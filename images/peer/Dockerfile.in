@@ -1,0 +1,10 @@
+# Copyright Greg Haskins All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+FROM _BASE_NS_/inkchain-baseos:_BASE_TAG_
+ENV INKCHAIN_CFG_PATH /etc/inkchain/inkchain
+RUN mkdir -p /var/inkchain/production $INKCHAIN_CFG_PATH
+COPY payload/peer /usr/local/bin
+ADD  payload/sampleconfig.tar.bz2 $INKCHAIN_CFG_PATH
+CMD ["peer","node","start"]

@@ -1,0 +1,12 @@
+# Copyright Greg Haskins All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+FROM _BASE_NS_/inkchain-baseimage:_BASE_TAG_
+ENV INKCHAIN_CFG_PATH /etc/inkchain/inkchain
+VOLUME /etc/inkchain/inkchain
+ADD  payload/sampleconfig.tar.bz2 $INKCHAIN_CFG_PATH
+COPY payload/cryptogen /usr/local/bin
+COPY payload/configtxgen /usr/local/bin
+COPY payload/configtxlator /usr/local/bin
+COPY payload/peer /usr/local/bin

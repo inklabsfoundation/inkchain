@@ -30,7 +30,6 @@ import (
 	"github.com/inkchain/inkchain/common/flogging"
 	"github.com/inkchain/inkchain/core/config"
 	"github.com/inkchain/inkchain/peer/chaincode"
-	"github.com/inkchain/inkchain/peer/token"
 	"github.com/inkchain/inkchain/peer/channel"
 	"github.com/inkchain/inkchain/peer/clilogging"
 	"github.com/inkchain/inkchain/peer/common"
@@ -98,7 +97,6 @@ func main() {
 	mainCmd.AddCommand(version.Cmd())
 	mainCmd.AddCommand(node.Cmd())
 	mainCmd.AddCommand(chaincode.Cmd(nil))
-	mainCmd.AddCommand(token.Cmd(nil))
 	mainCmd.AddCommand(clilogging.Cmd(nil))
 	mainCmd.AddCommand(channel.Cmd(nil))
 

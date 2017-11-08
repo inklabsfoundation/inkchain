@@ -21,9 +21,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/orderer/ledger"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
 	"github.com/stretchr/testify/assert"
 )
 

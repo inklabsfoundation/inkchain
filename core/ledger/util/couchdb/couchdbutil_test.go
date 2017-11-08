@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
 )
 
 //Unit test of couch db util functionality

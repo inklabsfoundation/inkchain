@@ -20,10 +20,10 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	. "github.com/inkchain/inkchain/orderer/ledger"
-	jsonledger "github.com/inkchain/inkchain/orderer/ledger/json"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	. "github.com/inklabsfoundation/inkchain/orderer/ledger"
+	jsonledger "github.com/inklabsfoundation/inkchain/orderer/ledger/json"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 var genesisBlock = cb.NewBlock(0, nil)

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/inkchain/inkchain/common/metadata"
+	"github.com/inklabsfoundation/inkchain/common/metadata"
 	"github.com/spf13/cobra"
 )
 

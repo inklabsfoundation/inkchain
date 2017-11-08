@@ -16,7 +16,7 @@ limitations under the License.
 
 package version
 
-import "github.com/inkchain/inkchain/common/ledger/util"
+import "github.com/inklabsfoundation/inkchain/common/ledger/util"
 
 // Height represents the height of a transaction in blockchain
 type Height struct {

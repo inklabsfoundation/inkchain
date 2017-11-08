@@ -20,7 +20,7 @@ package factory
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type FactoryOpts struct {

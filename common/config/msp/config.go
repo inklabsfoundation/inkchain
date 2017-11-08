@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/inkchain/inkchain/msp"
-	mspprotos "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspprotos "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 type pendingMSPConfig struct {

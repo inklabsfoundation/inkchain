@@ -19,9 +19,9 @@ package scc
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/core/common/sysccprovider"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/common/sysccprovider"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/peer"
 )
 
 // sccProviderFactory implements the sysccprovider.SystemChaincodeProviderFactory

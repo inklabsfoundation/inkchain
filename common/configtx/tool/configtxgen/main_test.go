@@ -22,8 +22,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp/factory"
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
 
 	"github.com/stretchr/testify/assert"
 )

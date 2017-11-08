@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 var (

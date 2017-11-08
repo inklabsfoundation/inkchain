@@ -16,7 +16,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-option go_package = "github.com/inkchain/inkchain/protos/orderer";
+option go_package = "github.com/inklabsfoundation/inkchain/protos/orderer";
 option java_package = "org.inkchain.inkchain.protos.orderer";
 
 package orderer;

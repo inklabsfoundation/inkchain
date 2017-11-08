@@ -17,7 +17,7 @@ limitations under the License.
 package clilogging
 
 import (
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"

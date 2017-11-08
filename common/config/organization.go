@@ -19,9 +19,9 @@ package config
 import (
 	"fmt"
 
-	mspconfig "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/msp"
-	mspprotos "github.com/inkchain/inkchain/protos/msp"
+	mspconfig "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspprotos "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 // Org config keys

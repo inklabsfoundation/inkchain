@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/inkchain/inkchain/common/configtx/api"
-	"github.com/inkchain/inkchain/common/flogging"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx/api"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 )

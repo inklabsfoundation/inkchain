@@ -17,11 +17,11 @@ limitations under the License.
 package mocks
 
 import (
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/comm"
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/discovery"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/comm"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/stretchr/testify/mock"
 )
 

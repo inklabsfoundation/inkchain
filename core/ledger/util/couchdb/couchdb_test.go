@@ -26,9 +26,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	ledgertestutil "github.com/inkchain/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	ledgertestutil "github.com/inklabsfoundation/inkchain/core/ledger/testutil"
 	"github.com/spf13/viper"
 )
 

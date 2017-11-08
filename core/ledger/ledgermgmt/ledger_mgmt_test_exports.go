@@ -21,7 +21,7 @@ import (
 
 	"fmt"
 
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
 )
 
 // InitializeTestEnv initializes ledgermgmt for tests

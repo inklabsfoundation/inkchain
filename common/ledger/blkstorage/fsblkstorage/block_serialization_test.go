@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func TestBlockSerialization(t *testing.T) {

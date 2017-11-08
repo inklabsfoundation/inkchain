@@ -17,8 +17,8 @@ limitations under the License.
 package config
 
 import (
-	mspconfig "github.com/inkchain/inkchain/common/config/msp"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	mspconfig "github.com/inklabsfoundation/inkchain/common/config/msp"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	logging "github.com/op/go-logging"
 )

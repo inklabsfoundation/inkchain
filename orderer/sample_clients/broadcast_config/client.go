@@ -23,12 +23,12 @@ import (
 
 	"google.golang.org/grpc"
 
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	"github.com/inkchain/inkchain/msp"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/orderer/localconfig"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/orderer/localconfig"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 var conf *config.TopLevel

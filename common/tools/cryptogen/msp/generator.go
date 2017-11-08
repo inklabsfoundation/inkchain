@@ -23,10 +23,10 @@ import (
 
 	"encoding/hex"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/ca"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/csp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/ca"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/csp"
 )
 
 func GenerateLocalMSP(baseDir, name string, sans []string, signCA *ca.CA,

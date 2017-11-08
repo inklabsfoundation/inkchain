@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"time"
 
-	localconfig "github.com/inkchain/inkchain/orderer/localconfig"
+	localconfig "github.com/inklabsfoundation/inkchain/orderer/localconfig"
 )
 
 type retryProcess struct {

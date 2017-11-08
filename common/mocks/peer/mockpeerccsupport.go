@@ -19,7 +19,7 @@ package peer
 import (
 	"fmt"
 
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //MockPeerCCSupport provides CC support for peer interfaces.

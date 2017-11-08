@@ -17,10 +17,10 @@ limitations under the License.
 package api
 
 import (
-	"github.com/inkchain/inkchain/common/config"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 )

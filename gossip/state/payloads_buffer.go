@@ -22,8 +22,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/inkchain/inkchain/gossip/util"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/op/go-logging"
 )
 

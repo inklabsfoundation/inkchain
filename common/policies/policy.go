@@ -21,10 +21,10 @@ import (
 	"strings"
 	"sync"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	logging "github.com/op/go-logging"
 )
 

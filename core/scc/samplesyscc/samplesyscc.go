@@ -17,8 +17,8 @@ limitations under the License.
 package samplesyscc
 
 import (
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // SampleSysCC example simple Chaincode implementation

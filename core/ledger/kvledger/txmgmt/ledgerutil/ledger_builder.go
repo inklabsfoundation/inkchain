@@ -1,8 +1,8 @@
 package ledgerutil
 
 import (
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/transutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/transutil"
 )
 
 type LedgerSetBuilder struct {

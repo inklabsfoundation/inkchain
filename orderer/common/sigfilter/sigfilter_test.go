@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"testing"
 
-	mockpolicies "github.com/inkchain/inkchain/common/mocks/policies"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	mockpolicies "github.com/inklabsfoundation/inkchain/common/mocks/policies"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/op/go-logging"
 )

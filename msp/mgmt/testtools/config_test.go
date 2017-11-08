@@ -19,8 +19,8 @@ package msptesttools
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 )
 
 func TestFakeSetup(t *testing.T) {

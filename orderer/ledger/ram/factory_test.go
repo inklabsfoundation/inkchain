@@ -19,7 +19,7 @@ package ramledger
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
 
 	logging "github.com/op/go-logging"
 )

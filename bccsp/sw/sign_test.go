@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"testing"
 
-	mocks2 "github.com/inkchain/inkchain/bccsp/mocks"
-	"github.com/inkchain/inkchain/bccsp/sw/mocks"
+	mocks2 "github.com/inklabsfoundation/inkchain/bccsp/mocks"
+	"github.com/inklabsfoundation/inkchain/bccsp/sw/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

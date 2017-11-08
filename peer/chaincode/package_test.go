@@ -24,10 +24,10 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/peer/common"
-	pcommon "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pcommon "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 func newTempDir() string {

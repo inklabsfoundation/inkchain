@@ -11,7 +11,7 @@ import (
 	"crypto/x509"
 
 	"github.com/Shopify/sarama"
-	localconfig "github.com/inkchain/inkchain/orderer/localconfig"
+	localconfig "github.com/inklabsfoundation/inkchain/orderer/localconfig"
 )
 
 func newBrokerConfig(tlsConfig localconfig.TLS, retryOptions localconfig.Retry, kafkaVersion sarama.KafkaVersion, chosenStaticPartition int32) *sarama.Config {

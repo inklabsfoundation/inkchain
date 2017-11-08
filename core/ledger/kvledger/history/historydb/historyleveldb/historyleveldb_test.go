@@ -21,12 +21,12 @@ import (
 	"strconv"
 	"testing"
 
-	configtxtest "github.com/inkchain/inkchain/common/configtx/test"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
-	"github.com/inkchain/inkchain/protos/peer"
+	configtxtest "github.com/inklabsfoundation/inkchain/common/configtx/test"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/spf13/viper"
 )
 

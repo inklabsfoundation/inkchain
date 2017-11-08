@@ -20,10 +20,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/config"
-	"github.com/inkchain/inkchain/common/configtx/api"
-	"github.com/inkchain/inkchain/common/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/configtx/api"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"

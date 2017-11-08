@@ -22,8 +22,8 @@ import (
 	"strings"
 	"testing"
 
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

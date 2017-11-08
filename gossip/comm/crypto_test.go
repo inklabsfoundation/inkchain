@@ -24,8 +24,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/gossip/util"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

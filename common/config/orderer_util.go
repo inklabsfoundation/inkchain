@@ -17,9 +17,9 @@ limitations under the License.
 package config
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func ordererConfigGroup(key string, value []byte) *cb.ConfigGroup {

@@ -63,7 +63,7 @@ func TestError(t *testing.T) {
 					err = ErrorWithCallstack(tc[i].errorArgs[0], tc[i].errorArgs[1], tc[i].errorArgs[2])
 				}
 				assert.NotEqual("", err.GetStack(), "Test case '%s' failed", tc[i].name)
-				assert.Contains(err.Error(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+				assert.Contains(err.Error(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 			} else {
 				if tc[i].messageArgs != nil {
 					err = Error(tc[i].errorArgs[0], tc[i].errorArgs[1], tc[i].errorArgs[2], tc[i].messageArgs)
@@ -71,7 +71,7 @@ func TestError(t *testing.T) {
 					err = Error(tc[i].errorArgs[0], tc[i].errorArgs[1], tc[i].errorArgs[2])
 				}
 				assert.Equal("", err.GetStack(), "Test case '%s' failed", tc[i].name)
-				assert.NotContains(err.Error(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+				assert.NotContains(err.Error(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 			}
 			assert.Equal(tc[i].errorArgs[0], err.GetComponentCode(), "Test case '%s' failed", tc[i].name)
 			assert.Equal(tc[i].errorArgs[1], err.GetReasonCode(), "Test case '%s' failed", tc[i].name)
@@ -80,7 +80,7 @@ func TestError(t *testing.T) {
 			} else {
 				assert.Contains(err.Error(), tc[i].errorArgs[2], "Test case '%s' failed", tc[i].name)
 			}
-			assert.NotContains(err.Message(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+			assert.NotContains(err.Message(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 
 			if tc[i].wrappedErrorArgs != nil {
 				if len(tc[i].wrappedErrorArgs) == 3 {
@@ -91,7 +91,7 @@ func TestError(t *testing.T) {
 							wrappedErr = ErrorWithCallstack(tc[i].wrappedErrorArgs[0], tc[i].wrappedErrorArgs[1], tc[i].wrappedErrorArgs[2])
 						}
 						assert.NotEqual("", wrappedErr.GetStack(), "Test case '%s' failed", tc[i].name)
-						assert.Contains(wrappedErr.Error(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+						assert.Contains(wrappedErr.Error(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 					} else {
 						if tc[i].wrappedMessageArgs != nil {
 							wrappedErr = Error(tc[i].wrappedErrorArgs[0], tc[i].wrappedErrorArgs[1], tc[i].wrappedErrorArgs[2], tc[i].wrappedMessageArgs)
@@ -99,7 +99,7 @@ func TestError(t *testing.T) {
 							wrappedErr = Error(tc[i].wrappedErrorArgs[0], tc[i].wrappedErrorArgs[1], tc[i].wrappedErrorArgs[2])
 						}
 						assert.Equal("", wrappedErr.GetStack(), "Test case '%s' failed", tc[i].name)
-						assert.NotContains(wrappedErr.Error(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+						assert.NotContains(wrappedErr.Error(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 					}
 					assert.Equal(tc[i].wrappedErrorArgs[0], wrappedErr.GetComponentCode(), "Test case '%s' failed", tc[i].name)
 					assert.Equal(tc[i].wrappedErrorArgs[1], wrappedErr.GetReasonCode(), "Test case '%s' failed", tc[i].name)
@@ -116,7 +116,7 @@ func TestError(t *testing.T) {
 
 				}
 				assert.Contains(err.Error(), "Caused by:", "Test case '%s' failed", tc[i].name)
-				assert.NotContains(err.Message(), "github.com/inkchain/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
+				assert.NotContains(err.Message(), "github.com/inklabsfoundation/inkchain/common/errors", "Test case '%s' failed", tc[i].name)
 			}
 		})
 	}

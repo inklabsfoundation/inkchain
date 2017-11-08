@@ -24,13 +24,13 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/cobra"
 
-	"github.com/inkchain/inkchain/common/cauthdsl"
-	"github.com/inkchain/inkchain/core/common/ccpackage"
-	"github.com/inkchain/inkchain/msp"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	pcommon "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
+	"github.com/inklabsfoundation/inkchain/core/common/ccpackage"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	pcommon "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var chaincodePackageCmd *cobra.Command

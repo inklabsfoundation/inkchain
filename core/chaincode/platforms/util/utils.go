@@ -26,9 +26,9 @@ import (
 	"path/filepath"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/util"
-	cutil "github.com/inkchain/inkchain/core/container/util"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
 )
 
 var logger = flogging.MustGetLogger("util")

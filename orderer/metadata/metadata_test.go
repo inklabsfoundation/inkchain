@@ -11,8 +11,8 @@ import (
 	"runtime"
 	"testing"
 
-	common "github.com/inkchain/inkchain/common/metadata"
-	"github.com/inkchain/inkchain/orderer/metadata"
+	common "github.com/inklabsfoundation/inkchain/common/metadata"
+	"github.com/inklabsfoundation/inkchain/orderer/metadata"
 	"github.com/stretchr/testify/assert"
 )
 

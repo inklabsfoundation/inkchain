@@ -19,7 +19,7 @@ package version
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 )
 
 func TestVersionSerialization(t *testing.T) {

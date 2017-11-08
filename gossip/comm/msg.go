@@ -19,7 +19,7 @@ package comm
 import (
 	"sync"
 
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 )
 
 // ReceivedMessageImpl is an implementation of ReceivedMessage

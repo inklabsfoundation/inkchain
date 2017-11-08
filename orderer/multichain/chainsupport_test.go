@@ -20,13 +20,13 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	mockconfigtx "github.com/inkchain/inkchain/common/mocks/configtx"
-	"github.com/inkchain/inkchain/common/mocks/crypto"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	mockconfigtx "github.com/inklabsfoundation/inkchain/common/mocks/configtx"
+	"github.com/inklabsfoundation/inkchain/common/mocks/crypto"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

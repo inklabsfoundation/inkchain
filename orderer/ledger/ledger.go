@@ -17,8 +17,8 @@ limitations under the License.
 package ledger
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 // Factory retrieves or creates new ledgers by chainID

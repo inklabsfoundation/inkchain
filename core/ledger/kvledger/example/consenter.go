@@ -19,7 +19,7 @@ package example
 import (
 	"github.com/golang/protobuf/proto"
 
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Consenter - a toy Consenter

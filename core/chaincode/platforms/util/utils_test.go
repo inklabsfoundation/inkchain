@@ -30,9 +30,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/config"
-	cutil "github.com/inkchain/inkchain/core/container/util"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

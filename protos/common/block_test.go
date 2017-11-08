@@ -21,7 +21,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/common/util"
 	"github.com/stretchr/testify/assert"
 )
 

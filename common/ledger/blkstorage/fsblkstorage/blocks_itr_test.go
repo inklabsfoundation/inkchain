@@ -20,8 +20,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 func TestBlocksItrBlockingNext(t *testing.T) {

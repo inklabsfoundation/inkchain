@@ -22,9 +22,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/inkchain/inkchain/common/tools/configtxlator/sanitycheck"
-	"github.com/inkchain/inkchain/common/tools/configtxlator/update"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/tools/configtxlator/sanitycheck"
+	"github.com/inklabsfoundation/inkchain/common/tools/configtxlator/update"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 )

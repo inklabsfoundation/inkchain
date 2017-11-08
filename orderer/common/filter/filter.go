@@ -19,7 +19,7 @@ package filter
 import (
 	"fmt"
 
-	ab "github.com/inkchain/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Action is used to express the output of a rule

@@ -21,9 +21,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	mb "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	mb "github.com/inklabsfoundation/inkchain/protos/msp"
 
 	"github.com/golang/protobuf/proto"
 	logging "github.com/op/go-logging"

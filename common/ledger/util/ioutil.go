@@ -23,7 +23,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 var logger = flogging.MustGetLogger("kvledger.util")

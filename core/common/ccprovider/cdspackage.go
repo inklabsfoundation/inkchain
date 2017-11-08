@@ -25,9 +25,9 @@ import (
 
 	"bytes"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //----- CDSData ------

@@ -17,9 +17,9 @@ limitations under the License.
 package txmgr
 
 import (
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // TxMgr - an interface that a transaction manager should implement

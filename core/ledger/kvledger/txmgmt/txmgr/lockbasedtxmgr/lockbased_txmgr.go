@@ -19,13 +19,13 @@ package lockbasedtxmgr
 import (
 	"sync"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/validator"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/validator/statebasedval"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/validator"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/validator/statebasedval"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 var logger = flogging.MustGetLogger("lockbasedtxmgr")

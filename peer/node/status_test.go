@@ -19,11 +19,11 @@ package node
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/core"
-	"github.com/inkchain/inkchain/core/comm"
-	testpb "github.com/inkchain/inkchain/core/comm/testdata/grpc"
-	"github.com/inkchain/inkchain/core/peer"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core"
+	"github.com/inklabsfoundation/inkchain/core/comm"
+	testpb "github.com/inklabsfoundation/inkchain/core/comm/testdata/grpc"
+	"github.com/inklabsfoundation/inkchain/core/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"

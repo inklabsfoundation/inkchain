@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	"github.com/Shopify/sarama"
-	"github.com/inkchain/inkchain/orderer/mocks/util"
+	"github.com/inklabsfoundation/inkchain/orderer/mocks/util"
 	"github.com/spf13/viper"
 )
 

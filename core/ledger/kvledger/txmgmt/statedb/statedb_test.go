@@ -20,8 +20,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
 )
 
 func TestPanic(t *testing.T) {

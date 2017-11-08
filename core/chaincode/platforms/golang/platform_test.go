@@ -26,8 +26,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/config"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -130,12 +130,12 @@ func Test_findSource(t *testing.T) {
 
 	var source SourceMap
 
-	source, err = findSource(gopath, "github.com/inkchain/inkchain/peer")
+	source, err = findSource(gopath, "github.com/inklabsfoundation/inkchain/peer")
 	if err != nil {
 		t.Errorf("failed to find source: %s", err)
 	}
 
-	if _, ok := source["src/github.com/inkchain/inkchain/peer/main.go"]; !ok {
+	if _, ok := source["src/github.com/inklabsfoundation/inkchain/peer/main.go"]; !ok {
 		t.Errorf("Failed to find expected source file: %v", source)
 	}
 
@@ -149,7 +149,7 @@ func Test_DeploymentPayload(t *testing.T) {
 	platform := &Platform{}
 	spec := &pb.ChaincodeSpec{
 		ChaincodeId: &pb.ChaincodeID{
-			Path: "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02",
+			Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02",
 		},
 	}
 
@@ -179,7 +179,7 @@ func Test_decodeUrl(t *testing.T) {
 	cs := &pb.ChaincodeSpec{
 		ChaincodeId: &pb.ChaincodeID{
 			Name: "Test Chaincode",
-			Path: "http://github.com/inkchain/inkchain/examples/chaincode/go/map",
+			Path: "http://github.com/inklabsfoundation/inkchain/examples/chaincode/go/map",
 		},
 	}
 
@@ -217,11 +217,11 @@ func TestValidateSpec(t *testing.T) {
 		spec *pb.ChaincodeSpec
 		succ bool
 	}{
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "http://github.com/inkchain/inkchain/examples/chaincode/go/map"}}, succ: true},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "https://github.com/inkchain/inkchain/examples/chaincode/go/map"}}, succ: true},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inkchain/inkchain/examples/chaincode/go/map"}}, succ: true},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inkchain/inkchain/bad/chaincode/go/map"}}, succ: false},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: ":github.com/inkchain/inkchain/examples/chaincode/go/map"}}, succ: false},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "http://github.com/inklabsfoundation/inkchain/examples/chaincode/go/map"}}, succ: true},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "https://github.com/inklabsfoundation/inkchain/examples/chaincode/go/map"}}, succ: true},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/map"}}, succ: true},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inklabsfoundation/inkchain/bad/chaincode/go/map"}}, succ: false},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: ":github.com/inklabsfoundation/inkchain/examples/chaincode/go/map"}}, succ: false},
 	}
 
 	for _, tst := range tests {
@@ -239,9 +239,9 @@ func TestGetDeploymentPayload(t *testing.T) {
 		spec *pb.ChaincodeSpec
 		succ bool
 	}{
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inkchain/inkchain/examples/chaincode/go/map"}}, succ: true},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inkchain/inkchain/examples/bad/go/map"}}, succ: false},
-		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inkchain/inkchain/test/chaincodes/BadImport"}}, succ: false},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/map"}}, succ: true},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inklabsfoundation/inkchain/examples/bad/go/map"}}, succ: false},
+		{spec: &pb.ChaincodeSpec{ChaincodeId: &pb.ChaincodeID{Name: "Test Chaincode", Path: "github.com/inklabsfoundation/inkchain/test/chaincodes/BadImport"}}, succ: false},
 	}
 
 	for _, tst := range tests {
@@ -258,11 +258,11 @@ func TestGenerateDockerBuild(t *testing.T) {
 
 	specs := make([]spec, 0)
 	specs = append(specs, spec{CCName: "NoCode", Path: "path/to/nowhere", File: "/bin/warez", Mode: 0100400, SuccessExpected: false})
-	specs = append(specs, spec{CCName: "invalidhttp", Path: "https://not/a/valid/path", File: "/src/github.com/inkchain/inkchain/examples/chaincode/go/map/map.go", Mode: 0100400, SuccessExpected: false, RealGen: true})
-	specs = append(specs, spec{CCName: "map", Path: "github.com/inkchain/inkchain/examples/chaincode/go/map", File: "/src/github.com/inkchain/inkchain/examples/chaincode/go/map/map.go", Mode: 0100400, SuccessExpected: true, RealGen: true})
-	specs = append(specs, spec{CCName: "AutoVendor", Path: "github.com/inkchain/inkchain/test/chaincodes/AutoVendor/chaincode", File: "/src/github.com/inkchain/inkchain/test/chaincodes/AutoVendor/chaincode/main.go", Mode: 0100400, SuccessExpected: true, RealGen: true})
-	specs = append(specs, spec{CCName: "mapBadPath", Path: "github.com/inkchain/inkchain/examples/chaincode/go/map", File: "/src/github.com/inkchain/inkchain/examples/bad/path/to/map.go", Mode: 0100400, SuccessExpected: false})
-	specs = append(specs, spec{CCName: "mapBadMode", Path: "github.com/inkchain/inkchain/examples/chaincode/go/map", File: "/src/github.com/inkchain/inkchain/examples/chaincode/go/map/map.go", Mode: 0100555, SuccessExpected: false})
+	specs = append(specs, spec{CCName: "invalidhttp", Path: "https://not/a/valid/path", File: "/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/map/map.go", Mode: 0100400, SuccessExpected: false, RealGen: true})
+	specs = append(specs, spec{CCName: "map", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/map", File: "/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/map/map.go", Mode: 0100400, SuccessExpected: true, RealGen: true})
+	specs = append(specs, spec{CCName: "AutoVendor", Path: "github.com/inklabsfoundation/inkchain/test/chaincodes/AutoVendor/chaincode", File: "/src/github.com/inklabsfoundation/inkchain/test/chaincodes/AutoVendor/chaincode/main.go", Mode: 0100400, SuccessExpected: true, RealGen: true})
+	specs = append(specs, spec{CCName: "mapBadPath", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/map", File: "/src/github.com/inklabsfoundation/inkchain/examples/bad/path/to/map.go", Mode: 0100400, SuccessExpected: false})
+	specs = append(specs, spec{CCName: "mapBadMode", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/map", File: "/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/map/map.go", Mode: 0100555, SuccessExpected: false})
 
 	var err error
 	for _, tst := range specs {

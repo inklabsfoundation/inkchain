@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/tools/protolator/testprotos"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/tools/protolator/testprotos"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

@@ -19,8 +19,8 @@ package discovery
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/gossip/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 )
 
 // CryptoService is an interface that the discovery expects to be implemented and passed on creation

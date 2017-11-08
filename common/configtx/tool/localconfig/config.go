@@ -22,15 +22,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/viperutil"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/viperutil"
 	logging "github.com/op/go-logging"
 
 	"github.com/spf13/viper"
 
 	"path/filepath"
 
-	cf "github.com/inkchain/inkchain/core/config"
+	cf "github.com/inklabsfoundation/inkchain/core/config"
 )
 
 const (

@@ -19,7 +19,7 @@ package util
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 )
 

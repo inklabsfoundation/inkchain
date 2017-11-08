@@ -26,9 +26,9 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 	"github.com/op/go-logging"
 )
 

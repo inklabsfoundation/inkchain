@@ -19,8 +19,8 @@ package ledgerconfig
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	ledgertestutil "github.com/inkchain/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	ledgertestutil "github.com/inklabsfoundation/inkchain/core/ledger/testutil"
 	"github.com/spf13/viper"
 )
 

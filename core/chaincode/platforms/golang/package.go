@@ -24,9 +24,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	ccutil "github.com/inkchain/inkchain/core/chaincode/platforms/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	ccutil "github.com/inklabsfoundation/inkchain/core/chaincode/platforms/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var includeFileTypes = map[string]bool{

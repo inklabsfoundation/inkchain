@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp/sw"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp/sw"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 	"github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"
 )

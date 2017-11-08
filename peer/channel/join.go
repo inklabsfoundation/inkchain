@@ -21,11 +21,11 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/inkchain/inkchain/core/scc/cscc"
-	"github.com/inkchain/inkchain/peer/common"
-	pcommon "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/core/scc/cscc"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pcommon "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
 )

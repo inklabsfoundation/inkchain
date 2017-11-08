@@ -143,7 +143,7 @@ func Test_WriteFolderToPackage(t *testing.T) {
 	gopath := os.Getenv("GOPATH")
 	gopath = filepath.SplitList(gopath)[0]
 	srcPath := filepath.Join(gopath, "src",
-		"github.com/inkchain/inkchain/examples/chaincode/java/SimpleSample")
+		"github.com/inklabsfoundation/inkchain/examples/chaincode/java/SimpleSample")
 	filePath := "src/src/main/java/example/SimpleSample.java"
 	includeFileTypes := map[string]bool{
 		".java": true,
@@ -171,7 +171,7 @@ func Test_WriteFolderToPackage(t *testing.T) {
 
 	// Success case 2: with exclude dir and no include file types
 	srcPath = filepath.Join(gopath, "src",
-		"github.com/inkchain/inkchain/examples/chaincode/java")
+		"github.com/inklabsfoundation/inkchain/examples/chaincode/java")
 	tarw := tar.NewWriter(bytes.NewBuffer(nil))
 	defer tarw.Close()
 	err = WriteFolderToTarPackage(tarw, srcPath, "SimpleSample",
@@ -187,7 +187,7 @@ func Test_WriteJavaProjectToPackage(t *testing.T) {
 	gopath := os.Getenv("GOPATH")
 	gopath = filepath.SplitList(gopath)[0]
 	pkgDir := filepath.Join(gopath, "src",
-		"github.com/inkchain/inkchain/examples/chaincode/java")
+		"github.com/inklabsfoundation/inkchain/examples/chaincode/java")
 	err := WriteJavaProjectToPackage(tw, pkgDir)
 	assert.NoError(t, err, "Error writing java project to package")
 

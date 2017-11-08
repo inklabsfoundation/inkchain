@@ -19,7 +19,7 @@ package historydb
 import (
 	"bytes"
 
-	"github.com/inkchain/inkchain/common/ledger/util"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util"
 )
 
 var compositeKeySep = []byte{0x00}

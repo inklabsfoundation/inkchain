@@ -17,9 +17,9 @@ limitations under the License.
 package gossip
 
 import (
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 )
 
 var saLogger = flogging.MustGetLogger("peer/gossip/sa")

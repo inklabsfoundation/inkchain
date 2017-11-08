@@ -20,11 +20,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/config"
-	configmsp "github.com/inkchain/inkchain/common/config/msp"
-	mmsp "github.com/inkchain/inkchain/common/mocks/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	configmsp "github.com/inklabsfoundation/inkchain/common/config/msp"
+	mmsp "github.com/inklabsfoundation/inkchain/common/mocks/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

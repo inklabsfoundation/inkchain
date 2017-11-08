@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 )

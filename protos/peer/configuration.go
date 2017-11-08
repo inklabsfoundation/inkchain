@@ -19,8 +19,8 @@ package peer
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 
 	"github.com/golang/protobuf/proto"
 )

@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"google.golang.org/grpc"
 )
 

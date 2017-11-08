@@ -26,7 +26,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 var vmLogger = flogging.MustGetLogger("container")

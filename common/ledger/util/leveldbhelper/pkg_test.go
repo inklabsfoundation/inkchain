@@ -20,7 +20,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 )
 
 const testDBPath = "/tmp/inkchain/ledgertests/util/leveldbhelper"

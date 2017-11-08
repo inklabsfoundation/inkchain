@@ -19,7 +19,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/config/msp"
 
 	"github.com/golang/protobuf/proto"
 )

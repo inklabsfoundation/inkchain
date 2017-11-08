@@ -18,9 +18,9 @@ package genesis
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/configtx"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 const (

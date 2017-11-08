@@ -24,13 +24,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/discovery"
-	"github.com/inkchain/inkchain/gossip/identity"
-	"github.com/inkchain/inkchain/gossip/util"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
+	"github.com/inklabsfoundation/inkchain/gossip/identity"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/stretchr/testify/assert"
 )
 

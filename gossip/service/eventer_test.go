@@ -20,9 +20,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/config"
-	"github.com/inkchain/inkchain/gossip/util"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 const testChainID = "foo"

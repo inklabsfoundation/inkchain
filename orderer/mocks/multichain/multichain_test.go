@@ -19,7 +19,7 @@ package multichain
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/orderer/multichain"
+	"github.com/inklabsfoundation/inkchain/orderer/multichain"
 )
 
 func TestConsenterSupportInterface(t *testing.T) {

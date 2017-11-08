@@ -26,12 +26,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/deliverservice/blocksprovider"
-	"github.com/inkchain/inkchain/core/deliverservice/mocks"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/blocksprovider"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/mocks"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )

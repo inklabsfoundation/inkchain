@@ -17,10 +17,10 @@ limitations under the License.
 package fileledger
 
 import (
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	ledger "github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	ledger "github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/op/go-logging"
 )
 

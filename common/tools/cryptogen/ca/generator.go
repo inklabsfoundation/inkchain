@@ -28,7 +28,7 @@ import (
 
 	"path/filepath"
 
-	"github.com/inkchain/inkchain/common/tools/cryptogen/csp"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/csp"
 )
 
 type CA struct {

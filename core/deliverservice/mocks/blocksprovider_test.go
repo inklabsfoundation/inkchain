@@ -23,10 +23,10 @@ import (
 	"time"
 
 	pb "github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/deliverservice/blocksprovider"
-	"github.com/inkchain/inkchain/protos/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/blocksprovider"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )

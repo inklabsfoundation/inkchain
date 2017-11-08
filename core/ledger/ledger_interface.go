@@ -17,10 +17,10 @@ limitations under the License.
 package ledger
 
 import (
-	commonledger "github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
-	"github.com/inkchain/inkchain/protos/peer"
+	commonledger "github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // PeerLedgerProvider provides handle to ledger instances

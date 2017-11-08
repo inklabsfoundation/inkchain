@@ -21,13 +21,13 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	ledgertestutil "github.com/inkchain/inkchain/core/ledger/testutil"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
-	"github.com/inkchain/inkchain/protos/peer"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	ledgertestutil "github.com/inklabsfoundation/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -19,7 +19,7 @@ package configtx
 import (
 	"bytes"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 type comparable struct {

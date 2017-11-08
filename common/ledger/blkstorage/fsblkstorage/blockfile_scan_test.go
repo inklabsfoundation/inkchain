@@ -20,10 +20,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/common/ledger/util"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util"
 
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 func TestBlockFileScanSmallTxOnly(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 
 	"google.golang.org/grpc/credentials"
 
-	"github.com/inkchain/inkchain/core/comm"
+	"github.com/inklabsfoundation/inkchain/core/comm"
 	"github.com/stretchr/testify/assert"
 )
 

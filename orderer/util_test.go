@@ -20,7 +20,7 @@ import (
 	"os"
 	"testing"
 
-	config "github.com/inkchain/inkchain/orderer/localconfig"
+	config "github.com/inklabsfoundation/inkchain/orderer/localconfig"
 	"github.com/stretchr/testify/assert"
 )
 

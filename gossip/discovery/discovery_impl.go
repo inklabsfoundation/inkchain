@@ -27,10 +27,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/gossip/msgstore"
-	"github.com/inkchain/inkchain/gossip/util"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/gossip/msgstore"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/op/go-logging"
 )
 

@@ -20,13 +20,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb/statecouchdb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb/stateleveldb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/txmgr"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb/statecouchdb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb/stateleveldb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 	"github.com/spf13/viper"
 )
 

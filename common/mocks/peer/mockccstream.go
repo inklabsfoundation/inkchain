@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //MockResponseSet is used for processing CC to Peer comm

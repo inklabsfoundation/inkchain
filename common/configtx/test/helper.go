@@ -17,17 +17,17 @@ limitations under the License.
 package test
 
 import (
-	"github.com/inkchain/inkchain/common/config"
-	configtxmsp "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/common/configtx"
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/genesis"
-	cf "github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	mspproto "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	configtxmsp "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/genesis"
+	cf "github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	mspproto "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 var logger = flogging.MustGetLogger("common/configtx/test")

@@ -22,7 +22,7 @@ import "peer/transaction.proto";
 
 option java_package = "org.inkchain.inkchain.protos.peer";
 option java_outer_classname = "EventsPackage";
-option go_package = "github.com/inkchain/inkchain/protos/peer";
+option go_package = "github.com/inklabsfoundation/inkchain/protos/peer";
 
 package protos;
 

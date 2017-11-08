@@ -19,7 +19,7 @@ package golang
 import "testing"
 
 func Test_listDeps(t *testing.T) {
-	_, err := listDeps(nil, "github.com/inkchain/inkchain/peer")
+	_, err := listDeps(nil, "github.com/inklabsfoundation/inkchain/peer")
 	if err != nil {
 		t.Errorf("list failed: %s", err)
 	}

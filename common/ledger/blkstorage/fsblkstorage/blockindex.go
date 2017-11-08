@@ -22,12 +22,12 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/util"
-	"github.com/inkchain/inkchain/common/ledger/util/leveldbhelper"
-	ledgerUtil "github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util/leveldbhelper"
+	ledgerUtil "github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 const (

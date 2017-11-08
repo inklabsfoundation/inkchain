@@ -17,9 +17,9 @@ limitations under the License.
 package example
 
 import (
-	"github.com/inkchain/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
 
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Committer a toy committer

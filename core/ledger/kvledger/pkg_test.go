@@ -20,7 +20,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
 	"github.com/spf13/viper"
 )
 

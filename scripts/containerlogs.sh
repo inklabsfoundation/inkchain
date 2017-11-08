@@ -6,7 +6,7 @@
 #
 
 
-cd $HOME/gopath/src/github.com/inkchain/inkchain/bddtests
+cd $HOME/gopath/src/github.com/inklabsfoundation/inkchain/bddtests
 
 count=$(git ls-files -o | wc -l)
 

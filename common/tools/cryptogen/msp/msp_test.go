@@ -20,9 +20,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/tools/cryptogen/ca"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/msp"
-	inkchainmsp "github.com/inkchain/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/ca"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/msp"
+	inkchainmsp "github.com/inklabsfoundation/inkchain/msp"
 	"github.com/stretchr/testify/assert"
 )
 

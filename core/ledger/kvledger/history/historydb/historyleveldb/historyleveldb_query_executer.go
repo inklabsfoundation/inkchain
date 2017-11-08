@@ -21,16 +21,16 @@ import (
 
 	"encoding/json"
 
-	commonledger "github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/util"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/history/historydb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	"github.com/inkchain/inkchain/core/wallet"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	commonledger "github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/history/historydb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 )
 

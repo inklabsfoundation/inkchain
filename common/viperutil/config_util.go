@@ -30,7 +30,7 @@ import (
 	"encoding/pem"
 
 	"github.com/Shopify/sarama"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 )

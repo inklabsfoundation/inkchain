@@ -22,11 +22,11 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	"github.com/inkchain/inkchain/orderer/localconfig"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	"github.com/inklabsfoundation/inkchain/orderer/localconfig"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

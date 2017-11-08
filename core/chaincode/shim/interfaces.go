@@ -21,10 +21,10 @@ import (
 
 	"math/big"
 
-	"github.com/inkchain/inkchain/core/wallet"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Chaincode interface must be implemented by all chaincodes. The inkchain runs

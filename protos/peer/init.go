@@ -17,7 +17,7 @@ limitations under the License.
 package peer
 
 import (
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	logging "github.com/op/go-logging"
 )
 

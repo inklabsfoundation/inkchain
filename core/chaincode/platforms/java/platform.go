@@ -25,8 +25,8 @@ import (
 	"net/url"
 	"strings"
 
-	cutil "github.com/inkchain/inkchain/core/container/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	//	"path/filepath"
 )
 

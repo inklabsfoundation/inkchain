@@ -26,7 +26,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp/mocks"
+	"github.com/inklabsfoundation/inkchain/bccsp/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

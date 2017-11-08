@@ -21,12 +21,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb/commontests"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	ledgertestutil "github.com/inkchain/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb/commontests"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	ledgertestutil "github.com/inklabsfoundation/inkchain/core/ledger/testutil"
 	"github.com/spf13/viper"
 )
 

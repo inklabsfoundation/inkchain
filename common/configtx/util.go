@@ -17,7 +17,7 @@ limitations under the License.
 package configtx
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 )

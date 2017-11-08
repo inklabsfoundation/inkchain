@@ -17,13 +17,13 @@ limitations under the License.
 package msp
 
 import (
-	"github.com/inkchain/inkchain/common/cauthdsl"
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	mspprotos "github.com/inkchain/inkchain/protos/msp"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	mspprotos "github.com/inklabsfoundation/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 var logger = flogging.MustGetLogger("configvalues/msp")

@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/Shopify/sarama"
-	localconfig "github.com/inkchain/inkchain/orderer/localconfig"
-	"github.com/inkchain/inkchain/orderer/mocks/util"
+	localconfig "github.com/inklabsfoundation/inkchain/orderer/localconfig"
+	"github.com/inklabsfoundation/inkchain/orderer/mocks/util"
 	"github.com/stretchr/testify/assert"
 )
 

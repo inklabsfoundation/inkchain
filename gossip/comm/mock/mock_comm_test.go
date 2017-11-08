@@ -19,9 +19,9 @@ package mock
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/gossip/comm"
-	"github.com/inkchain/inkchain/gossip/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/comm"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/stretchr/testify/assert"
 )
 

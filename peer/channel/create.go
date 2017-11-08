@@ -23,14 +23,14 @@ import (
 	"errors"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/configtx"
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	localsigner "github.com/inkchain/inkchain/common/localmsp"
-	"github.com/inkchain/inkchain/common/util"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/peer/common"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	localsigner "github.com/inklabsfoundation/inkchain/common/localmsp"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/spf13/cobra"
 )
 

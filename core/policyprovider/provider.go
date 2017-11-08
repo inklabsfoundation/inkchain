@@ -17,9 +17,9 @@ limitations under the License.
 package policyprovider
 
 import (
-	"github.com/inkchain/inkchain/core/peer"
-	"github.com/inkchain/inkchain/core/policy"
-	"github.com/inkchain/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 )
 
 // init is called when this package is loaded. This implementation registers the factory

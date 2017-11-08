@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 // GetRandomBytes returns len random looking bytes

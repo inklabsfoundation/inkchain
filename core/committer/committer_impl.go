@@ -19,12 +19,12 @@ package committer
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/committer/txvalidator"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/events/producer"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/committer/txvalidator"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/events/producer"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/op/go-logging"
 )
 

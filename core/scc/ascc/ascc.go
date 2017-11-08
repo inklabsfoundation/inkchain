@@ -14,12 +14,12 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/policy"
-	"github.com/inkchain/inkchain/core/policyprovider"
-	"github.com/inkchain/inkchain/msp/mgmt"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/core/policyprovider"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Create Logger

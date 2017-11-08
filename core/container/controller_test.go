@@ -26,10 +26,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/container/ccintf"
-	"github.com/inkchain/inkchain/core/container/dockercontroller"
-	"github.com/inkchain/inkchain/core/container/inproccontroller"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/container/ccintf"
+	"github.com/inklabsfoundation/inkchain/core/container/dockercontroller"
+	"github.com/inklabsfoundation/inkchain/core/container/inproccontroller"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )

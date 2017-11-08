@@ -17,8 +17,8 @@ limitations under the License.
 package msp
 
 import (
-	m "github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/protos/msp"
+	m "github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 type noopmsp struct {

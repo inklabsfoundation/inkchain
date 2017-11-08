@@ -19,7 +19,7 @@ package clilogging
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 
 	"github.com/spf13/cobra"
 )

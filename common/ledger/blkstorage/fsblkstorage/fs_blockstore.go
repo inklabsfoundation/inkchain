@@ -17,12 +17,12 @@ limitations under the License.
 package fsblkstorage
 
 import (
-	"github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/util/leveldbhelper"
+	"github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util/leveldbhelper"
 
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // fsBlockStore - filesystem based implementation for `BlockStore`

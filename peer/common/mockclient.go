@@ -18,8 +18,8 @@ package common
 
 import (
 	"github.com/golang/protobuf/ptypes/empty"
-	cb "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	context "golang.org/x/net/context"
 	grpc "google.golang.org/grpc"
 )

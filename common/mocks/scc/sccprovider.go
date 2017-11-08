@@ -17,9 +17,9 @@ limitations under the License.
 package scc
 
 import (
-	lm "github.com/inkchain/inkchain/common/mocks/ledger"
-	"github.com/inkchain/inkchain/core/common/sysccprovider"
-	"github.com/inkchain/inkchain/core/ledger"
+	lm "github.com/inklabsfoundation/inkchain/common/mocks/ledger"
+	"github.com/inklabsfoundation/inkchain/core/common/sysccprovider"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
 )
 
 type MocksccProviderFactory struct {

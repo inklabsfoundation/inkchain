@@ -23,10 +23,10 @@ import (
 
 	"errors"
 
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/protos/common"
-	mspproto "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	mspproto "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 type MockChannelPolicyManagerGetter struct {

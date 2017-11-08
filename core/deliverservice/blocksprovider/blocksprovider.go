@@ -23,14 +23,14 @@ import (
 	"sync/atomic"
 
 	"github.com/golang/protobuf/proto"
-	gossipcommon "github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/discovery"
+	gossipcommon "github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/protos/common"
-	gossip_proto "github.com/inkchain/inkchain/protos/gossip"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	gossip_proto "github.com/inklabsfoundation/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/op/go-logging"
 )
 

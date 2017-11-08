@@ -24,8 +24,8 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/inkchain/inkchain/peer/common"
-	pcommon "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pcommon "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 //helper to sign an existing package

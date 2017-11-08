@@ -21,8 +21,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/inkchain/inkchain/common/tools/configtxlator/metadata"
-	"github.com/inkchain/inkchain/common/tools/configtxlator/rest"
+	"github.com/inklabsfoundation/inkchain/common/tools/configtxlator/metadata"
+	"github.com/inklabsfoundation/inkchain/common/tools/configtxlator/rest"
 	"github.com/op/go-logging"
 	"gopkg.in/alecthomas/kingpin.v2"
 )

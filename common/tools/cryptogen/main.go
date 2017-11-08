@@ -29,9 +29,9 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"github.com/inkchain/inkchain/common/tools/cryptogen/ca"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/metadata"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/msp"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/ca"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/metadata"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/msp"
 )
 
 const (

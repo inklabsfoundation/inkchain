@@ -27,14 +27,14 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/peer/chaincode"
-	"github.com/inkchain/inkchain/peer/channel"
-	"github.com/inkchain/inkchain/peer/clilogging"
-	"github.com/inkchain/inkchain/peer/common"
-	"github.com/inkchain/inkchain/peer/node"
-	"github.com/inkchain/inkchain/peer/version"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/peer/chaincode"
+	"github.com/inklabsfoundation/inkchain/peer/channel"
+	"github.com/inklabsfoundation/inkchain/peer/clilogging"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	"github.com/inklabsfoundation/inkchain/peer/node"
+	"github.com/inklabsfoundation/inkchain/peer/version"
 )
 
 var logger = flogging.MustGetLogger("main")

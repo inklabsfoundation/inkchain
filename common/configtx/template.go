@@ -19,13 +19,13 @@ package configtx
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/config"
-	configmsp "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	configmsp "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 )

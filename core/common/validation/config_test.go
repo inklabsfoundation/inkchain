@@ -19,12 +19,12 @@ package validation
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx"
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	"github.com/inkchain/inkchain/common/util"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func TestValidateConfigTx(t *testing.T) {

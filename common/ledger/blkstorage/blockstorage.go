@@ -19,9 +19,9 @@ package blkstorage
 import (
 	"errors"
 
-	"github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // IndexableAttr represents an indexable attribute

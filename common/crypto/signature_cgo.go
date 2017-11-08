@@ -22,7 +22,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"fmt"
-	"github.com/inkchain/inkchain/common/crypto/secp256k1"
+	"github.com/inklabsfoundation/inkchain/common/crypto/secp256k1"
 )
 
 

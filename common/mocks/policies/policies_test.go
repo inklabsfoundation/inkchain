@@ -19,7 +19,7 @@ package policies
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/common/policies"
 )
 
 func TestPolicyManagerInterface(t *testing.T) {

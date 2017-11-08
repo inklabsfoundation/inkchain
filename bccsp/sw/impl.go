@@ -22,9 +22,9 @@ import (
 	"hash"
 	"reflect"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/errors"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/errors"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"golang.org/x/crypto/sha3"
 )
 

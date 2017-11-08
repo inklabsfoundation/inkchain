@@ -22,9 +22,9 @@ import (
 	"strconv"
 	"strings"
 
-	ledger "github.com/inkchain/inkchain/core/ledger"
+	ledger "github.com/inklabsfoundation/inkchain/core/ledger"
 
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 	logging "github.com/op/go-logging"
 )
 

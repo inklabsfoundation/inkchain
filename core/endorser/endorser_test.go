@@ -31,24 +31,24 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	mockpolicies "github.com/inkchain/inkchain/common/mocks/policies"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/core/container"
-	"github.com/inkchain/inkchain/core/peer"
-	syscc "github.com/inkchain/inkchain/core/scc"
-	"github.com/inkchain/inkchain/core/testutil"
-	"github.com/inkchain/inkchain/msp"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	pbutils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	mockpolicies "github.com/inklabsfoundation/inkchain/common/mocks/policies"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/core/container"
+	"github.com/inklabsfoundation/inkchain/core/peer"
+	syscc "github.com/inklabsfoundation/inkchain/core/scc"
+	"github.com/inklabsfoundation/inkchain/core/testutil"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	pbutils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -334,7 +334,7 @@ func deleteChaincodeOnDisk(chaincodeID string) {
 //TestDeploy deploy chaincode example01
 func TestDeploy(t *testing.T) {
 	chainID := util.GetTestChainID()
-	spec := &pb.ChaincodeSpec{Type: 1, ChaincodeId: &pb.ChaincodeID{Name: "ex01", Path: "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01", Version: "0"}, Input: &pb.ChaincodeInput{Args: [][]byte{[]byte("init"), []byte("a"), []byte("100"), []byte("b"), []byte("200")}}}
+	spec := &pb.ChaincodeSpec{Type: 1, ChaincodeId: &pb.ChaincodeID{Name: "ex01", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01", Version: "0"}, Input: &pb.ChaincodeInput{Args: [][]byte{[]byte("init"), []byte("a"), []byte("100"), []byte("b"), []byte("200")}}}
 	defer deleteChaincodeOnDisk("ex01.0")
 
 	cccid := ccprovider.NewCCContext(chainID, "ex01", "0", "", false, nil, nil)
@@ -373,7 +373,7 @@ func TestRedeploy(t *testing.T) {
 	chainID := util.GetTestChainID()
 
 	//invalid arguments
-	spec := &pb.ChaincodeSpec{Type: 1, ChaincodeId: &pb.ChaincodeID{Name: "ex02", Path: "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02", Version: "0"}, Input: &pb.ChaincodeInput{Args: [][]byte{[]byte("init"), []byte("a"), []byte("100"), []byte("b"), []byte("200")}}}
+	spec := &pb.ChaincodeSpec{Type: 1, ChaincodeId: &pb.ChaincodeID{Name: "ex02", Path: "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02", Version: "0"}, Input: &pb.ChaincodeInput{Args: [][]byte{[]byte("init"), []byte("a"), []byte("100"), []byte("b"), []byte("200")}}}
 
 	defer deleteChaincodeOnDisk("ex02.0")
 
@@ -405,7 +405,7 @@ func TestDeployAndInvoke(t *testing.T) {
 	chainID := util.GetTestChainID()
 	var ctxt = context.Background()
 
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	chaincodeID := &pb.ChaincodeID{Path: url, Name: "ex01", Version: "0"}
 
 	defer deleteChaincodeOnDisk("ex01.0")
@@ -510,8 +510,8 @@ func TestDeployAndUpgrade(t *testing.T) {
 	chainID := util.GetTestChainID()
 	var ctxt = context.Background()
 
-	url1 := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
-	url2 := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	url1 := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
+	url2 := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 	chaincodeID1 := &pb.ChaincodeID{Path: url1, Name: "upgradeex01", Version: "0"}
 	chaincodeID2 := &pb.ChaincodeID{Path: url2, Name: "upgradeex01", Version: "1"}
 
@@ -573,7 +573,7 @@ func TestWritersACLFail(t *testing.T) {
 	chainID := util.GetTestChainID()
 	var ctxt = context.Background()
 
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	chaincodeID := &pb.ChaincodeID{Path: url, Name: "ex01-fail", Version: "0"}
 
 	defer deleteChaincodeOnDisk("ex01-fail.0")
@@ -662,7 +662,7 @@ func TestAdminACLFail(t *testing.T) {
 
 	var ctxt = context.Background()
 
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	chaincodeID := &pb.ChaincodeID{Path: url, Name: "ex01-fail1", Version: "0"}
 
 	defer deleteChaincodeOnDisk("ex01-fail1.0")

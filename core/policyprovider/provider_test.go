@@ -19,7 +19,7 @@ package policyprovider
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/core/policy"
 	"github.com/stretchr/testify/assert"
 )
 

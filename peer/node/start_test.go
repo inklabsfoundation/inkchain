@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

@@ -17,9 +17,9 @@ limitations under the License.
 package config
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func applicationConfigGroup(orgID string, key string, value []byte) *cb.ConfigGroup {

@@ -22,7 +22,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/spf13/viper"
 )
 

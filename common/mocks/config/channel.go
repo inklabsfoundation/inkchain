@@ -16,7 +16,7 @@ limitations under the License.
 
 package config
 
-import "github.com/inkchain/inkchain/common/util"
+import "github.com/inklabsfoundation/inkchain/common/util"
 
 func nearIdentityHash(input []byte) []byte {
 	return util.ConcatenateBytes([]byte("FakeHash("), input, []byte(""))

@@ -19,7 +19,7 @@ package util
 import (
 	"sync"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/op/go-logging"
 )
 

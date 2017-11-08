@@ -17,7 +17,7 @@ limitations under the License.
 package consumer
 
 import (
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //EventAdapter is the interface by which a inkchain event client registers interested events and

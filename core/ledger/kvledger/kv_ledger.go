@@ -20,17 +20,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	commonledger "github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/history/historydb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/txmgr"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/txmgr/lockbasedtxmgr"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	commonledger "github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/history/historydb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr/lockbasedtxmgr"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var logger = flogging.MustGetLogger("kvledger")

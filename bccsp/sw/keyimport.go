@@ -25,8 +25,8 @@ import (
 	"crypto/x509"
 	"reflect"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/utils"
 )
 
 type aes256ImportKeyOptsKeyImporter struct{}

@@ -22,8 +22,8 @@ import (
 
 	"errors"
 
-	"github.com/inkchain/inkchain/peer/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/spf13/cobra"
 )

@@ -21,12 +21,12 @@ import (
 
 	"errors"
 
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 // PolicyChecker offers methods to check a signed proposal against a specific policy

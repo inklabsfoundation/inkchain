@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	mb "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	mb "github.com/inklabsfoundation/inkchain/protos/msp"
 
 	"github.com/op/go-logging"
 )

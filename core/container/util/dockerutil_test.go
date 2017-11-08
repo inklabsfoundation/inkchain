@@ -19,7 +19,7 @@ package util
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/metadata"
+	"github.com/inklabsfoundation/inkchain/common/metadata"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

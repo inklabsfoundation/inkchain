@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"testing"
 
-	mockconfigtx "github.com/inkchain/inkchain/common/mocks/configtx"
-	mockpolicies "github.com/inkchain/inkchain/common/mocks/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
+	mockconfigtx "github.com/inklabsfoundation/inkchain/common/mocks/configtx"
+	mockpolicies "github.com/inklabsfoundation/inkchain/common/mocks/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/stretchr/testify/assert"
 )

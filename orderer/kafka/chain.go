@@ -13,11 +13,11 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/golang/protobuf/proto"
-	localconfig "github.com/inkchain/inkchain/orderer/localconfig"
-	"github.com/inkchain/inkchain/orderer/multichain"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	localconfig "github.com/inklabsfoundation/inkchain/orderer/localconfig"
+	"github.com/inklabsfoundation/inkchain/orderer/multichain"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 // Used for capturing metrics -- see processMessagesToBlocks

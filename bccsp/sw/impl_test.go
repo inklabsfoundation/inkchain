@@ -35,9 +35,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/signer"
-	"github.com/inkchain/inkchain/bccsp/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/signer"
+	"github.com/inklabsfoundation/inkchain/bccsp/utils"
 	"golang.org/x/crypto/sha3"
 )
 

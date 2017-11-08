@@ -19,9 +19,9 @@ package localmsp
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/crypto"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 type mspSigner struct {

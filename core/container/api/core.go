@@ -21,7 +21,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/inkchain/inkchain/core/container/ccintf"
+	"github.com/inklabsfoundation/inkchain/core/container/ccintf"
 )
 
 type BuildSpecFactory func() (io.Reader, error)

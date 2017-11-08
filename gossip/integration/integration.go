@@ -23,11 +23,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/gossip"
-	"github.com/inkchain/inkchain/gossip/identity"
-	"github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/identity"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )

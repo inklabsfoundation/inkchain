@@ -50,7 +50,7 @@ func GetDevConfigDir() (string, error) {
 	}
 
 	for _, p := range filepath.SplitList(gopath) {
-		devPath := filepath.Join(p, "src/github.com/inkchain/inkchain/sampleconfig")
+		devPath := filepath.Join(p, "src/github.com/inklabsfoundation/inkchain/sampleconfig")
 		if !dirExists(devPath) {
 			continue
 		}
@@ -109,11 +109,11 @@ func TranslatePathInPlace(base string, p *string) {
 //----------------------------------------------------------------------------------
 // GetPath allows configuration strings that specify a (config-file) relative path
 //
-// For example: Assume our config is located in /etc/inkchain/inkchain/core.yaml with
+// For example: Assume our config is located in /etc/inklabsfoundation/inkchain/core.yaml with
 // a key "msp.configPath" = "msp/config.yaml".
 //
 // This function will return:
-//      GetPath("msp.configPath") -> /etc/inkchain/inkchain/msp/config.yaml
+//      GetPath("msp.configPath") -> /etc/inklabsfoundation/inkchain/msp/config.yaml
 //
 //----------------------------------------------------------------------------------
 func GetPath(key string) string {

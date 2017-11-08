@@ -22,9 +22,9 @@ import (
 
 	"os"
 
-	"github.com/inkchain/inkchain/common/configtx/test"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/common/configtx/test"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
 	"github.com/spf13/viper"
 )
 

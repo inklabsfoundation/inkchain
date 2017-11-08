@@ -20,8 +20,8 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 )
 

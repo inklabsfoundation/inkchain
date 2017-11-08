@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/util"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

@@ -20,9 +20,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/msp"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

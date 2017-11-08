@@ -23,10 +23,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/inkchain/inkchain/core/comm"
-	"github.com/inkchain/inkchain/core/deliverservice/blocksprovider"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/core/comm"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/blocksprovider"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

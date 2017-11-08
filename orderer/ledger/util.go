@@ -18,9 +18,9 @@ package ledger
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/orderer/ink"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/orderer/ink"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 var closedChan chan struct{}

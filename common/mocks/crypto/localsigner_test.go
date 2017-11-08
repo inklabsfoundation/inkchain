@@ -19,7 +19,7 @@ package crypto
 import (
 	"testing"
 
-	crypto "github.com/inkchain/inkchain/common/crypto"
+	crypto "github.com/inklabsfoundation/inkchain/common/crypto"
 )
 
 func TestLocalSignerInterface(t *testing.T) {

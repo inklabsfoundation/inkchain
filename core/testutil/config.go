@@ -26,11 +26,11 @@ import (
 	"github.com/op/go-logging"
 	"github.com/spf13/viper"
 
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 // Config the config wrapper structure

@@ -17,13 +17,13 @@ limitations under the License.
 package multichain
 
 import (
-	"github.com/inkchain/inkchain/common/config"
-	mockconfig "github.com/inkchain/inkchain/common/mocks/config"
-	"github.com/inkchain/inkchain/orderer/common/blockcutter"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	mockblockcutter "github.com/inkchain/inkchain/orderer/mocks/blockcutter"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	mockconfig "github.com/inklabsfoundation/inkchain/common/mocks/config"
+	"github.com/inklabsfoundation/inkchain/orderer/common/blockcutter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	mockblockcutter "github.com/inklabsfoundation/inkchain/orderer/mocks/blockcutter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/op/go-logging"
 )

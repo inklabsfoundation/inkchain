@@ -17,9 +17,9 @@ limitations under the License.
 package clilogging
 
 import (
-	"github.com/inkchain/inkchain/common/errors"
-	"github.com/inkchain/inkchain/peer/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/errors"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"github.com/spf13/cobra"
 )

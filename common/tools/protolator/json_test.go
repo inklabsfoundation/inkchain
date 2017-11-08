@@ -24,7 +24,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/tools/protolator/testprotos"
+	"github.com/inklabsfoundation/inkchain/common/tools/protolator/testprotos"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

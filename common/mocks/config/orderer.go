@@ -19,8 +19,8 @@ package config
 import (
 	"time"
 
-	"github.com/inkchain/inkchain/common/config"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 // Orderer is a mock implementation of config.Orderer

@@ -13,12 +13,12 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/Shopify/sarama/mocks"
-	mockconfig "github.com/inkchain/inkchain/common/mocks/config"
-	mockblockcutter "github.com/inkchain/inkchain/orderer/mocks/blockcutter"
-	mockmultichain "github.com/inkchain/inkchain/orderer/mocks/multichain"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	mockconfig "github.com/inklabsfoundation/inkchain/common/mocks/config"
+	mockblockcutter "github.com/inklabsfoundation/inkchain/orderer/mocks/blockcutter"
+	mockmultichain "github.com/inklabsfoundation/inkchain/orderer/mocks/multichain"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

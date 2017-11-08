@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"testing"
 
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	. "github.com/inkchain/inkchain/common/tools/protolator"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	. "github.com/inklabsfoundation/inkchain/common/tools/protolator"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

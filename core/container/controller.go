@@ -23,10 +23,10 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/inkchain/inkchain/core/container/api"
-	"github.com/inkchain/inkchain/core/container/ccintf"
-	"github.com/inkchain/inkchain/core/container/dockercontroller"
-	"github.com/inkchain/inkchain/core/container/inproccontroller"
+	"github.com/inklabsfoundation/inkchain/core/container/api"
+	"github.com/inklabsfoundation/inkchain/core/container/ccintf"
+	"github.com/inklabsfoundation/inkchain/core/container/dockercontroller"
+	"github.com/inklabsfoundation/inkchain/core/container/inproccontroller"
 )
 
 type refCountedLock struct {

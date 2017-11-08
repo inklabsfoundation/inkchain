@@ -23,11 +23,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 func TestMain(m *testing.M) {

@@ -20,10 +20,10 @@ import (
 	"testing"
 	"time"
 
-	mockconfig "github.com/inkchain/inkchain/common/mocks/config"
-	mockblockcutter "github.com/inkchain/inkchain/orderer/mocks/blockcutter"
-	mockmultichain "github.com/inkchain/inkchain/orderer/mocks/multichain"
-	cb "github.com/inkchain/inkchain/protos/common"
+	mockconfig "github.com/inklabsfoundation/inkchain/common/mocks/config"
+	mockblockcutter "github.com/inklabsfoundation/inkchain/orderer/mocks/blockcutter"
+	mockmultichain "github.com/inklabsfoundation/inkchain/orderer/mocks/multichain"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

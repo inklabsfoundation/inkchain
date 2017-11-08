@@ -19,8 +19,8 @@ package config
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/config/msp"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/config/msp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // ConsortiumProtos holds the config protos for the consortium config

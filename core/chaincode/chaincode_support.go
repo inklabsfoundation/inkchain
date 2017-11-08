@@ -31,16 +31,16 @@ import (
 
 	"strings"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/chaincode/platforms"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/core/container"
-	"github.com/inkchain/inkchain/core/container/api"
-	"github.com/inkchain/inkchain/core/container/ccintf"
-	"github.com/inkchain/inkchain/core/ledger"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/core/container"
+	"github.com/inklabsfoundation/inkchain/core/container/api"
+	"github.com/inklabsfoundation/inkchain/core/container/ccintf"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 type key string

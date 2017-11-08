@@ -16,7 +16,7 @@ limitations under the License.
 
 // +build ignore
 
-//go:generate -command gencerts go run $GOPATH/src/github.com/inkchain/inkchain/core/comm/testdata/certs/generate.go
+//go:generate -command gencerts go run $GOPATH/src/github.com/inklabsfoundation/inkchain/core/comm/testdata/certs/generate.go
 //go:generate gencerts -orgs 3 -child-orgs 1 -servers 1 -clients 0
 
 package testdata

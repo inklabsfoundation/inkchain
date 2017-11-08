@@ -20,18 +20,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/viperutil"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/viperutil"
 
 	"github.com/Shopify/sarama"
 	"github.com/op/go-logging"
 	"github.com/spf13/viper"
 
-	cf "github.com/inkchain/inkchain/core/config"
+	cf "github.com/inklabsfoundation/inkchain/core/config"
 
 	"path/filepath"
 
-	bccsp "github.com/inkchain/inkchain/bccsp/factory"
+	bccsp "github.com/inklabsfoundation/inkchain/bccsp/factory"
 )
 
 const (

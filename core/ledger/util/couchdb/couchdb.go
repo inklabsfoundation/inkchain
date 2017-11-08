@@ -37,7 +37,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	logging "github.com/op/go-logging"
 )
 

@@ -20,16 +20,16 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/peer"
-	"github.com/inkchain/inkchain/core/policy"
-	"github.com/inkchain/inkchain/msp/mgmt"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 // LedgerQuerier implements the ledger query functions, including:

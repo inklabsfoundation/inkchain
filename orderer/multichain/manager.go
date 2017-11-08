@@ -8,17 +8,17 @@ package multichain
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/config"
-	"github.com/inkchain/inkchain/common/configtx"
-	configtxapi "github.com/inkchain/inkchain/common/configtx/api"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	configtxapi "github.com/inklabsfoundation/inkchain/common/configtx/api"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/op/go-logging"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/crypto"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
 )
 
 var logger = logging.MustGetLogger("orderer/multichain")

@@ -17,7 +17,7 @@ limitations under the License.
 package util
 
 import (
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // TxValidationFlags is array of transaction validation codes. It is used when commiter validates block.

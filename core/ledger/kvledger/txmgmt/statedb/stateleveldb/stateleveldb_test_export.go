@@ -20,8 +20,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
 )
 
 // TestVDBEnv provides a level db backed versioned db for testing

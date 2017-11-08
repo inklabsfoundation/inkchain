@@ -21,7 +21,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/configtxgen/metadata"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/configtxgen/metadata"
 	"github.com/stretchr/testify/assert"
 )
 

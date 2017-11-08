@@ -26,10 +26,10 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/sw"
-	"github.com/inkchain/inkchain/bccsp/utils"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/sw"
+	"github.com/inklabsfoundation/inkchain/bccsp/utils"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/miekg/pkcs11"
 )
 

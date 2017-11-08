@@ -19,7 +19,7 @@ package config
 import (
 	"testing"
 
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

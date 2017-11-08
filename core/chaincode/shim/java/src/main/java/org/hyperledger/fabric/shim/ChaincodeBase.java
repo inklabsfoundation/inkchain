@@ -66,7 +66,7 @@ public abstract class ChaincodeBase implements Chaincode {
 	private int port = DEFAULT_PORT;
 	private String hostOverrideAuthority = "";
 	private boolean tlsEnabled = false;
-	private String rootCertFile = "/etc/inkchain/inkchain/peer.crt";
+	private String rootCertFile = "/etc/inklabsfoundation/inkchain/peer.crt";
 
 	private Handler handler;
 	private String id;

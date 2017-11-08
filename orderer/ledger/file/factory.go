@@ -19,9 +19,9 @@ package fileledger
 import (
 	"sync"
 
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage/fsblkstorage"
-	"github.com/inkchain/inkchain/orderer/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage/fsblkstorage"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
 )
 
 type fileLedgerFactory struct {

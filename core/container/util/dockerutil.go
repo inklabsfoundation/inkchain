@@ -21,8 +21,8 @@ import (
 	"strings"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/inkchain/inkchain/common/metadata"
-	"github.com/inkchain/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/common/metadata"
+	"github.com/inklabsfoundation/inkchain/core/config"
 	"github.com/spf13/viper"
 )
 

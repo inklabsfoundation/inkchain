@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type ecdsaPrivateKey struct {

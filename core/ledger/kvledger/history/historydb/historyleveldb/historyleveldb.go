@@ -17,18 +17,18 @@ limitations under the License.
 package historyleveldb
 
 import (
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/util/leveldbhelper"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/history/historydb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/core/wallet"
-	"github.com/inkchain/inkchain/protos/common"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util/leveldbhelper"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/history/historydb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var logger = flogging.MustGetLogger("historyleveldb")

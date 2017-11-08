@@ -19,8 +19,8 @@ package config
 import (
 	"testing"
 
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/stretchr/testify/assert"
 )

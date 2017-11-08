@@ -21,7 +21,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
 	"github.com/spf13/viper"
 )
 

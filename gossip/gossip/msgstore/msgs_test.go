@@ -24,8 +24,8 @@ import (
 
 	"sync"
 
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
 	"github.com/stretchr/testify/assert"
 )
 

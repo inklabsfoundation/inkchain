@@ -23,13 +23,13 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/inkchain/inkchain/common/tools/protolator"
+	"github.com/inklabsfoundation/inkchain/common/tools/protolator"
 
 	// Import these to register the proto types
-	_ "github.com/inkchain/inkchain/protos/common"
-	_ "github.com/inkchain/inkchain/protos/msp"
-	_ "github.com/inkchain/inkchain/protos/orderer"
-	_ "github.com/inkchain/inkchain/protos/peer"
+	_ "github.com/inklabsfoundation/inkchain/protos/common"
+	_ "github.com/inklabsfoundation/inkchain/protos/msp"
+	_ "github.com/inklabsfoundation/inkchain/protos/orderer"
+	_ "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/mux"

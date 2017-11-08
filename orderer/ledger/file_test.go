@@ -20,9 +20,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	. "github.com/inkchain/inkchain/orderer/ledger"
-	fileledger "github.com/inkchain/inkchain/orderer/ledger/file"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	. "github.com/inklabsfoundation/inkchain/orderer/ledger"
+	fileledger "github.com/inklabsfoundation/inkchain/orderer/ledger/file"
 )
 
 func init() {

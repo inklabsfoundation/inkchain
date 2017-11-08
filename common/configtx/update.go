@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/inkchain/inkchain/common/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func (c *configSet) verifyReadSet(readSet map[string]comparable) error {

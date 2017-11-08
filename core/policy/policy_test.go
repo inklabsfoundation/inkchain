@@ -19,12 +19,12 @@ package policy
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/core/policy/mocks"
-	"github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/core/policy/mocks"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

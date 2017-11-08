@@ -19,8 +19,8 @@ package chaincode
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"golang.org/x/net/context"
 )
@@ -39,7 +39,7 @@ func TestExecuteInvokeOnManyChains(t *testing.T) {
 
 	var ctxt = context.Background()
 
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 	chaincodeID := &pb.ChaincodeID{Name: "example02", Path: url, Version: "0"}
 
 	args := []string{"a", "b", "10"}

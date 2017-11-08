@@ -19,8 +19,8 @@ package msp
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 
 	"github.com/golang/protobuf/proto"
 )

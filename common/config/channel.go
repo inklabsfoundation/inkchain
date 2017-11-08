@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/common/util"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Channel config keys

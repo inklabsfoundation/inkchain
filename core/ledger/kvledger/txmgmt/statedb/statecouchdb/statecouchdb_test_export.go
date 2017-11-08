@@ -20,8 +20,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/util/couchdb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util/couchdb"
 )
 
 // TestVDBEnv provides a couch db backed versioned db for testing

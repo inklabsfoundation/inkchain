@@ -17,10 +17,10 @@ limitations under the License.
 package msptesttools
 
 import (
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 )
 
 // LoadTestMSPSetup sets up the local MSP

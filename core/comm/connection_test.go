@@ -26,8 +26,8 @@ import (
 	"testing"
 	"time"
 
-	testpb "github.com/inkchain/inkchain/core/comm/testdata/grpc"
-	"github.com/inkchain/inkchain/core/testutil"
+	testpb "github.com/inklabsfoundation/inkchain/core/comm/testdata/grpc"
+	"github.com/inklabsfoundation/inkchain/core/testutil"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"

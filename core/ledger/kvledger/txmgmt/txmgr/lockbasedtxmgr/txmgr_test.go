@@ -23,11 +23,11 @@ import (
 
 	"os"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	ledgertestutil "github.com/inkchain/inkchain/core/ledger/testutil"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	ledgertestutil "github.com/inklabsfoundation/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
 )
 
 func TestMain(m *testing.M) {

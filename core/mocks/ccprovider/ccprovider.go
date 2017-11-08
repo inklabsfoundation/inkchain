@@ -19,10 +19,10 @@ package ccprovider
 import (
 	"context"
 
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 type ExecuteChaincodeResultProvider interface {

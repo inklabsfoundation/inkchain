@@ -21,10 +21,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/common/ccpackage"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/core/common/ccpackage"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

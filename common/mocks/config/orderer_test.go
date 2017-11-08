@@ -19,7 +19,7 @@ package config
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/config"
 )
 
 func TestOrdererConfigInterface(t *testing.T) {

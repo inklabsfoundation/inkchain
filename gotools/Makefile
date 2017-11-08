@@ -35,13 +35,13 @@ all: $(GOTOOLS_BIN)
 #Use native go tools
 install:
 	@mkdir -p $(BINDIR)
-	cp /opt/gopath/src/github.com/inkchain/inkchain/gotools/bin/* $(BINDIR)
+	cp /opt/gopath/src/github.com/inklabsfoundation/inkchain/gotools/bin/* $(BINDIR)
 
 # Special override for protoc-gen-go since we want to use the version vendored with the project
 gotool.protoc-gen-go:
 	@echo "Building github.com/golang/protobuf/protoc-gen-go -> protoc-gen-go"
 	@mkdir -p $(TMP_GOPATH)/src/github.com/golang/protobuf/
-	@cp -R $(GOPATH)/src/github.com/inkchain/inkchain/vendor/github.com/golang/protobuf/* $(TMP_GOPATH)/src/github.com/golang/protobuf
+	@cp -R $(GOPATH)/src/github.com/inklabsfoundation/inkchain/vendor/github.com/golang/protobuf/* $(TMP_GOPATH)/src/github.com/golang/protobuf
 	@GOPATH=$(abspath $(TMP_GOPATH)) go install github.com/golang/protobuf/protoc-gen-go
 
 # Default rule for gotools uses the name->path map for a generic 'go get' style build

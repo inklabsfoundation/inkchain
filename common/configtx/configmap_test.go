@@ -19,7 +19,7 @@ package configtx
 import (
 	"testing"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

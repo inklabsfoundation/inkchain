@@ -18,7 +18,7 @@ package sw
 import (
 	"errors"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 // NewDummyKeyStore instantiate a dummy key store

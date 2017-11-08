@@ -20,7 +20,7 @@ import (
 
 	"crypto/sha256"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type aesPrivateKey struct {

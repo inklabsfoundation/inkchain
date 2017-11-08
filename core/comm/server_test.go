@@ -27,8 +27,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/transport"
 
-	"github.com/inkchain/inkchain/core/comm"
-	testpb "github.com/inkchain/inkchain/core/comm/testdata/grpc"
+	"github.com/inklabsfoundation/inkchain/core/comm"
+	testpb "github.com/inklabsfoundation/inkchain/core/comm/testdata/grpc"
 )
 
 //Embedded certificates for testing

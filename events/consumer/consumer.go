@@ -26,11 +26,11 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/comm"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	ehpb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/comm"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	ehpb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var consumerLogger = flogging.MustGetLogger("eventhub_consumer")

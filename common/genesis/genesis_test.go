@@ -19,8 +19,8 @@ package genesis
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

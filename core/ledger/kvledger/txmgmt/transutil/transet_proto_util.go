@@ -4,9 +4,9 @@ import (
 	"math/big"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/protos/ledger/transet"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 )
 
 type TranSet struct {

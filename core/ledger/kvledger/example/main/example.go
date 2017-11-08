@@ -20,14 +20,14 @@ import (
 	"fmt"
 	"os"
 
-	configtxtest "github.com/inkchain/inkchain/common/configtx/test"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/example"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	"github.com/inkchain/inkchain/core/ledger/ledgermgmt"
-	"github.com/inkchain/inkchain/core/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/common"
+	configtxtest "github.com/inklabsfoundation/inkchain/common/configtx/test"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/example"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgermgmt"
+	"github.com/inklabsfoundation/inkchain/core/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 	logging "github.com/op/go-logging"
 )
 

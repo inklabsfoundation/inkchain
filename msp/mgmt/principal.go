@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 const (

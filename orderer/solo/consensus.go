@@ -19,8 +19,8 @@ package solo
 import (
 	"time"
 
-	"github.com/inkchain/inkchain/orderer/multichain"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/orderer/multichain"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 	"github.com/op/go-logging"
 )
 

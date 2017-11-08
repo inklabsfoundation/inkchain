@@ -17,8 +17,8 @@ limitations under the License.
 package config
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 const (

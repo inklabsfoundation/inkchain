@@ -30,8 +30,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/utils"
 )
 
 // NewFileBasedKeyStore instantiated a file-based key store at a given position.

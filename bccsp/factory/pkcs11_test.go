@@ -19,7 +19,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp/pkcs11"
+	"github.com/inklabsfoundation/inkchain/bccsp/pkcs11"
 	"github.com/stretchr/testify/assert"
 )
 

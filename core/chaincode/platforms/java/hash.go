@@ -26,10 +26,10 @@ import (
 	"errors"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/util"
-	ccutil "github.com/inkchain/inkchain/core/chaincode/platforms/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	ccutil "github.com/inklabsfoundation/inkchain/core/chaincode/platforms/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var logger = flogging.MustGetLogger("java/hash")

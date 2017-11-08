@@ -22,8 +22,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/peer/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -66,7 +66,7 @@ func TestBadVersion(t *testing.T) {
 	cmd, _ := initInstallTest(fsPath, t)
 	defer finitInstallTest(fsPath)
 
-	args := []string{"-n", "example02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"}
+	args := []string{"-n", "example02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"}
 	cmd.SetArgs(args)
 
 	if err := cmd.Execute(); err == nil {
@@ -81,7 +81,7 @@ func TestNonExistentCC(t *testing.T) {
 	cmd, _ := initInstallTest(fsPath, t)
 	defer finitInstallTest(fsPath)
 
-	args := []string{"-n", "badexample02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/bad_example02", "-v", "testversion"}
+	args := []string{"-n", "badexample02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/bad_example02", "-v", "testversion"}
 	cmd.SetArgs(args)
 
 	if err := cmd.Execute(); err == nil {
@@ -181,7 +181,7 @@ func installEx02() error {
 	cmd := installCmd(mockCF)
 	addFlags(cmd)
 
-	args := []string{"-n", "example02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02", "-v", "anotherversion"}
+	args := []string{"-n", "example02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02", "-v", "anotherversion"}
 	cmd.SetArgs(args)
 
 	if err := cmd.Execute(); err != nil {

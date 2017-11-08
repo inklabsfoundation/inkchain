@@ -22,9 +22,9 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/crypto"
-	cb "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 )
 

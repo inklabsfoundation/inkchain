@@ -21,10 +21,10 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 
-	"github.com/inkchain/inkchain/protos/common"
-	putil "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	putil "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 func TestBlockfileMgrBlockReadWrite(t *testing.T) {

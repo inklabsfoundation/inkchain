@@ -25,11 +25,11 @@ import (
 
 	"bytes"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/core/common/ccpackage"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/core/common/ccpackage"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //----- SignedCDSData ------

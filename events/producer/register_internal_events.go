@@ -22,7 +22,7 @@ limitations under the License.
 package producer
 
 import (
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //----Event Types -----

@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/protos/ledger/rwset/kvrwset"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/rwset/kvrwset"
 )
 
 func TestTxRWSetMarshalUnmarshal(t *testing.T) {

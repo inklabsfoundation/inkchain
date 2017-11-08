@@ -20,11 +20,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
 )
 
 type provider struct {

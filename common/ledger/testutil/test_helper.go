@@ -20,13 +20,13 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/configtx/test"
-	"github.com/inkchain/inkchain/common/util"
-	lutils "github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	ptestutils "github.com/inkchain/inkchain/protos/testutils"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx/test"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	lutils "github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	ptestutils "github.com/inklabsfoundation/inkchain/protos/testutils"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 //BlockGenerator generates a series of blocks for testing

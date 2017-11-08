@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/bccsp/sw"
+	"github.com/inklabsfoundation/inkchain/bccsp/sw"
 	"github.com/stretchr/testify/assert"
 )
 

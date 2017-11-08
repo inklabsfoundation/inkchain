@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/tools/protolator/testprotos"
+	"github.com/inklabsfoundation/inkchain/common/tools/protolator/testprotos"
 
 	"github.com/stretchr/testify/assert"
 )

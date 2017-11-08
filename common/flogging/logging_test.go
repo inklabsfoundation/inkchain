@@ -20,7 +20,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"
 )

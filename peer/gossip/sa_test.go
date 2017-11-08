@@ -19,8 +19,8 @@ package gossip
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/peer/gossip/mocks"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/peer/gossip/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

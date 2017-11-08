@@ -16,7 +16,7 @@ limitations under the License.
 
 package committer
 
-import "github.com/inkchain/inkchain/protos/common"
+import "github.com/inklabsfoundation/inkchain/protos/common"
 
 // Committer is the interface supported by committers
 // The only committer is noopssinglechain committer.

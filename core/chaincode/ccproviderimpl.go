@@ -21,9 +21,9 @@ import (
 
 	"fmt"
 
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/ledger"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // ccProviderFactory implements the ccprovider.ChaincodeProviderFactory

@@ -2,9 +2,9 @@ package ledgerutil
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/transutil"
-	"github.com/inkchain/inkchain/protos/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/transutil"
+	"github.com/inklabsfoundation/inkchain/protos/ledger"
 )
 
 type LedgerSet struct {

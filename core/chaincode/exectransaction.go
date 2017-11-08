@@ -20,9 +20,9 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"golang.org/x/net/context"
 )
 

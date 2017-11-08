@@ -25,13 +25,13 @@ import (
 	"encoding/hex"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/common/crypto"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode/platforms"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // GetChaincodeInvocationSpec get the ChaincodeInvocationSpec from the proposal

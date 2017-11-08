@@ -3,10 +3,10 @@ package transutil
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/ledger/transet"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 )
 
 type TranSetBuilder struct {

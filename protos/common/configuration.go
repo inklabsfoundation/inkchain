@@ -19,7 +19,7 @@ package common
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 
 	"github.com/golang/protobuf/proto"
 )

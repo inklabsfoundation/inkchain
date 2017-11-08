@@ -21,7 +21,7 @@ import (
 
 	"time"
 
-	"github.com/inkchain/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
 )
 
 var noopLock = func() {}

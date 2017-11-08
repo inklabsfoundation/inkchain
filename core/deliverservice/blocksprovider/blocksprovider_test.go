@@ -22,11 +22,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/deliverservice/mocks"
-	"github.com/inkchain/inkchain/gossip/api"
-	common2 "github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/mocks"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	common2 "github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

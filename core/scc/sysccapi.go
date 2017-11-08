@@ -21,16 +21,16 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/container/inproccontroller"
-	"github.com/inkchain/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/container/inproccontroller"
+	"github.com/inklabsfoundation/inkchain/core/peer"
 
 	"github.com/spf13/viper"
 
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var sysccLogger = flogging.MustGetLogger("sccapi")

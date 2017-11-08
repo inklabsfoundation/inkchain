@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/deliverservice"
-	"github.com/inkchain/inkchain/core/deliverservice/blocksprovider"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/election"
-	"github.com/inkchain/inkchain/gossip/identity"
-	"github.com/inkchain/inkchain/gossip/state"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/blocksprovider"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/election"
+	"github.com/inklabsfoundation/inkchain/gossip/identity"
+	"github.com/inklabsfoundation/inkchain/gossip/state"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

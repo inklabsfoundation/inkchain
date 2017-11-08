@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package msp
 
 import (
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 // FIXME: we need better comments on the interfaces!!

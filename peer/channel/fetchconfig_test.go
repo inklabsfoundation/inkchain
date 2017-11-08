@@ -20,7 +20,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/peer/common"
+	"github.com/inklabsfoundation/inkchain/peer/common"
 	"github.com/stretchr/testify/assert"
 )
 

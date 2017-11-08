@@ -20,10 +20,10 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/bccsp/signer"
-	m "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/bccsp/signer"
+	m "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 // This is an instantiation of an MSP that

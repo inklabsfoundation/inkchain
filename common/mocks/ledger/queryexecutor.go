@@ -19,7 +19,7 @@ package ledger
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger"
 )
 
 type MockQueryExecutor struct {

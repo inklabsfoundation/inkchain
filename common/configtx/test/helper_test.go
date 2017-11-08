@@ -21,8 +21,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
 	logging "github.com/op/go-logging"
 )
 

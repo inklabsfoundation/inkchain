@@ -20,12 +20,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx"
-	configtxapi "github.com/inkchain/inkchain/common/configtx/api"
-	mockconfigtx "github.com/inkchain/inkchain/common/mocks/configtx"
-	mockcrypto "github.com/inkchain/inkchain/common/mocks/crypto"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	configtxapi "github.com/inklabsfoundation/inkchain/common/configtx/api"
+	mockconfigtx "github.com/inklabsfoundation/inkchain/common/mocks/configtx"
+	mockcrypto "github.com/inklabsfoundation/inkchain/common/mocks/crypto"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

@@ -17,19 +17,19 @@ limitations under the License.
 package multichain
 
 import (
-	"github.com/inkchain/inkchain/common/config"
-	"github.com/inkchain/inkchain/common/crypto"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/orderer/common/blockcutter"
-	"github.com/inkchain/inkchain/orderer/common/broadcast"
-	"github.com/inkchain/inkchain/orderer/common/configtxfilter"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	"github.com/inkchain/inkchain/orderer/common/sigfilter"
-	"github.com/inkchain/inkchain/orderer/common/sizefilter"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/orderer/common/blockcutter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/broadcast"
+	"github.com/inklabsfoundation/inkchain/orderer/common/configtxfilter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/sigfilter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/sizefilter"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 // Consenter defines the backing ordering mechanism

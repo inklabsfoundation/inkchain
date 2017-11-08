@@ -20,12 +20,12 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	ptestutils "github.com/inkchain/inkchain/protos/testutils"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	ptestutils "github.com/inklabsfoundation/inkchain/protos/testutils"
 )
 
 // App - a sample fund transfer app

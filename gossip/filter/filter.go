@@ -17,9 +17,9 @@ limitations under the License.
 package filter
 
 import (
-	"github.com/inkchain/inkchain/gossip/comm"
-	"github.com/inkchain/inkchain/gossip/discovery"
-	"github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/gossip/comm"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
 )
 
 // RoutingFilter defines a predicate on a NetworkMember

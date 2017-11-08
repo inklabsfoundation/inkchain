@@ -16,7 +16,7 @@ limitations under the License.
 
 package kvledger
 
-import "github.com/inkchain/inkchain/protos/common"
+import "github.com/inklabsfoundation/inkchain/protos/common"
 
 type recoverable interface {
 	// ShouldRecover return whether recovery is need.

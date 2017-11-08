@@ -21,7 +21,7 @@ import (
 	"sync"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 )
 
 var logger = flogging.MustGetLogger("common/config")

@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"testing"
 
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	cb "github.com/inkchain/inkchain/protos/common"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -21,9 +21,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"golang.org/x/net/context"
 )
@@ -46,7 +46,7 @@ func TestExecuteConcurrentInvokes(t *testing.T) {
 
 	var ctxt = context.Background()
 
-	url := "github.com/inkchain/inkchain/examples/ccchecker/chaincodes/newkeyperinvoke"
+	url := "github.com/inklabsfoundation/inkchain/examples/ccchecker/chaincodes/newkeyperinvoke"
 
 	chaincodeID := &pb.ChaincodeID{Name: "nkpi", Path: url, Version: "0"}
 

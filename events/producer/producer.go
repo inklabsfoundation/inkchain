@@ -21,8 +21,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var logger = flogging.MustGetLogger("eventhub_producer")

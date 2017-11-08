@@ -19,9 +19,9 @@ package chaincode
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/peer/common"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/peer/common"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

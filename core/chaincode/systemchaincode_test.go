@@ -22,12 +22,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/peer"
-	"github.com/inkchain/inkchain/core/scc"
-	"github.com/inkchain/inkchain/core/scc/samplesyscc"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/scc"
+	"github.com/inklabsfoundation/inkchain/core/scc/samplesyscc"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -80,7 +80,7 @@ func initSysCCTests() (*oldSysCCInfo, net.Listener, error) {
 		{
 			Enabled:   true,
 			Name:      "sample_syscc",
-			Path:      "github.com/inkchain/inkchain/core/scc/samplesyscc",
+			Path:      "github.com/inklabsfoundation/inkchain/core/scc/samplesyscc",
 			InitArgs:  [][]byte{},
 			Chaincode: &samplesyscc.SampleSysCC{},
 		},
@@ -102,7 +102,7 @@ func deploySampleSysCC(t *testing.T, ctxt context.Context, chainID string) error
 
 	defer scc.DeDeploySysCCs(chainID)
 
-	url := "github.com/inkchain/inkchain/core/scc/sample_syscc"
+	url := "github.com/inklabsfoundation/inkchain/core/scc/sample_syscc"
 
 	sysCCVers := util.GetSysCCVersion()
 

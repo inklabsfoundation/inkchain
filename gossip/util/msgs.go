@@ -19,8 +19,8 @@ package util
 import (
 	"sync"
 
-	"github.com/inkchain/inkchain/gossip/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 )
 
 // MembershipStore struct which encapsulates

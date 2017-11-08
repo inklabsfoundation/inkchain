@@ -19,9 +19,9 @@ package chaincode
 import (
 	"fmt"
 
-	protcommon "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	protcommon "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
 )

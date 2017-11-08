@@ -36,9 +36,9 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/inkchain/inkchain/core/comm"
-	"github.com/inkchain/inkchain/core/config"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/comm"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Is the configuration cached?

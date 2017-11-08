@@ -17,8 +17,8 @@ limitations under the License.
 package policies
 
 import (
-	"github.com/inkchain/inkchain/common/policies"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Policy is a mock implementation of the policies.Policy interface

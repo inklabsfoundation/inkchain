@@ -19,10 +19,10 @@ package sanitycheck
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/configtx"
-	cb "github.com/inkchain/inkchain/protos/common"
-	mspprotos "github.com/inkchain/inkchain/protos/msp"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	mspprotos "github.com/inklabsfoundation/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 )

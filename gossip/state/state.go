@@ -25,14 +25,14 @@ import (
 	"time"
 
 	pb "github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/committer"
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/comm"
-	common2 "github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/discovery"
-	"github.com/inkchain/inkchain/gossip/util"
-	"github.com/inkchain/inkchain/protos/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/core/committer"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/comm"
+	common2 "github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/op/go-logging"
 )
 

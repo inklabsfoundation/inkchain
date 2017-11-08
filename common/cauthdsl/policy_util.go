@@ -17,8 +17,8 @@ limitations under the License.
 package cauthdsl
 
 import (
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 // TemplatePolicy creates a headerless configuration item representing a policy for a given key

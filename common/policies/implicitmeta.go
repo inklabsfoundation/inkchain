@@ -19,7 +19,7 @@ package policies
 import (
 	"fmt"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 )

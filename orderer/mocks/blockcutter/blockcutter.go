@@ -17,8 +17,8 @@ limitations under the License.
 package mocks
 
 import (
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 import (

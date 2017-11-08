@@ -19,7 +19,7 @@ package mocks
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/orderer/common/blockcutter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/blockcutter"
 )
 
 func TestBlockCutterInterface(t *testing.T) {

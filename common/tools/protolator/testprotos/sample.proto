@@ -16,7 +16,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-option go_package = "github.com/inkchain/inkchain/common/tools/protolator/testprotos";
+option go_package = "github.com/inklabsfoundation/inkchain/common/tools/protolator/testprotos";
 
 package testprotos;
 

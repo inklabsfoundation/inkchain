@@ -22,11 +22,11 @@ import (
 
 	"errors"
 
-	"github.com/inkchain/inkchain/bccsp/factory"
-	configvaluesmsp "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	configvaluesmsp "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
 )
 
 // LoadLocalMsp loads the local MSP from the specified directory

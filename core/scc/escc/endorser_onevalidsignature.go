@@ -19,13 +19,13 @@ package escc
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
 )
 
 var logger = flogging.MustGetLogger("escc")

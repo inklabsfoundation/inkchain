@@ -20,8 +20,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/crypto"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -29,10 +29,10 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/peer/common"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )

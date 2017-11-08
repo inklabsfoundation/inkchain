@@ -17,9 +17,9 @@ limitations under the License.
 package fsblkstorage
 
 import (
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/util"
-	"github.com/inkchain/inkchain/common/ledger/util/leveldbhelper"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util"
+	"github.com/inklabsfoundation/inkchain/common/ledger/util/leveldbhelper"
 )
 
 // FsBlockstoreProvider provides handle to block storage - this is not thread-safe

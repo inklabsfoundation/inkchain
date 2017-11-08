@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type ECDSASignature struct {

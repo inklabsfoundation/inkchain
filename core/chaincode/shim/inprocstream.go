@@ -17,7 +17,7 @@ limitations under the License.
 package shim
 
 import (
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // PeerChaincodeStream interface for stream between Peer and chaincode instance.

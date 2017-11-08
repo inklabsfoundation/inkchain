@@ -17,7 +17,7 @@ limitations under the License.
 package sysccprovider
 
 import (
-	"github.com/inkchain/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
 )
 
 // SystemChaincodeProvider provides an abstraction layer that is

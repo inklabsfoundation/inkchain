@@ -19,7 +19,7 @@ package config
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/common/config/msp"
 
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"

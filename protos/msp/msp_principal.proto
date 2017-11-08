@@ -17,7 +17,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-option go_package = "github.com/inkchain/inkchain/protos/msp";
+option go_package = "github.com/inklabsfoundation/inkchain/protos/msp";
 option java_package = "org.inkchain.inkchain.protos.common";
 
 package common;

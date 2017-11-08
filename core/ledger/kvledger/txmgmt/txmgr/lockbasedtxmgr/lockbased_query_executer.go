@@ -17,8 +17,8 @@ limitations under the License.
 package lockbasedtxmgr
 
 import (
-	"github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/util"
 )
 
 // LockBasedQueryExecutor is a query executor used in `LockBasedTxMgr`

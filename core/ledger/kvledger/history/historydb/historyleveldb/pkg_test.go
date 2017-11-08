@@ -21,14 +21,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/blkstorage"
-	"github.com/inkchain/inkchain/common/ledger/blkstorage/fsblkstorage"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/history/historydb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb/stateleveldb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/txmgr"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/txmgr/lockbasedtxmgr"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage/fsblkstorage"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/history/historydb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb/stateleveldb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr/lockbasedtxmgr"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
 	"github.com/spf13/viper"
 )
 

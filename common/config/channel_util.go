@@ -19,9 +19,9 @@ package config
 import (
 	"math"
 
-	"github.com/inkchain/inkchain/bccsp"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 const defaultHashingAlgorithm = bccsp.SHA256

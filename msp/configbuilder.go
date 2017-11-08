@@ -27,9 +27,9 @@ import (
 
 	"os"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
 	"gopkg.in/yaml.v2"
 )
 

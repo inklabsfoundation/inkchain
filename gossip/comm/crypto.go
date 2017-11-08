@@ -28,8 +28,8 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/inkchain/inkchain/common/util"
-	gutil "github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	gutil "github.com/inklabsfoundation/inkchain/gossip/util"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"

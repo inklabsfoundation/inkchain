@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
 	"github.com/stretchr/testify/assert"
 )
 

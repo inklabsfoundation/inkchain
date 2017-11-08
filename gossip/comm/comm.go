@@ -19,9 +19,9 @@ package comm
 import (
 	"fmt"
 
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/common"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 )
 
 // Comm is an object that enables to communicate with other peers

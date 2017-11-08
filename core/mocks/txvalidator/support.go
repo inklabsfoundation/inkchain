@@ -17,11 +17,11 @@ limitations under the License.
 package support
 
 import (
-	mockpolicies "github.com/inkchain/inkchain/common/mocks/policies"
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/core/ledger"
-	"github.com/inkchain/inkchain/msp"
-	"github.com/inkchain/inkchain/protos/common"
+	mockpolicies "github.com/inklabsfoundation/inkchain/common/mocks/policies"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	"github.com/inklabsfoundation/inkchain/msp"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 type Support struct {

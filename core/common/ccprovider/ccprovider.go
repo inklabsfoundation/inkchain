@@ -28,9 +28,9 @@ import (
 
 	"bytes"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/ledger"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/ledger"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var ccproviderLogger = flogging.MustGetLogger("ccprovider")

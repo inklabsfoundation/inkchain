@@ -24,8 +24,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/gossip/util"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

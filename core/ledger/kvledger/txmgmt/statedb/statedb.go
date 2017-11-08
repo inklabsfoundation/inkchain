@@ -23,8 +23,8 @@ import (
 
 	"encoding/json"
 
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
 )
 
 // VersionedDBProvider provides an instance of an versioned DB

@@ -19,7 +19,7 @@ package policies
 import (
 	"testing"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/golang/protobuf/proto"
 	logging "github.com/op/go-logging"

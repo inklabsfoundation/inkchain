@@ -18,13 +18,13 @@ package scc
 
 import (
 	//import system chain codes here
-	"github.com/inkchain/inkchain/core/scc/ascc"
-	"github.com/inkchain/inkchain/core/scc/cscc"
-	"github.com/inkchain/inkchain/core/scc/escc"
-	"github.com/inkchain/inkchain/core/scc/lscc"
-	"github.com/inkchain/inkchain/core/scc/qscc"
-	"github.com/inkchain/inkchain/core/scc/samplesyscc"
-	"github.com/inkchain/inkchain/core/scc/vscc"
+	"github.com/inklabsfoundation/inkchain/core/scc/ascc"
+	"github.com/inklabsfoundation/inkchain/core/scc/cscc"
+	"github.com/inklabsfoundation/inkchain/core/scc/escc"
+	"github.com/inklabsfoundation/inkchain/core/scc/lscc"
+	"github.com/inklabsfoundation/inkchain/core/scc/qscc"
+	"github.com/inklabsfoundation/inkchain/core/scc/samplesyscc"
+	"github.com/inklabsfoundation/inkchain/core/scc/vscc"
 )
 
 //see systemchaincode_test.go for an example using "sample_syscc"
@@ -32,7 +32,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "cscc",
-		Path:              "github.com/inkchain/inkchain/core/scc/cscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/cscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &cscc.PeerConfiger{},
 		InvokableExternal: true, // cscc is invoked to join a channel
@@ -40,7 +40,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "lscc",
-		Path:              "github.com/inkchain/inkchain/core/scc/lscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/lscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &lscc.LifeCycleSysCC{},
 		InvokableExternal: true, // lscc is invoked to deploy new chaincodes
@@ -49,21 +49,21 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:   true,
 		Name:      "escc",
-		Path:      "github.com/inkchain/inkchain/core/scc/escc",
+		Path:      "github.com/inklabsfoundation/inkchain/core/scc/escc",
 		InitArgs:  [][]byte{[]byte("")},
 		Chaincode: &escc.EndorserOneValidSignature{},
 	},
 	{
 		Enabled:   true,
 		Name:      "vscc",
-		Path:      "github.com/inkchain/inkchain/core/scc/vscc",
+		Path:      "github.com/inklabsfoundation/inkchain/core/scc/vscc",
 		InitArgs:  [][]byte{[]byte("")},
 		Chaincode: &vscc.ValidatorOneValidSignature{},
 	},
 	{
 		Enabled:           true,
 		Name:              "qscc",
-		Path:              "github.com/inkchain/inkchain/core/chaincode/qscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/chaincode/qscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &qscc.LedgerQuerier{},
 		InvokableExternal: true, // qscc can be invoked to retrieve blocks
@@ -72,7 +72,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "ascc",
-		Path:              "github.com/inkchain/inkchain/core/scc/tscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/tscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &ascc.AssetSysCC{},
 		InvokableExternal: true, // ascc is invoked for token management
@@ -80,7 +80,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "samplesyscc",
-		Path:              "github.com/inkchain/inkchain/core/scc/samplesyscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/samplesyscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &samplesyscc.SampleSysCC{},
 		InvokableExternal: true,

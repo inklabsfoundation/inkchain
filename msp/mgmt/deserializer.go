@@ -20,8 +20,8 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/msp"
-	mspproto "github.com/inkchain/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspproto "github.com/inklabsfoundation/inkchain/protos/msp"
 )
 
 // DeserializersManager is a support interface to

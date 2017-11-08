@@ -21,9 +21,9 @@ import (
 	"os"
 	"testing"
 
-	msp2 "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
+	msp2 "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -17,8 +17,8 @@ limitations under the License.
 package validator
 
 import (
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 // Validator validates a ledgerset

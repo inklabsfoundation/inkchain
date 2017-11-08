@@ -19,7 +19,7 @@ package clilogging
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/peer/common"
+	"github.com/inklabsfoundation/inkchain/peer/common"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )

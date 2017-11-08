@@ -25,9 +25,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/inkchain/inkchain/core/chaincode/platforms/util"
-	cutil "github.com/inkchain/inkchain/core/container/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms/util"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Platform for the CAR type

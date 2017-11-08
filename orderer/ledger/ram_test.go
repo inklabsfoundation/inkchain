@@ -17,9 +17,9 @@ limitations under the License.
 package ledger_test
 
 import (
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	. "github.com/inkchain/inkchain/orderer/ledger"
-	ramledger "github.com/inkchain/inkchain/orderer/ledger/ram"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	. "github.com/inklabsfoundation/inkchain/orderer/ledger"
+	ramledger "github.com/inklabsfoundation/inkchain/orderer/ledger/ram"
 )
 
 func init() {

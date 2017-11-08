@@ -19,7 +19,7 @@ package ledgerconfig
 import (
 	"path/filepath"
 
-	"github.com/inkchain/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/core/config"
 	"github.com/spf13/viper"
 )
 

@@ -19,10 +19,10 @@ package config
 import (
 	"testing"
 
-	mspconfig "github.com/inkchain/inkchain/common/config/msp"
-	inkchainconfig "github.com/inkchain/inkchain/core/config"
-	"github.com/inkchain/inkchain/msp"
-	mspprotos "github.com/inkchain/inkchain/protos/msp"
+	mspconfig "github.com/inklabsfoundation/inkchain/common/config/msp"
+	inkchainconfig "github.com/inklabsfoundation/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspprotos "github.com/inklabsfoundation/inkchain/protos/msp"
 	"github.com/stretchr/testify/assert"
 )
 

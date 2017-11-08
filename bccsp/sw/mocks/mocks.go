@@ -21,7 +21,7 @@ import (
 	"hash"
 	"reflect"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type Encryptor struct {

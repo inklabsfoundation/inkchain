@@ -18,8 +18,8 @@ package core
 
 import (
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/inkchain/inkchain/common/flogging"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"golang.org/x/net/context"
 )
 

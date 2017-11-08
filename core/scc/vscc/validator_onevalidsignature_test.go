@@ -27,26 +27,26 @@ import (
 	"bytes"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/cauthdsl"
-	lm "github.com/inkchain/inkchain/common/mocks/ledger"
-	"github.com/inkchain/inkchain/common/mocks/scc"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/ccpackage"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/common/sysccprovider"
-	cutils "github.com/inkchain/inkchain/core/container/util"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
-	per "github.com/inkchain/inkchain/core/peer"
-	"github.com/inkchain/inkchain/core/policy"
-	"github.com/inkchain/inkchain/core/scc/lscc"
-	"github.com/inkchain/inkchain/msp"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/protos/common"
-	mspproto "github.com/inkchain/inkchain/protos/msp"
-	"github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
+	lm "github.com/inklabsfoundation/inkchain/common/mocks/ledger"
+	"github.com/inklabsfoundation/inkchain/common/mocks/scc"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/ccpackage"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/common/sysccprovider"
+	cutils "github.com/inklabsfoundation/inkchain/core/container/util"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
+	per "github.com/inklabsfoundation/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/core/scc/lscc"
+	"github.com/inklabsfoundation/inkchain/msp"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	mspproto "github.com/inklabsfoundation/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -798,7 +798,7 @@ func TestAlreadyDeployed(t *testing.T) {
 
 	ccname := "mycc"
 	ccver := "1"
-	path := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	path := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	ppath := lccctestpath + "/" + ccname + "." + ccver
 
@@ -1117,7 +1117,7 @@ func TestValidateUpgradeOK(t *testing.T) {
 
 	ccname := "mycc"
 	ccver := "1"
-	path := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	path := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	ppath := lccctestpath + "/" + ccname + "." + ccver
 
@@ -1194,7 +1194,7 @@ func TestInvalidateUpgradeBadVersion(t *testing.T) {
 
 	ccname := "mycc"
 	ccver := "1"
-	path := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	path := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	ppath := lccctestpath + "/" + ccname + "." + ccver
 
@@ -1269,7 +1269,7 @@ func TestValidateUpgradeWithPoliciesOK(t *testing.T) {
 
 	ccname := "mycc"
 	ccver := "1"
-	path := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	path := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	ppath := lccctestpath + "/" + ccname + "." + ccver
 
@@ -1348,7 +1348,7 @@ func TestValidateUpgradeWithPoliciesFail(t *testing.T) {
 
 	ccname := "mycc"
 	ccver := "1"
-	path := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	path := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	ppath := lccctestpath + "/" + ccname + "." + ccver
 

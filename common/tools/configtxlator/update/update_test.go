@@ -19,7 +19,7 @@ package update
 import (
 	"testing"
 
-	cb "github.com/inkchain/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 	"github.com/stretchr/testify/assert"
 )

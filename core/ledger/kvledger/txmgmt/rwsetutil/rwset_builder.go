@@ -17,10 +17,10 @@ limitations under the License.
 package rwsetutil
 
 import (
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/core/ledger/util"
-	"github.com/inkchain/inkchain/protos/ledger/rwset/kvrwset"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/rwset/kvrwset"
 )
 
 var logger = flogging.MustGetLogger("rwsetutil")

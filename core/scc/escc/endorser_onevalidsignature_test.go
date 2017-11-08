@@ -23,14 +23,14 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/core/common/validation"
-	mspmgmt "github.com/inkchain/inkchain/msp/mgmt"
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/common/validation"
+	mspmgmt "github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -28,11 +28,11 @@ import (
 	"math/big"
 
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/wallet"
-	"github.com/inkchain/inkchain/protos/ledger/queryresult"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/queryresult"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/op/go-logging"
 )
 

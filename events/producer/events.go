@@ -21,7 +21,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //---- event hub framework ----

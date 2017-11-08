@@ -19,7 +19,7 @@ package peer
 import (
 	"encoding/json"
 
-	"github.com/inkchain/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/common/util"
 )
 
 type strArgs struct {

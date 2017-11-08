@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 )
 
 func TestBuffer(t *testing.T) {

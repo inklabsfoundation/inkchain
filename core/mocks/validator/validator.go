@@ -17,8 +17,8 @@ limitations under the License.
 package validator
 
 import (
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // MockValidator implements a mock validation useful for testing

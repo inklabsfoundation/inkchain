@@ -27,14 +27,14 @@ import (
 
 	"io/ioutil"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/common/metadata"
-	"github.com/inkchain/inkchain/core/chaincode/platforms/car"
-	"github.com/inkchain/inkchain/core/chaincode/platforms/golang"
-	"github.com/inkchain/inkchain/core/chaincode/platforms/java"
-	"github.com/inkchain/inkchain/core/config"
-	cutil "github.com/inkchain/inkchain/core/container/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/common/metadata"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms/car"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms/golang"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms/java"
+	"github.com/inklabsfoundation/inkchain/core/config"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/spf13/viper"
 )
 
@@ -126,7 +126,7 @@ func generateDockerfile(platform Platform, cds *pb.ChaincodeDeploymentSpec, tls 
 	buf = append(buf, fmt.Sprintf("ENV CORE_CHAINCODE_BUILDLEVEL=%s", metadata.Version))
 
 	if tls {
-		const guestTLSPath = "/etc/inkchain/inkchain/peer.crt"
+		const guestTLSPath = "/etc/inklabsfoundation/inkchain/peer.crt"
 
 		buf = append(buf, "ENV CORE_PEER_TLS_ROOTCERT_FILE="+guestTLSPath)
 		buf = append(buf, "COPY peer.crt "+guestTLSPath)

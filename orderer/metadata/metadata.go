@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"runtime"
 
-	common "github.com/inkchain/inkchain/common/metadata"
+	common "github.com/inklabsfoundation/inkchain/common/metadata"
 )
 
 // package-scoped variables

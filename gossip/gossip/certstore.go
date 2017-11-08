@@ -21,12 +21,12 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/inkchain/inkchain/gossip/api"
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/gossip/pull"
-	"github.com/inkchain/inkchain/gossip/identity"
-	"github.com/inkchain/inkchain/gossip/util"
-	proto "github.com/inkchain/inkchain/protos/gossip"
+	"github.com/inklabsfoundation/inkchain/gossip/api"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/gossip/pull"
+	"github.com/inklabsfoundation/inkchain/gossip/identity"
+	"github.com/inklabsfoundation/inkchain/gossip/util"
+	proto "github.com/inklabsfoundation/inkchain/protos/gossip"
 	"github.com/op/go-logging"
 )
 

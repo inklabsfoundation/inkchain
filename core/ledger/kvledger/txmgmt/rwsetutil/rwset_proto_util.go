@@ -18,9 +18,9 @@ package rwsetutil
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/protos/ledger/rwset"
-	"github.com/inkchain/inkchain/protos/ledger/rwset/kvrwset"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/rwset"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/rwset/kvrwset"
 )
 
 // TxRwSet acts as a proxy of 'rwset.TxReadWriteSet' proto message and helps constructing Read-write set specifically for KV data model

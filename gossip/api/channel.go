@@ -17,7 +17,7 @@ limitations under the License.
 package api
 
 import (
-	"github.com/inkchain/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
 )
 
 func init() {

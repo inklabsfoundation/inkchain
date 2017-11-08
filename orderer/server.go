@@ -17,12 +17,12 @@ limitations under the License.
 package main
 
 import (
-	"github.com/inkchain/inkchain/common/crypto"
-	"github.com/inkchain/inkchain/orderer/common/broadcast"
-	"github.com/inkchain/inkchain/orderer/common/deliver"
-	"github.com/inkchain/inkchain/orderer/configupdate"
-	"github.com/inkchain/inkchain/orderer/multichain"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	"github.com/inklabsfoundation/inkchain/orderer/common/broadcast"
+	"github.com/inklabsfoundation/inkchain/orderer/common/deliver"
+	"github.com/inklabsfoundation/inkchain/orderer/configupdate"
+	"github.com/inklabsfoundation/inkchain/orderer/multichain"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 
 	"runtime/debug"
 )

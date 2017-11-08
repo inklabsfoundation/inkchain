@@ -21,10 +21,10 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	configtxtest "github.com/inkchain/inkchain/common/configtx/test"
-	"github.com/inkchain/inkchain/protos/common"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	configtxtest "github.com/inklabsfoundation/inkchain/common/configtx/test"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

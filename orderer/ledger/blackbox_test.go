@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"testing"
 
-	. "github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	. "github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 type ledgerTestable interface {

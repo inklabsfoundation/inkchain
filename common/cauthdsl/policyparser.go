@@ -23,9 +23,9 @@ import (
 	"strconv"
 
 	"github.com/Knetic/govaluate"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/msp"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/msp"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var regex *regexp.Regexp = regexp.MustCompile("^([[:alnum:]]+)([.])(member|admin)$")

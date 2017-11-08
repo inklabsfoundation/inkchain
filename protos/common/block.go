@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/inkchain/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/common/util"
 )
 
 // NewBlock construct a block with no data and no metadata.

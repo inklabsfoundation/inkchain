@@ -20,9 +20,9 @@ import (
 	"crypto/ecdsa"
 	"crypto/x509"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/factory"
-	"github.com/inkchain/inkchain/bccsp/signer"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/factory"
+	"github.com/inklabsfoundation/inkchain/bccsp/signer"
 )
 
 // GeneratePrivateKey creates a private key and stores it in keystorePath

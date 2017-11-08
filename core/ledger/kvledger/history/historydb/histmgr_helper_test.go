@@ -19,7 +19,7 @@ package historydb
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
 )
 
 var strKeySep = string(compositeKeySep)

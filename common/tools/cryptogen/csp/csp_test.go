@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/common/tools/cryptogen/csp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/common/tools/cryptogen/csp"
 	"github.com/stretchr/testify/assert"
 )
 

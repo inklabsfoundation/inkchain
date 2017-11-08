@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	"github.com/inkchain/inkchain/core/ledger/ledgermgmt"
-	ccprovider2 "github.com/inkchain/inkchain/core/mocks/ccprovider"
-	"github.com/inkchain/inkchain/core/peer"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgermgmt"
+	ccprovider2 "github.com/inklabsfoundation/inkchain/core/mocks/ccprovider"
+	"github.com/inklabsfoundation/inkchain/core/peer"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

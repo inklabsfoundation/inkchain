@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"testing"
 
-	mockconfigtx "github.com/inkchain/inkchain/common/mocks/configtx"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	cb "github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/utils"
+	mockconfigtx "github.com/inklabsfoundation/inkchain/common/mocks/configtx"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

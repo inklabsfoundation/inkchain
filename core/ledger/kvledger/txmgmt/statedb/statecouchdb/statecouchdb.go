@@ -26,11 +26,11 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/statedb"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/version"
-	"github.com/inkchain/inkchain/core/ledger/ledgerconfig"
-	"github.com/inkchain/inkchain/core/ledger/util/couchdb"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/version"
+	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/ledger/util/couchdb"
 )
 
 var logger = flogging.MustGetLogger("statecouchdb")

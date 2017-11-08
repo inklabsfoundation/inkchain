@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

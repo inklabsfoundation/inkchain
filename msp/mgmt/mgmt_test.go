@@ -19,8 +19,8 @@ package mgmt
 import (
 	"testing"
 
-	configvaluesmsp "github.com/inkchain/inkchain/common/config/msp"
-	"github.com/inkchain/inkchain/msp"
+	configvaluesmsp "github.com/inklabsfoundation/inkchain/common/config/msp"
+	"github.com/inklabsfoundation/inkchain/msp"
 	"github.com/stretchr/testify/assert"
 )
 

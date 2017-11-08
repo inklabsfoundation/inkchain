@@ -19,7 +19,7 @@ package msp
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/core/config"
 	"github.com/stretchr/testify/assert"
 )
 

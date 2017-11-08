@@ -19,8 +19,8 @@ package configtx
 import (
 	"testing"
 
-	configtxapi "github.com/inkchain/inkchain/common/configtx/api"
-	"github.com/inkchain/inkchain/common/policies"
+	configtxapi "github.com/inklabsfoundation/inkchain/common/configtx/api"
+	"github.com/inklabsfoundation/inkchain/common/policies"
 )
 
 func TestConfigtxTransactionalInterface(t *testing.T) {

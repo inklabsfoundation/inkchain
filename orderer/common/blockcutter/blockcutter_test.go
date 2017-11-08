@@ -20,10 +20,10 @@ import (
 	"bytes"
 	"testing"
 
-	mockconfig "github.com/inkchain/inkchain/common/mocks/config"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	mockconfig "github.com/inklabsfoundation/inkchain/common/mocks/config"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 	logging "github.com/op/go-logging"
 )
 

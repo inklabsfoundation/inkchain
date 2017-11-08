@@ -19,7 +19,7 @@ package clilogging
 import (
 	"golang.org/x/net/context"
 
-	pb "github.com/inkchain/inkchain/protos/peer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 
 	"github.com/spf13/cobra"
 )

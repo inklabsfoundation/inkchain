@@ -27,7 +27,7 @@ import (
 
 	"errors"
 
-	"github.com/inkchain/inkchain/bccsp/sw"
+	"github.com/inklabsfoundation/inkchain/bccsp/sw"
 )
 
 type dsaSignature struct {

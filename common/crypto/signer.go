@@ -16,7 +16,7 @@ limitations under the License.
 
 package crypto
 
-import cb "github.com/inkchain/inkchain/protos/common"
+import cb "github.com/inklabsfoundation/inkchain/protos/common"
 
 // LocalSigner is a temporary stub interface which will be implemented by the local MSP
 type LocalSigner interface {

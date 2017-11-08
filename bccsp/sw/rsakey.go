@@ -27,7 +27,7 @@ import (
 	"encoding/asn1"
 	"math/big"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 // rsaPublicKey reflects the ASN.1 structure of a PKCS#1 public key.

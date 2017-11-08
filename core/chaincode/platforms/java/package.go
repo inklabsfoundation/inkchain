@@ -23,8 +23,8 @@ import (
 
 	"errors"
 
-	cutil "github.com/inkchain/inkchain/core/container/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //tw is expected to have the chaincode in it from GenerateHashcode.

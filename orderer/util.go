@@ -21,12 +21,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/inkchain/inkchain/common/ledger/blkstorage/fsblkstorage"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	fileledger "github.com/inkchain/inkchain/orderer/ledger/file"
-	jsonledger "github.com/inkchain/inkchain/orderer/ledger/json"
-	ramledger "github.com/inkchain/inkchain/orderer/ledger/ram"
-	config "github.com/inkchain/inkchain/orderer/localconfig"
+	"github.com/inklabsfoundation/inkchain/common/ledger/blkstorage/fsblkstorage"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	fileledger "github.com/inklabsfoundation/inkchain/orderer/ledger/file"
+	jsonledger "github.com/inklabsfoundation/inkchain/orderer/ledger/json"
+	ramledger "github.com/inklabsfoundation/inkchain/orderer/ledger/ram"
+	config "github.com/inklabsfoundation/inkchain/orderer/localconfig"
 )
 
 func createLedgerFactory(conf *config.TopLevel) (ledger.Factory, string) {

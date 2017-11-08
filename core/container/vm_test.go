@@ -21,9 +21,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/testutil"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/testutil"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )
@@ -53,7 +53,7 @@ func TestVM_BuildImage_ChaincodeLocal(t *testing.T) {
 		return
 	}
 	// Build the spec
-	chaincodePath := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	chaincodePath := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	spec := &pb.ChaincodeSpec{Type: pb.ChaincodeSpec_GOLANG,
 		ChaincodeId: &pb.ChaincodeID{Name: "ex01", Path: chaincodePath},
 		Input:       &pb.ChaincodeInput{Args: util.ToChaincodeArgs("f")}}

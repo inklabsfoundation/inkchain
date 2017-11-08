@@ -22,9 +22,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp"
-	"github.com/inkchain/inkchain/bccsp/mocks"
-	"github.com/inkchain/inkchain/bccsp/utils"
+	"github.com/inklabsfoundation/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp/mocks"
+	"github.com/inklabsfoundation/inkchain/bccsp/utils"
 	"github.com/stretchr/testify/assert"
 )
 

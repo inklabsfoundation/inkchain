@@ -22,8 +22,8 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/inkchain/inkchain/msp/mgmt"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 type handler struct {

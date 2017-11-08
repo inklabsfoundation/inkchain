@@ -19,9 +19,9 @@ package service
 import (
 	"reflect"
 
-	"github.com/inkchain/inkchain/common/config"
+	"github.com/inklabsfoundation/inkchain/common/config"
 
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Config enumerates the configuration methods required by gossip

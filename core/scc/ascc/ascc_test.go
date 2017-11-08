@@ -2,7 +2,7 @@ package ascc
 
 import (
 	"testing"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	"fmt"
 	"strconv"
 )

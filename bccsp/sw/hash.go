@@ -19,7 +19,7 @@ package sw
 import (
 	"hash"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 )
 
 type hasher struct {

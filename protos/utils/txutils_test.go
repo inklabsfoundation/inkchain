@@ -12,11 +12,11 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	mockmsp "github.com/inkchain/inkchain/common/mocks/msp"
-	"github.com/inkchain/inkchain/common/util"
-	cb "github.com/inkchain/inkchain/protos/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	"github.com/inkchain/inkchain/protos/utils"
+	mockmsp "github.com/inklabsfoundation/inkchain/common/mocks/msp"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/stretchr/testify/assert"
 )
 

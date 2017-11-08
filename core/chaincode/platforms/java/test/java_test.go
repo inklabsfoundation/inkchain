@@ -20,10 +20,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/container"
-	"github.com/inkchain/inkchain/core/testutil"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/container"
+	"github.com/inklabsfoundation/inkchain/core/testutil"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 func TestMain(m *testing.M) {

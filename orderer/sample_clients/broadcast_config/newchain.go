@@ -17,9 +17,9 @@ limitations under the License.
 package main
 
 import (
-	"github.com/inkchain/inkchain/common/configtx"
-	genesisconfig "github.com/inkchain/inkchain/common/configtx/tool/localconfig"
-	cb "github.com/inkchain/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/common/configtx"
+	genesisconfig "github.com/inklabsfoundation/inkchain/common/configtx/tool/localconfig"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
 )
 
 func newChainRequest(consensusType, creationPolicy, newChannelId string) *cb.Envelope {

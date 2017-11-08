@@ -19,11 +19,11 @@ package lockbasedtxmgr
 import (
 	"errors"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
-	"github.com/inkchain/inkchain/core/wallet"
-	"github.com/inkchain/inkchain/protos/ledger/transet"
-	"github.com/inkchain/inkchain/protos/ledger/transet/kvtranset"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 )
 
 // LockBasedTxSimulator is a transaction simulator used in `LockBasedTxMgr`

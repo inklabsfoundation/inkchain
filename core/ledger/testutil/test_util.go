@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inkchain/inkchain/core/config"
+	"github.com/inklabsfoundation/inkchain/core/config"
 	"github.com/op/go-logging"
 	"github.com/spf13/viper"
 )

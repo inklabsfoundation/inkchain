@@ -21,9 +21,9 @@ package config
 import (
 	"time"
 
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // Org stores the common organizational config

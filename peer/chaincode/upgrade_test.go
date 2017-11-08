@@ -22,9 +22,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/inkchain/inkchain/msp/mgmt/testtools"
-	"github.com/inkchain/inkchain/peer/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/msp/mgmt/testtools"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 var once sync.Once
@@ -67,7 +67,7 @@ func TestUpgradeCmd(t *testing.T) {
 	cmd := upgradeCmd(mockCF)
 	addFlags(cmd)
 
-	args := []string{"-n", "example02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02",
+	args := []string{"-n", "example02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02",
 		"-v", "anotherversion", "-c", "{\"Function\":\"init\",\"Args\": [\"param\",\"1\"]}"}
 	cmd.SetArgs(args)
 
@@ -101,7 +101,7 @@ func TestUpgradeCmdEndorseFail(t *testing.T) {
 	cmd := upgradeCmd(mockCF)
 	addFlags(cmd)
 
-	args := []string{"-n", "example02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02",
+	args := []string{"-n", "example02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02",
 		"-v", "anotherversion", "-c", "{\"Function\":\"init\",\"Args\": [\"param\",\"1\"]}"}
 	cmd.SetArgs(args)
 
@@ -142,7 +142,7 @@ func TestUpgradeCmdSendTXFail(t *testing.T) {
 	cmd := upgradeCmd(mockCF)
 	addFlags(cmd)
 
-	args := []string{"-n", "example02", "-p", "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02", "-v", "anotherversion", "-c", "{\"Function\":\"init\",\"Args\": [\"param\",\"1\"]}"}
+	args := []string{"-n", "example02", "-p", "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02", "-v", "anotherversion", "-c", "{\"Function\":\"init\",\"Args\": [\"param\",\"1\"]}"}
 	cmd.SetArgs(args)
 
 	expectErrMsg := sendErr.Error()

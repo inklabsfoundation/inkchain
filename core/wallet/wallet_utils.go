@@ -10,10 +10,10 @@ import (
 	"crypto/sha256"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/common/crypto"
-	"github.com/inkchain/inkchain/common/crypto/secp256k1"
-	"github.com/inkchain/inkchain/common/crypto/sha3"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/crypto"
+	"github.com/inklabsfoundation/inkchain/common/crypto/secp256k1"
+	"github.com/inklabsfoundation/inkchain/common/crypto/sha3"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 //--------------------------------------

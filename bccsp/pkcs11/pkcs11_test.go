@@ -23,7 +23,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/inkchain/inkchain/bccsp"
+	"github.com/inklabsfoundation/inkchain/bccsp"
 	"github.com/miekg/pkcs11"
 	"github.com/stretchr/testify/assert"
 )

@@ -22,8 +22,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/inkchain/inkchain/peer/common"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/peer/common"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 )
 

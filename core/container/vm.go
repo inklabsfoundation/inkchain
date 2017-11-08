@@ -23,10 +23,10 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/fsouza/go-dockerclient"
-	"github.com/inkchain/inkchain/common/flogging"
-	"github.com/inkchain/inkchain/core/chaincode/platforms"
-	cutil "github.com/inkchain/inkchain/core/container/util"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
+	cutil "github.com/inklabsfoundation/inkchain/core/container/util"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // VM implemenation of VM management functionality.

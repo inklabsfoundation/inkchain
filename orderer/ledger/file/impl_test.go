@@ -22,12 +22,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/configtx/tool/provisional"
-	cl "github.com/inkchain/inkchain/common/ledger"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/configtx/tool/provisional"
+	cl "github.com/inklabsfoundation/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 	logging "github.com/op/go-logging"
 	"github.com/stretchr/testify/assert"
 )

@@ -19,7 +19,7 @@ package fsblkstorage
 import (
 	"sync"
 
-	"github.com/inkchain/inkchain/common/ledger"
+	"github.com/inklabsfoundation/inkchain/common/ledger"
 )
 
 // blocksItr - an iterator for iterating over a sequence of blocks

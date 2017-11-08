@@ -16,7 +16,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-option go_package = "github.com/inkchain/inkchain/protos/ledger/transet/kvtranset";
+option go_package = "github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset";
 option java_package = "org.inkchain.inkchain.protos.ledger.transet.kvtranset";
 
 package kvtranset;

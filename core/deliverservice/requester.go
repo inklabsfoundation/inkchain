@@ -19,11 +19,11 @@ package deliverclient
 import (
 	"math"
 
-	"github.com/inkchain/inkchain/common/localmsp"
-	"github.com/inkchain/inkchain/core/deliverservice/blocksprovider"
-	"github.com/inkchain/inkchain/protos/common"
-	"github.com/inkchain/inkchain/protos/orderer"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/localmsp"
+	"github.com/inklabsfoundation/inkchain/core/deliverservice/blocksprovider"
+	"github.com/inklabsfoundation/inkchain/protos/common"
+	"github.com/inklabsfoundation/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 type blocksRequester struct {

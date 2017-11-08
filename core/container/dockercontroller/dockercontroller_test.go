@@ -33,12 +33,12 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/inkchain/inkchain/common/ledger/testutil"
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/chaincode/platforms"
-	"github.com/inkchain/inkchain/core/container/ccintf"
-	coreutil "github.com/inkchain/inkchain/core/testutil"
-	pb "github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/ledger/testutil"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
+	"github.com/inklabsfoundation/inkchain/core/container/ccintf"
+	coreutil "github.com/inklabsfoundation/inkchain/core/testutil"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 func TestHostConfig(t *testing.T) {
@@ -122,7 +122,7 @@ func Test_Start(t *testing.T) {
 	err = dvm.Start(ctx, ccid, args, env, nil, nil)
 	testerr(t, err, false)
 
-	chaincodePath := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	chaincodePath := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	spec := &pb.ChaincodeSpec{Type: pb.ChaincodeSpec_GOLANG,
 		ChaincodeId: &pb.ChaincodeID{Name: "ex01", Path: chaincodePath},
 		Input:       &pb.ChaincodeInput{Args: util.ToChaincodeArgs("f")}}

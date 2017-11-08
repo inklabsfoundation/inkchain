@@ -19,8 +19,8 @@ package filter
 import (
 	"testing"
 
-	"github.com/inkchain/inkchain/gossip/common"
-	"github.com/inkchain/inkchain/gossip/discovery"
+	"github.com/inklabsfoundation/inkchain/gossip/common"
+	"github.com/inklabsfoundation/inkchain/gossip/discovery"
 	"github.com/stretchr/testify/assert"
 )
 

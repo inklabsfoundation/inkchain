@@ -22,8 +22,8 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/inkchain/inkchain/core/chaincode/shim"
-	"github.com/inkchain/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

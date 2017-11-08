@@ -17,9 +17,9 @@ limitations under the License.
 package sizefilter
 
 import (
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 	logging "github.com/op/go-logging"
 )
 

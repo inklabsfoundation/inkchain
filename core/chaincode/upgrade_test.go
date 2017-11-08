@@ -21,10 +21,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/inkchain/inkchain/common/util"
-	"github.com/inkchain/inkchain/core/common/ccprovider"
-	pb "github.com/inkchain/inkchain/protos/peer"
-	putils "github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/common/util"
+	"github.com/inklabsfoundation/inkchain/core/common/ccprovider"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
@@ -140,7 +140,7 @@ func TestUpgradeCC(t *testing.T) {
 	var ctxt = context.Background()
 
 	ccName := "mycc"
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example01"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example01"
 	chaincodeID := &pb.ChaincodeID{Name: ccName, Path: url, Version: "0"}
 
 	f := "init"
@@ -181,7 +181,7 @@ func TestUpgradeCC(t *testing.T) {
 
 	//now upgrade to example02 which takes the same args as example01 but inits state vars
 	//and also allows query.
-	url = "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	url = "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	//Note ccName hasn't changed...
 	chaincodeID = &pb.ChaincodeID{Name: ccName, Path: url, Version: "1"}
@@ -234,7 +234,7 @@ func TestInvalUpgradeCC(t *testing.T) {
 	var ctxt = context.Background()
 
 	ccName := "mycc"
-	url := "github.com/inkchain/inkchain/examples/chaincode/go/chaincode_example02"
+	url := "github.com/inklabsfoundation/inkchain/examples/chaincode/go/chaincode_example02"
 
 	f := "init"
 	args := util.ToChaincodeArgs(f, "a", "100", "b", "200")

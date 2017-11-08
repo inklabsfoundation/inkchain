@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inkchain/inkchain/common/config/msp"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/config/msp"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
 
 const (

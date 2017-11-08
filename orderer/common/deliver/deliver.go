@@ -19,16 +19,16 @@ package deliver
 import (
 	"io"
 
-	"github.com/inkchain/inkchain/common/policies"
-	"github.com/inkchain/inkchain/orderer/common/filter"
-	"github.com/inkchain/inkchain/orderer/common/sigfilter"
-	"github.com/inkchain/inkchain/orderer/ledger"
-	cb "github.com/inkchain/inkchain/protos/common"
-	ab "github.com/inkchain/inkchain/protos/orderer"
+	"github.com/inklabsfoundation/inkchain/common/policies"
+	"github.com/inklabsfoundation/inkchain/orderer/common/filter"
+	"github.com/inklabsfoundation/inkchain/orderer/common/sigfilter"
+	"github.com/inklabsfoundation/inkchain/orderer/ledger"
+	cb "github.com/inklabsfoundation/inkchain/protos/common"
+	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 	"github.com/op/go-logging"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/inkchain/inkchain/protos/utils"
+	"github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var logger = logging.MustGetLogger("orderer/common/deliver")

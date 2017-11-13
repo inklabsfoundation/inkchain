@@ -18,7 +18,6 @@ package ledger
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/inklabsfoundation/inkchain/orderer/ink"
 	cb "github.com/inklabsfoundation/inkchain/protos/common"
 	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
 )
@@ -81,114 +80,6 @@ func CreateNextBlock(rl Reader, messages []*cb.Envelope) *cb.Block {
 
 	block := cb.NewBlock(nextBlockNumber, previousBlockHash)
 	block.Header.DataHash = data.Hash()
-	block.Data = data
-
-	return block
-}
-
-func CreateNextBlockBySolo(rl Reader, messages []*cb.Envelope) *cb.Block {
-	var nextBlockNumber uint64
-	var previousBlockHash []byte
-
-	// ink alloc
-
-	soloAccounts := ink.GetSoloAccounts()
-	allocProportion := float32(1 / len(soloAccounts))
-	inkDistPolicy := &cb.InkDistPolicy{}
-	var recipientGroup []*cb.InkRecipient
-	for _, v := range soloAccounts {
-		inkRecipient := &cb.InkRecipient{}
-		inkRecipient.Recipient = v
-		inkRecipient.Share = allocProportion
-		recipientGroup = append(recipientGroup, inkRecipient)
-	}
-	inkDistPolicy.Group = recipientGroup
-
-	if rl.Height() > 0 {
-		it, _ := rl.Iterator(&ab.SeekPosition{
-			Type: &ab.SeekPosition_Newest{
-				&ab.SeekNewest{},
-			},
-		})
-		<-it.ReadyChan() // Should never block, but just in case
-		block, status := it.Next()
-		if status != cb.Status_SUCCESS {
-			panic("Error seeking to newest block for chain with non-zero height")
-		}
-		nextBlockNumber = block.Header.Number + 1
-		previousBlockHash = block.Header.Hash()
-	}
-
-	data := &cb.BlockData{
-		Data: make([][]byte, len(messages)),
-	}
-
-	var err error
-	for i, msg := range messages {
-		data.Data[i], err = proto.Marshal(msg)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	block := cb.NewBlock(nextBlockNumber, previousBlockHash)
-	block.Header.DataHash = data.Hash()
-	// ink alloc
-	block.Header.InkDistPolicy = inkDistPolicy
-
-	block.Data = data
-
-	return block
-}
-
-func CreateNextBlockByKafka(rl Reader, messages []*cb.Envelope) *cb.Block {
-	var nextBlockNumber uint64
-	var previousBlockHash []byte
-
-	kafkaAccounts := ink.GetKafkaAccounts()
-	allocProportion := float32(1 / len(kafkaAccounts))
-	inkDistPolicy := &cb.InkDistPolicy{}
-	var recipientGroup []*cb.InkRecipient
-	for _, v := range kafkaAccounts {
-		inkRecipient := &cb.InkRecipient{}
-		inkRecipient.Recipient = v
-		inkRecipient.Share = allocProportion
-		recipientGroup = append(recipientGroup, inkRecipient)
-	}
-	inkDistPolicy.Group = recipientGroup
-
-	if rl.Height() > 0 {
-		it, _ := rl.Iterator(&ab.SeekPosition{
-			Type: &ab.SeekPosition_Newest{
-				&ab.SeekNewest{},
-			},
-		})
-		<-it.ReadyChan() // Should never block, but just in case
-		block, status := it.Next()
-		if status != cb.Status_SUCCESS {
-			panic("Error seeking to newest block for chain with non-zero height")
-		}
-		nextBlockNumber = block.Header.Number + 1
-		previousBlockHash = block.Header.Hash()
-	}
-
-	data := &cb.BlockData{
-		Data: make([][]byte, len(messages)),
-	}
-
-	var err error
-	for i, msg := range messages {
-		data.Data[i], err = proto.Marshal(msg)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	block := cb.NewBlock(nextBlockNumber, previousBlockHash)
-	block.Header.DataHash = data.Hash()
-
-	// ink alloc
-	block.Header.InkDistPolicy = inkDistPolicy
 	block.Data = data
 
 	return block

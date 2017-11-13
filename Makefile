@@ -35,7 +35,7 @@
 #   - dist-clean - clean release packages for all target platforms
 #   - unit-test-clean - cleans unit test state (particularly from docker)
 
-PROJECT_NAME   = inkchain/inkchain
+PROJECT_NAME   = inklabsfoundation/inkchain
 BASE_VERSION = 0.9
 PREV_VERSION = 0.8
 IS_RELEASE = true
@@ -377,24 +377,24 @@ release/%/install: $(PROJECT_FILES)
 
 .PHONY: dist
 dist: dist-clean release
-	cd release/$(MARCH) && tar -czvf inkchain-inkchain-$(MARCH).$(PROJECT_VERSION).tar.gz *
+	cd release/$(MARCH) && tar -czvf inklabsfoundation-inkchain-$(MARCH).$(PROJECT_VERSION).tar.gz *
 
 dist-all: dist-clean release-all $(patsubst %,dist/%, $(RELEASE_PLATFORMS))
 
 dist/windows-amd64:
-	cd release/windows-amd64 && tar -czvf inkchain-inkchain-windows-amd64.$(PROJECT_VERSION).tar.gz *
+	cd release/windows-amd64 && tar -czvf inklabsfoundation-inkchain-windows-amd64.$(PROJECT_VERSION).tar.gz *
 
 dist/darwin-amd64:
-	cd release/darwin-amd64 && tar -czvf inkchain-inkchain-darwin-amd64.$(PROJECT_VERSION).tar.gz *
+	cd release/darwin-amd64 && tar -czvf inklabsfoundation-inkchain-darwin-amd64.$(PROJECT_VERSION).tar.gz *
 
 dist/linux-amd64:
-	cd release/linux-amd64 && tar -czvf inkchain-inkchain-linux-amd64.$(PROJECT_VERSION).tar.gz *
+	cd release/linux-amd64 && tar -czvf inklabsfoundation-inkchain-linux-amd64.$(PROJECT_VERSION).tar.gz *
 
 dist/linux-ppc64le:
-	cd release/linux-ppc64le && tar -czvf inkchain-inkchain-linux-ppc64le.$(PROJECT_VERSION).tar.gz *
+	cd release/linux-ppc64le && tar -czvf inklabsfoundation-inkchain-linux-ppc64le.$(PROJECT_VERSION).tar.gz *
 
 dist/linux-s390x:
-	cd release/linux-s390x && tar -czvf inkchain-inkchain-linux-s390x.$(PROJECT_VERSION).tar.gz *
+	cd release/linux-s390x && tar -czvf inklabsfoundation-inkchain-linux-s390x.$(PROJECT_VERSION).tar.gz *
 
 .PHONY: protos
 protos: buildenv
@@ -417,11 +417,11 @@ clean-all: clean gotools-clean dist-clean release-clean unit-test-clean
 
 .PHONY: dist-clean
 dist-clean:
-	-@rm -rf release/windows-amd64/inkchain-inkchain-windows-amd64.$(PROJECT_VERSION).tar.gz ||:
-	-@rm -rf release/darwin-amd64/inkchain-inkchain-darwin-amd64.$(PROJECT_VERSION).tar.gz ||:
-	-@rm -rf release/linux-amd64/inkchain-inkchain-linux-amd64.$(PROJECT_VERSION).tar.gz ||:
-	-@rm -rf release/linux-ppc64le/inkchain-inkchain-linux-ppc64le.$(PROJECT_VERSION).tar.gz ||:
-	-@rm -rf release/linux-s390x/inkchain-inkchain-linux-s390x.$(PROJECT_VERSION).tar.gz ||:
+	-@rm -rf release/windows-amd64/inklabsfoundation-inkchain-windows-amd64.$(PROJECT_VERSION).tar.gz ||:
+	-@rm -rf release/darwin-amd64/inklabsfoundation-inkchain-darwin-amd64.$(PROJECT_VERSION).tar.gz ||:
+	-@rm -rf release/linux-amd64/inklabsfoundation-inkchain-linux-amd64.$(PROJECT_VERSION).tar.gz ||:
+	-@rm -rf release/linux-ppc64le/inklabsfoundation-inkchain-linux-ppc64le.$(PROJECT_VERSION).tar.gz ||:
+	-@rm -rf release/linux-s390x/inklabsfoundation-inkchain-linux-s390x.$(PROJECT_VERSION).tar.gz ||:
 
 %-release-clean:
 	$(eval TARGET = ${patsubst %-release-clean,%,${@}})

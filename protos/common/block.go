@@ -30,7 +30,6 @@ func NewBlock(seqNum uint64, previousHash []byte) *Block {
 	block.Header = &BlockHeader{}
 	block.Header.Number = seqNum
 	block.Header.PreviousHash = previousHash
-	block.Header.InkDistPolicy = nil
 	block.Data = &BlockData{}
 
 	var metadataContents [][]byte

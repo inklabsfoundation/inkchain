@@ -110,7 +110,7 @@ func (ch *chain) main() {
 				continue
 			}
 			logger.Debugf("Batch timer expired, creating block")
-			block := ch.support.CreateNextBlockBySolo(batch)
+			block := ch.support.CreateNextBlock(batch)
 			ch.support.WriteBlock(block, committers, nil)
 		case <-ch.exitChan:
 			logger.Debugf("Exiting")

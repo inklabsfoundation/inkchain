@@ -73,8 +73,6 @@ type ConsenterSupport interface {
 	BlockCutter() blockcutter.Receiver
 	SharedConfig() config.Orderer
 	CreateNextBlock(messages []*cb.Envelope) *cb.Block
-	CreateNextBlockBySolo(messages []*cb.Envelope) *cb.Block
-	CreateNextBlockByKafka(messages []*cb.Envelope) *cb.Block
 	WriteBlock(block *cb.Block, committers []filter.Committer, encodedMetadataValue []byte) *cb.Block
 	ChainID() string // ChainID returns the chain ID this specific consenter instance is associated with
 	Height() uint64  // Returns the number of blocks on the chain this specific consenter instance is associated with
@@ -223,14 +221,6 @@ func (cs *chainSupport) Errored() <-chan struct{} {
 
 func (cs *chainSupport) CreateNextBlock(messages []*cb.Envelope) *cb.Block {
 	return ledger.CreateNextBlock(cs.ledger, messages)
-}
-
-func (cs *chainSupport) CreateNextBlockBySolo(messages []*cb.Envelope) *cb.Block {
-	return ledger.CreateNextBlockBySolo(cs.ledger, messages)
-}
-
-func (cs *chainSupport) CreateNextBlockByKafka(messages []*cb.Envelope) *cb.Block {
-	return ledger.CreateNextBlockByKafka(cs.ledger, messages)
 }
 
 func (cs *chainSupport) addBlockSignature(block *cb.Block) {

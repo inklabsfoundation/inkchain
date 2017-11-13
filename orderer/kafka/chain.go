@@ -384,7 +384,7 @@ func processRegular(regularMessage *ab.KafkaMessageRegular, support multichain.C
 		// The receivedOffset for the first batch is one less than the supplied
 		// offset to this function.
 		offset := receivedOffset - int64(len(batches)-i-1)
-		block := support.CreateNextBlockByKafka(batch)
+		block := support.CreateNextBlock(batch)
 		encodedLastOffsetPersisted := utils.MarshalOrPanic(&ab.KafkaMetadata{LastOffsetPersisted: offset})
 		support.WriteBlock(block, committers[i], encodedLastOffsetPersisted)
 		*lastCutBlockNumber++
@@ -407,7 +407,7 @@ func processTimeToCut(ttcMessage *ab.KafkaMessageTimeToCut, support multichain.C
 			return fmt.Errorf("got right time-to-cut message (for block %d),"+
 				" no pending requests though; this might indicate a bug", *lastCutBlockNumber+1)
 		}
-		block := support.CreateNextBlockByKafka(batch)
+		block := support.CreateNextBlock(batch)
 		encodedLastOffsetPersisted := utils.MarshalOrPanic(&ab.KafkaMetadata{LastOffsetPersisted: receivedOffset})
 		support.WriteBlock(block, committers, encodedLastOffsetPersisted)
 		*lastCutBlockNumber++

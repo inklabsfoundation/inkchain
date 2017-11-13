@@ -151,18 +151,10 @@ message Block {
 // The block header is hashed using the configured chain hashing algorithm
 // over the ASN.1 encoding of the BlockHeader
 
-message InkRecipient {
-    string recipient = 1;
-    float share = 2;
-}
-message InkDistPolicy {
-    repeated InkRecipient group = 1;
-}
 message BlockHeader {
     uint64 number = 1; // The position in the blockchain
-    InkDistPolicy ink_dist_policy = 2;
-    bytes previous_hash = 3; // The hash of the previous block header
-    bytes data_hash = 4; // The hash of the BlockData, by MerkleTree
+    bytes previous_hash = 2; // The hash of the previous block header
+    bytes data_hash = 3; // The hash of the BlockData, by MerkleTree
 }
 
 message BlockData {

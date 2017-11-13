@@ -249,7 +249,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		}
 
 	}
-	v.addTransferToRWSet(transferUpdates, updates, block.Header.InkDistPolicy)
+	v.addTransferToRWSet(transferUpdates, updates)
 	block.Metadata.Metadata[common.BlockMetadataIndex_TRANSACTIONS_FILTER] = txsFilter
 	return updates, nil
 }
@@ -324,11 +324,8 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	return false, nil
 }
-func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, inkPolicy *common.InkDistPolicy) {
-	doInkDist := true
-	if inkPolicy == nil {
-		doInkDist = false
-	}
+func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch) {
+	doInkDist := false
 	inkTotal := big.NewInt(0)
 	for accountUpdate, _ := range transferBatch.Updates {
 		balanceChange := transferBatch.GetAllBalanceUpdates(accountUpdate)
@@ -373,56 +370,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 			continue
 		}
 		batch.Put(wallet.WALLET_NAMESPACE, accountUpdate, accountBytes, transferBatch.GetBalanceVersion(accountUpdate))
-	}
-
-	if doInkDist {
-		for index, recipient := range inkPolicy.Group {
-			account := &wallet.Account{}
-			var accountVersion *version.Height
-			if batch.Exists(wallet.WALLET_NAMESPACE, recipient.Recipient) {
-				versionedValue := batch.Get(wallet.WALLET_NAMESPACE, recipient.Recipient)
-				accountVersion = versionedValue.Version
-				if versionedValue != nil {
-					jsonErr := json.Unmarshal(versionedValue.Value, account)
-					if jsonErr != nil {
-						continue
-					}
-				}
-			} else {
-				versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, recipient.Recipient)
-				accountVersion = versionedValue.Version
-				if err != nil {
-					continue
-				}
-				if versionedValue != nil {
-					jsonErr := json.Unmarshal(versionedValue.Value, account)
-					if jsonErr != nil {
-						continue
-					}
-				}
-			}
-			if account.Balance == nil {
-				account.Balance = make(map[string]*big.Int)
-			}
-			mtcBalance, ok := account.Balance[wallet.MTC_BALANCE_NAME]
-			if !ok {
-				mtcBalance = big.NewInt(0)
-				account.Balance[wallet.MTC_BALANCE_NAME] = mtcBalance
-			}
-			if index == len(inkPolicy.Group) {
-				mtcBalance = mtcBalance.Add(mtcBalance, inkTotal)
-			} else {
-				inkShare := inkTotal.Mul(inkTotal, big.NewInt(int64(recipient.Share*100)))
-				inkShare = inkShare.Div(inkShare, big.NewInt(100))
-				mtcBalance = mtcBalance.Add(mtcBalance, inkShare)
-				inkTotal = inkTotal.Sub(inkTotal, inkShare)
-			}
-			accountBytes, err := json.Marshal(account)
-			if err != nil {
-				continue
-			}
-			batch.Put(wallet.WALLET_NAMESPACE, recipient.Recipient, accountBytes, accountVersion)
-		}
 	}
 }
 func addWriteSetToBatch(txRWSet *rwsetutil.TxRwSet, txHeight *version.Height, batch *statedb.UpdateBatch) {

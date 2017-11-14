@@ -330,22 +330,23 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 	if feeAddress != nil && len(feeAddress) == wallet.AddressLength {
 		doInkDist = true
 	}
+	bigZero := big.NewInt(0)
 	inkTotal := big.NewInt(0)
 	for accountUpdate, _ := range transferBatch.Updates {
 		balanceChange := transferBatch.GetAllBalanceUpdates(accountUpdate)
 		inkFee, ok := transferBatch.GetSenderInk(accountUpdate)
 		if !ok || inkFee == nil {
-			inkFee = big.NewInt(0)
+			inkFee = bigZero
 		}
 		feeBalance, ok := balanceChange[wallet.MAIN_BALANCE_NAME]
-		if !ok && inkFee.Cmp(big.NewInt(0)) > 0 {
+		if !ok && inkFee.Cmp(bigZero) > 0 {
 			continue
 		}
 		versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, accountUpdate)
 		if err != nil {
 			continue
 		}
-		if doInkDist && feeBalance != nil {
+		if doInkDist && feeBalance != nil && inkFee.Cmp(bigZero) > 0 {
 			feeBalance = feeBalance.Sub(feeBalance, inkFee)
 			inkTotal = inkTotal.Add(inkTotal, inkFee)
 		}
@@ -376,7 +377,7 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		batch.Put(wallet.WALLET_NAMESPACE, accountUpdate, accountBytes, transferBatch.GetBalanceVersion(accountUpdate))
 	}
 
-	if doInkDist {
+	if doInkDist && inkTotal.Cmp(bigZero) > 0 {
 		account := &wallet.Account{}
 		var accountVersion *version.Height
 		feeAccountName := wallet.BytesToAddress(feeAddress).ToString()

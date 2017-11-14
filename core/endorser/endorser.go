@@ -588,7 +588,7 @@ func (e *Endorser) commitTxSimulation(proposal *pb.Proposal, chainID string, sig
 	if err != nil {
 		return err
 	}
-	block := common.NewBlock(blockNumber, []byte{})
+	block := common.NewBlock(blockNumber, []byte{}, []byte{})
 	block.Data.Data = [][]byte{txBytes}
 	block.Header.DataHash = block.Data.Hash()
 	if err = lgr.Commit(block); err != nil {

@@ -3,6 +3,7 @@ package wallet
 import (
 	"encoding/hex"
 	"math/big"
+	"strings"
 )
 
 const (
@@ -51,7 +52,7 @@ func (a *Address) ToBytes() []byte {
 
 func StringToAddress(b string) *Address {
 	a := Address{}
-	bytes, err := hex.DecodeString(b)
+	bytes, err := hex.DecodeString(strings.ToLower(b))
 	if err != nil {
 		return nil
 	}

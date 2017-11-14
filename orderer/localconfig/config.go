@@ -80,6 +80,7 @@ type General struct {
 	LocalMSPDir    string
 	LocalMSPID     string
 	BCCSP          *bccsp.FactoryOpts
+	FeeAddress     string
 }
 
 // TLS contains config for TLS connections.
@@ -176,6 +177,7 @@ var defaults = TopLevel{
 		LocalMSPDir: "msp",
 		LocalMSPID:  "DEFAULT",
 		BCCSP:       bccsp.GetDefaultOpts(),
+		FeeAddress:  "411b6f8f24F28CaAFE514c16E11800167f8EBd89",
 	},
 	RAMLedger: RAMLedger{
 		HistorySize: 10000,

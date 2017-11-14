@@ -249,7 +249,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		}
 
 	}
-	v.addTransferToRWSet(transferUpdates, updates)
+	v.addTransferToRWSet(transferUpdates, updates, block.Header.FeeAddress)
 	block.Metadata.Metadata[common.BlockMetadataIndex_TRANSACTIONS_FILTER] = txsFilter
 	return updates, nil
 }
@@ -324,8 +324,11 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	return false, nil
 }
-func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch) {
+func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte) {
 	doInkDist := false
+	if feeAddress != nil && len(feeAddress) == wallet.AddressLength {
+		doInkDist = true
+	}
 	inkTotal := big.NewInt(0)
 	for accountUpdate, _ := range transferBatch.Updates {
 		balanceChange := transferBatch.GetAllBalanceUpdates(accountUpdate)
@@ -371,6 +374,53 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		}
 		batch.Put(wallet.WALLET_NAMESPACE, accountUpdate, accountBytes, transferBatch.GetBalanceVersion(accountUpdate))
 	}
+
+	if doInkDist {
+		account := &wallet.Account{}
+		var accountVersion *version.Height
+		feeAccountName := wallet.BytesToAddress(feeAddress).ToString()
+		if batch.Exists(wallet.WALLET_NAMESPACE, feeAccountName) {
+			versionedValue := batch.Get(wallet.WALLET_NAMESPACE, feeAccountName)
+			accountVersion = versionedValue.Version
+			if versionedValue != nil {
+				jsonErr := json.Unmarshal(versionedValue.Value, account)
+				if jsonErr != nil {
+					logger.Debugf("committer: fee account error")
+					return
+				}
+			}
+		} else {
+			versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, feeAccountName)
+			accountVersion = versionedValue.Version
+			if err != nil {
+				logger.Debugf("committer: fee account error")
+				return
+			}
+			if versionedValue != nil {
+				jsonErr := json.Unmarshal(versionedValue.Value, account)
+				if jsonErr != nil {
+					logger.Debugf("committer: fee account error")
+					return
+				}
+			}
+		}
+		if account.Balance == nil {
+			account.Balance = make(map[string]*big.Int)
+		}
+		mtcBalance, ok := account.Balance[wallet.MTC_BALANCE_NAME]
+		if !ok {
+			mtcBalance = big.NewInt(0)
+			account.Balance[wallet.MTC_BALANCE_NAME] = mtcBalance
+		}
+		mtcBalance = mtcBalance.Add(mtcBalance, inkTotal)
+		accountBytes, err := json.Marshal(account)
+		if err != nil {
+			logger.Debugf("committer: fee account error")
+			return
+		}
+		batch.Put(wallet.WALLET_NAMESPACE, feeAccountName, accountBytes, accountVersion)
+	}
+
 }
 func addWriteSetToBatch(txRWSet *rwsetutil.TxRwSet, txHeight *version.Height, batch *statedb.UpdateBatch) {
 	for _, nsRWSet := range txRWSet.NsRwSets {

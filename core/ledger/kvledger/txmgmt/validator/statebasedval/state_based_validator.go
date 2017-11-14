@@ -189,8 +189,9 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		txsFilter = util.NewTxValidationFlags(len(block.Data.Data))
 		block.Metadata.Metadata[common.BlockMetadataIndex_TRANSACTIONS_FILTER] = txsFilter
 	}
-
+	lastTxIndex := 0
 	for txIndex, envBytes := range block.Data.Data {
+		lastTxIndex = txIndex
 		if txsFilter.IsInvalid(txIndex) {
 			// Skiping invalid transaction
 			logger.Warningf("Block [%d] Transaction index [%d] marked as invalid by committer. Reason code [%d]",
@@ -249,7 +250,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		}
 
 	}
-	v.addTransferToRWSet(transferUpdates, updates, block.Header.FeeAddress)
+	v.addTransferToRWSet(transferUpdates, updates, block.Header.FeeAddress, version.NewHeight(block.Header.Number, uint64(lastTxIndex)))
 	block.Metadata.Metadata[common.BlockMetadataIndex_TRANSACTIONS_FILTER] = txsFilter
 	return updates, nil
 }
@@ -324,7 +325,7 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	return false, nil
 }
-func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte) {
+func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte, txHeight *version.Height) {
 	doInkDist := false
 	if feeAddress != nil && len(feeAddress) == wallet.AddressLength {
 		doInkDist = true
@@ -391,7 +392,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 			}
 		} else {
 			versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, feeAccountName)
-			accountVersion = versionedValue.Version
 			if err != nil {
 				logger.Debugf("committer: fee account error")
 				return
@@ -402,6 +402,10 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 					logger.Debugf("committer: fee account error")
 					return
 				}
+				accountVersion = versionedValue.Version
+			} else {
+				account.Address = wallet.BytesToAddress(feeAddress)
+				accountVersion = txHeight
 			}
 		}
 		if account.Balance == nil {

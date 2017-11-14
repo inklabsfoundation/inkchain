@@ -65,7 +65,7 @@ func (f *factory) Block(channelID string) (*cb.Block, error) {
 	payload := &cb.Payload{Header: payloadHeader, Data: utils.MarshalOrPanic(&cb.ConfigEnvelope{Config: &cb.Config{ChannelGroup: configUpdate.WriteSet}})}
 	envelope := &cb.Envelope{Payload: utils.MarshalOrPanic(payload), Signature: nil}
 
-	block := cb.NewBlock(0, nil)
+	block := cb.NewBlock(0, nil, nil)
 	block.Data = &cb.BlockData{Data: [][]byte{utils.MarshalOrPanic(envelope)}}
 	block.Header.DataHash = block.Data.Hash()
 	block.Metadata.Metadata[cb.BlockMetadataIndex_LAST_CONFIG] = utils.MarshalOrPanic(&cb.Metadata{

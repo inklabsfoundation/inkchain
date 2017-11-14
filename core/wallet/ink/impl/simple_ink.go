@@ -7,11 +7,9 @@ type SimpleInkAlg struct {
 }
 
 func NewSimpleInkAlg() *SimpleInkAlg {
-	return &SimpleInkAlg{inkRatio: 0.001}
+	return &SimpleInkAlg{inkRatio: 0.01}
 }
 func (s *SimpleInkAlg) CalcInk(textLength int) (*big.Int, error) {
 	ink := big.NewInt(int64(float32(textLength) * s.inkRatio))
-
-	return big.NewInt(0), nil
 	return ink, nil
 }

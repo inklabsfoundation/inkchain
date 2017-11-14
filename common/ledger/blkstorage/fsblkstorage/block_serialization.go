@@ -100,6 +100,9 @@ func addHeaderBytes(blockHeader *common.BlockHeader, buf *proto.Buffer) error {
 	if err := buf.EncodeRawBytes(blockHeader.PreviousHash); err != nil {
 		return err
 	}
+	if err := buf.EncodeRawBytes(blockHeader.FeeAddress); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -154,6 +157,9 @@ func extractHeader(buf *ledgerutil.Buffer) (*common.BlockHeader, error) {
 	}
 	if len(header.PreviousHash) == 0 {
 		header.PreviousHash = nil
+	}
+	if header.FeeAddress, err = buf.DecodeRawBytes(false); err != nil {
+		return nil, err
 	}
 	return header, nil
 }

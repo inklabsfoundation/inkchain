@@ -216,5 +216,5 @@ func initializeMultiChainManager(conf *config.TopLevel, signer crypto.LocalSigne
 	consenters["solo"] = solo.New()
 	consenters["kafka"] = kafka.New(conf.Kafka.TLS, conf.Kafka.Retry, conf.Kafka.Version)
 
-	return multichain.NewManagerImpl(lf, consenters, signer)
+	return multichain.NewManagerImpl(lf, consenters, signer, conf.General.FeeAddress)
 }

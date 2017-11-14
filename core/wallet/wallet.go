@@ -3,6 +3,7 @@ package wallet
 import (
 	"encoding/hex"
 	"math/big"
+	"strings"
 )
 
 const (
@@ -12,8 +13,8 @@ const (
 	AddressStringLength = 40
 	PriKeyLength        = 32
 	PriKeyStringLength  = 64
-	WALLET_NAMESPACE    = "mtc"
-	MTC_BALANCE_NAME    = "mtc"
+	WALLET_NAMESPACE    = "ink"
+	MAIN_BALANCE_NAME   = "INK"
 )
 
 type Hash [HashLength]byte
@@ -51,7 +52,7 @@ func (a *Address) ToBytes() []byte {
 
 func StringToAddress(b string) *Address {
 	a := Address{}
-	bytes, err := hex.DecodeString(b)
+	bytes, err := hex.DecodeString(strings.ToLower(b))
 	if err != nil {
 		return nil
 	}

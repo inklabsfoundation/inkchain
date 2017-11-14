@@ -13,8 +13,8 @@ const (
 	AddressStringLength = 40
 	PriKeyLength        = 32
 	PriKeyStringLength  = 64
-	WALLET_NAMESPACE    = "mtc"
-	MTC_BALANCE_NAME    = "mtc"
+	WALLET_NAMESPACE    = "ink"
+	MAIN_BALANCE_NAME   = "INK"
 )
 
 type Hash [HashLength]byte

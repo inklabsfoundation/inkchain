@@ -84,12 +84,12 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 			if err != nil {
 				return nil, fmt.Errorf("commiter: error when calculating ink.")
 			}
-			mtcBalance, ok := account.Balance[wallet.MTC_BALANCE_NAME]
+			mtcBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
 			if !ok {
 				return nil, fmt.Errorf("commiter: insuffient mtc balance for ink consumption.")
 			}
 			if batch.ExistsFrom(sender) {
-				balanceUpdate := batch.GetBalanceUpdate(sender, wallet.MTC_BALANCE_NAME)
+				balanceUpdate := batch.GetBalanceUpdate(sender, wallet.MAIN_BALANCE_NAME)
 				if balanceUpdate != nil {
 					mtcBalance = mtcBalance.Add(mtcBalance, balanceUpdate)
 				}
@@ -337,7 +337,7 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		if !ok || inkFee == nil {
 			inkFee = big.NewInt(0)
 		}
-		mtcBalance, ok := balanceChange[wallet.MTC_BALANCE_NAME]
+		feeBalance, ok := balanceChange[wallet.MAIN_BALANCE_NAME]
 		if !ok && inkFee.Cmp(big.NewInt(0)) > 0 {
 			continue
 		}
@@ -345,8 +345,8 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		if err != nil {
 			continue
 		}
-		if doInkDist && mtcBalance != nil {
-			mtcBalance = mtcBalance.Sub(mtcBalance, inkFee)
+		if doInkDist && feeBalance != nil {
+			feeBalance = feeBalance.Sub(feeBalance, inkFee)
 			inkTotal = inkTotal.Add(inkTotal, inkFee)
 		}
 		account := &wallet.Account{}
@@ -411,12 +411,12 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		if account.Balance == nil {
 			account.Balance = make(map[string]*big.Int)
 		}
-		mtcBalance, ok := account.Balance[wallet.MTC_BALANCE_NAME]
+		feeBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
 		if !ok {
-			mtcBalance = big.NewInt(0)
-			account.Balance[wallet.MTC_BALANCE_NAME] = mtcBalance
+			feeBalance = big.NewInt(0)
+			account.Balance[wallet.MAIN_BALANCE_NAME] = feeBalance
 		}
-		mtcBalance = mtcBalance.Add(mtcBalance, inkTotal)
+		feeBalance = feeBalance.Add(feeBalance, inkTotal)
 		accountBytes, err := json.Marshal(account)
 		if err != nil {
 			logger.Debugf("committer: fee account error")

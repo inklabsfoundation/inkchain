@@ -125,7 +125,7 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if err != nil {
 		return fmt.Errorf("endorser: error when calculating ink.")
 	}
-	mtcBalance, ok := account.Balance[wallet.MTC_BALANCE_NAME]
+	mtcBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
 	if !ok || mtcBalance.Cmp(inkFee) < 0 {
 		return fmt.Errorf("endorser: insuffient balance for ink consumption.")
 	}

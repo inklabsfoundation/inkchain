@@ -317,7 +317,7 @@ func (stub *MockStub) Transfer(to string, balanceType string, amount *big.Int) e
 			}
 			fromBalance, ok := fromAccount.Balance[balanceType]
 			if !ok {
-				return errors.New("balance" + wallet.MTC_BALANCE_NAME + "not exists")
+				return errors.New("balance" + wallet.MAIN_BALANCE_NAME + "not exists")
 			}
 			if fromBalance.Cmp(amount) < 0 {
 				return errors.New("insufficient balance for sender")

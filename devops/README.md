@@ -71,3 +71,5 @@ inkchain/inkchain-zookeeper    x86_64-0.9.1                    9da7d54b7d6f     
 ```
 
 ## Run the examples
+
+We provide an example [token issue](../examples/issue-token) which based on inkchain.

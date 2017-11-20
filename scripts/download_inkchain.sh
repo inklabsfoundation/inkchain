@@ -15,7 +15,7 @@ echo_b "===Download official images from https://hub.docker.com/u/inkchain/"
 # pull inkchain images
 ARCH=x86_64
 BASEIMAGE_RELEASE=0.3.1
-IMG_TAG_LATEST=0.9
+IMG_TAG_LATEST=0.10
 
 echo_b "===Pulling inkchain images... with tag = ${IMG_TAG_LATEST}"
 docker pull inkchain/inkchain-peer:$ARCH-$IMG_TAG_LATEST

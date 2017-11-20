@@ -42,7 +42,7 @@ issueToken(){
 makeTransfer(){
     echo_b "pls wait 5 secs..."
     sleep 5
-    peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","3c97f146e8de9807ef723538521fcecd5f64c79a","CCToken","10"]}' -i "1" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","3c97f146e8de9807ef723538521fcecd5f64c79a","INK","10"]}' -i "1" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Make transfer has Failed."
@@ -53,7 +53,7 @@ makeTransfer(){
 chaincodeQueryA () {
     echo_b "Attempting to Query account A's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","4230a12f5b0693dd88bb35c79d7e56a68614b199","CCToken"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","4230a12f5b0693dd88bb35c79d7e56a68614b199","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account A Failed."
@@ -62,7 +62,7 @@ chaincodeQueryA () {
 chaincodeQueryB () {
     echo_b "Attempting to  query account B's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","3c97f146e8de9807ef723538521fcecd5f64c79a","CCToken"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","3c97f146e8de9807ef723538521fcecd5f64c79a","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account B Failed."
@@ -70,9 +70,9 @@ chaincodeQueryB () {
 }
 
 echo_b "=====================6.Issue a token using ascc========================"
-issueToken CCToken
+issueToken INK
 
-echo_b "=====================7.Transfer 100 amount of CCToken====================="
+echo_b "=====================7.Transfer 100 amount of INK====================="
 makeTransfer
 
 echo_b "=====================8.Query transfer result of From account====================="

@@ -46,28 +46,25 @@ Execute a `docker images` command in yout terminal, If the images compiled succe
 see output similar to the following:
 
 ```bash
-inkchain/inkchain-ccenv        latest                          249e938219b0        29 hours ago        1.28GB
-inkchain/inkchain-ccenv        x86_64-0.9.1                    249e938219b0        29 hours ago        1.28GB
-inkchain/inkchain-tools        latest                          b19f13f153ef        46 hours ago        1.34GB
-inkchain/inkchain-tools        x86_64-0.9.1                    b19f13f153ef        46 hours ago        1.34GB
-inkchain/inkchain-testenv      latest                          41b6a64231b7        46 hours ago        1.41GB
-inkchain/inkchain-testenv      x86_64-0.9.1                    41b6a64231b7        46 hours ago        1.41GB
-inkchain/inkchain-buildenv     latest                          4d64e0249a72        46 hours ago        1.32GB
-inkchain/inkchain-buildenv     x86_64-0.9.1                    4d64e0249a72        46 hours ago        1.32GB
-inkchain/inkchain-orderer      latest                          967234ea4d84        46 hours ago        180MB
-inkchain/inkchain-orderer      x86_64-0.9.1                    967234ea4d84        46 hours ago        180MB
-inkchain/inkchain-peer         latest                          e046ec9cc594        46 hours ago        183MB
-inkchain/inkchain-peer         x86_64-0.9.1                    e046ec9cc594        46 hours ago        183MB
-inkchain/inkchain-javaenv      latest                          5616849dda4a        46 hours ago        1.42GB
-inkchain/inkchain-javaenv      x86_64-0.9.1                    5616849dda4a        46 hours ago        1.42GB
-inkchain/inkchain-baseimage    x86_64-0.3.1                    9f2e9ec7c527        6 months ago        1.27GB
-inkchain/inkchain-baseos       x86_64-0.3.1                    4b0cab202084        6 months ago        157MB
-inkchain/inkchain-couchdb      latest                          f960e952b103        2 weeks ago         1.51GB
-inkchain/inkchain-couchdb      x86_64-0.9.1                    f960e952b103        2 weeks ago         1.51GB
-inkchain/inkchain-kafka        latest                          e73bcd0d91ab        2 weeks ago         1.3GB
-inkchain/inkchain-kafka        x86_64-0.9.1                    e73bcd0d91ab        2 weeks ago         1.3GB
-inkchain/inkchain-zookeeper    latest                          9da7d54b7d6f        2 weeks ago         1.31GB
-inkchain/inkchain-zookeeper    x86_64-0.9.1                    9da7d54b7d6f        2 weeks ago         1.31GB
+REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
+inkchain/inkchain-tools        latest              7b18be3a82fe        4 days ago          1.34GB
+inkchain/inkchain-tools        x86_64-0.10         7b18be3a82fe        4 days ago          1.34GB
+inkchain/inkchain-couchdb      latest              eccce4288cf5        4 days ago          1.51GB
+inkchain/inkchain-couchdb      x86_64-0.10         eccce4288cf5        4 days ago          1.51GB
+inkchain/inkchain-kafka        latest              1bb4cd5bba69        4 days ago          1.3GB
+inkchain/inkchain-kafka        x86_64-0.10         1bb4cd5bba69        4 days ago          1.3GB
+inkchain/inkchain-zookeeper    latest              4eb257be4062        4 days ago          1.33GB
+inkchain/inkchain-zookeeper    x86_64-0.10         4eb257be4062        4 days ago          1.33GB
+inkchain/inkchain-orderer      latest              85cab7e9c4cf        4 days ago          180MB
+inkchain/inkchain-orderer      x86_64-0.10         85cab7e9c4cf        4 days ago          180MB
+inkchain/inkchain-peer         latest              0a7d33a7f6f0        4 days ago          183MB
+inkchain/inkchain-peer         x86_64-0.10         0a7d33a7f6f0        4 days ago          183MB
+inkchain/inkchain-javaenv      latest              09231aa0c8f0        4 days ago          1.42GB
+inkchain/inkchain-javaenv      x86_64-0.10         09231aa0c8f0        4 days ago          1.42GB
+inkchain/inkchain-ccenv        latest              53566e6b8ae2        4 days ago          1.29GB
+inkchain/inkchain-ccenv        x86_64-0.10         53566e6b8ae2        4 days ago          1.29GB
+inkchain/inkchain-baseimage    x86_64-0.3.1        c92d9fdee998        2 months ago        1.26GB
+inkchain/inkchain-baseos       x86_64-0.3.1        4b0cab202084        6 months ago        157MB
 ```
 
 ## Run the examples

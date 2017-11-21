@@ -31,9 +31,11 @@ go.fqp.misspell  := github.com/client9/misspell/cmd/misspell
 go.fqp.gocov-xml:= github.com/AlekSi/gocov-xml
 all: $(GOTOOLS_BIN)
 
-install: $(GOTOOLS_BIN)
+#install: $(GOTOOLS_BIN)
+#Use native go tools
+install:
 	@mkdir -p $(BINDIR)
-	cp $^ $(BINDIR)
+	cp /opt/gopath/src/github.com/inklabsfoundation/inkchain/gotools/bin/* $(BINDIR)
 
 # Special override for protoc-gen-go since we want to use the version vendored with the project
 gotool.protoc-gen-go:

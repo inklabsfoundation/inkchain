@@ -404,7 +404,7 @@ clean: docker-clean unit-test-clean release-clean
 
 .PHONY: clean-all
 clean-all: clean gotools-clean dist-clean release-clean unit-test-clean
-	-@rm -rf /var/inkchain/* ||:
+	-@rm -rf /var/inklabsfoundation/* ||:
 
 .PHONY: dist-clean
 dist-clean:

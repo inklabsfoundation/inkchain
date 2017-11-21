@@ -125,7 +125,7 @@ func GetPath(key string) string {
 	return TranslatePath(filepath.Dir(viper.ConfigFileUsed()), p)
 }
 
-const OfficialPath = "/etc/inkchain/inkchain"
+const OfficialPath = "/etc/inklabsfoundation/inkchain"
 
 //----------------------------------------------------------------------------------
 // InitViper()
@@ -146,7 +146,7 @@ func InitViper(v *viper.Viper, configName string) error {
 		//
 		// *) CWD
 		// *) The $GOPATH based development tree
-		// *) /etc/inkchain/inkchain
+		// *) /etc/inklabsfoundation/inkchain
 		//
 
 		// CWD

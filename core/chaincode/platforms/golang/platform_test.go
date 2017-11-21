@@ -111,7 +111,7 @@ func TestPlatform_GoPathNotSet(t *testing.T) {
 	p := &Platform{}
 	spec := &pb.ChaincodeSpec{
 		ChaincodeId: &pb.ChaincodeID{
-			Path: "/opt/gopath/src/github.com/inkchain/inkchain",
+			Path: "/opt/gopath/src/github.com/inklabsfoundation/inkchain",
 		},
 	}
 	gopath := os.Getenv("GOPATH")

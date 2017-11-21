@@ -27,7 +27,7 @@ type IdentityDeserializer interface {
 //
 // By "membership service provider" we refer to an abstract component of the
 // system that would provide (anonymous) credentials to clients, and peers for
-// them to participate in inkchain/inkchain network. Clients use these
+// them to participate in inklabsfoundation/inkchain network. Clients use these
 // credentials to authenticate their transactions, and peers use these credentials
 // to authenticate transaction processing results (endorsements). While
 // strongly connected to the transaction processing components of the systems,

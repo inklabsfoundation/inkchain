@@ -53,13 +53,13 @@ DRUN = docker run -i --rm $(DOCKER_RUN_FLAGS) \
 
 DBUILD = docker build $(DOCKER_BUILD_FLAGS)
 
-BASE_DOCKER_NS ?= inkchain
+BASE_DOCKER_NS ?= inklabsfoundation
 BASE_DOCKER_TAG=$(ARCH)-$(BASEIMAGE_RELEASE)
 
-DOCKER_NS ?= inkchain
+DOCKER_NS ?= inklabsfoundation
 DOCKER_TAG=$(ARCH)-$(PROJECT_VERSION)
 
-BASE_DOCKER_LABEL=org.inkchain.inkchain
+BASE_DOCKER_LABEL=org.inkchinklabsfoundationain.inkchain
 
 DOCKER_GO_LDFLAGS += $(GO_LDFLAGS)
 DOCKER_GO_LDFLAGS += -linkmode external -extldflags '-static -lpthread'

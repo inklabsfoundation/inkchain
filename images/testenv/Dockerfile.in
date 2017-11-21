@@ -5,7 +5,7 @@
 FROM _NS_/inkchain-buildenv:_TAG_
 
 # inkchain configuration locations
-ENV INKCHAIN_CFG_PATH /etc/inkchain/inkchain
+ENV INKCHAIN_CFG_PATH /etc/inklabsfoundation/inkchain
 
 # create needed directories
 RUN mkdir -p \
@@ -24,4 +24,4 @@ COPY payload/install-softhsm2.sh /tmp
 RUN bash /tmp/install-softhsm2.sh && rm -f install-softhsm2.sh
 
 # typically, this is mapped to a developer's dev environment
-WORKDIR /opt/gopath/src/github.com/inkchain/inkchain
+WORKDIR /opt/gopath/src/github.com/inklabsfoundation/inkchain

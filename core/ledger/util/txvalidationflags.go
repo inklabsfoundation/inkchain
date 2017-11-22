@@ -41,7 +41,7 @@ func (obj TxValidationFlags) Flag(txIndex int) peer.TxValidationCode {
 
 // IsValid checks if specified transaction is valid
 func (obj TxValidationFlags) IsValid(txIndex int) bool {
-	return obj.IsSetTo(txIndex, peer.TxValidationCode_VALID)
+	return obj.IsSetTo(txIndex, peer.TxValidationCode_VALID) || obj.IsSetTo(txIndex, peer.TxValidationCode_EXCEED_BALANCE)
 }
 
 // IsInvalid checks if specified transaction is invalid

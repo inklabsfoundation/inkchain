@@ -82,27 +82,27 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 		inkFee, err := v.inkCalculator.CalcInk(ledgerByteCount)
 		if inkFee.Cmp(big.NewInt(0)) > 0 {
 			if err != nil {
-				return nil, fmt.Errorf("commiter: error when calculating ink.")
+				return nil, fmt.Errorf("committer: error when calculating ink.")
 			}
-			mtcBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
+			inkBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
 			if !ok {
-				return nil, fmt.Errorf("commiter: insuffient mtc balance for ink consumption.")
+				return nil, fmt.Errorf("committer: insuffient INK balance for consumption.")
 			}
 			if batch.ExistsFrom(sender) {
 				balanceUpdate := batch.GetBalanceUpdate(sender, wallet.MAIN_BALANCE_NAME)
 				if balanceUpdate != nil {
-					mtcBalance = mtcBalance.Add(mtcBalance, balanceUpdate)
+					inkBalance = inkBalance.Add(inkBalance, balanceUpdate)
 				}
 			}
 			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
 			if !ok {
-				return nil, fmt.Errorf("commiter: invalid inklimit.")
+				return nil, fmt.Errorf("committer: invalid inklimit.")
 			}
 			if inkFee.Cmp(inkLimit) > 0 {
-				return nil, fmt.Errorf("commiter: ink exceeds inkLimit.")
+				return nil, fmt.Errorf("committer: ink exceeds inkLimit.")
 			}
-			if !ok || mtcBalance.Cmp(inkFee) < 0 {
-				return nil, fmt.Errorf("commiter: insuffient balance for ink consumption.")
+			if !ok || inkBalance.Cmp(inkFee) < 0 {
+				return nil, fmt.Errorf("committer: insuffient balance for ink consumption.")
 			}
 		}
 		return inkFee, nil
@@ -159,15 +159,15 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			if txResult, err = v.validateTx(ledgerSet.TxRwSet, updates); err != nil || txResult != peer.TxValidationCode_VALID {
 				ledgerSet.TxRwSet = nil
 				ledgerSet.TranSet = nil
-				return nil, nil, nil, txResult, err
+				return nil, nil, senderCounter, txResult, err
 			}
 		}
 		//validate transfer
 		if ledgerSet.TranSet != nil {
-			if txResult, err = v.validateTrans(ledgerSet.TranSet, transferUpdates); err != nil || txResult != peer.TxValidationCode_VALID {
+			if txResult, err = v.validateTrans(ledgerSet.TranSet, transferUpdates, senderCounter.Ink); err != nil || txResult != peer.TxValidationCode_VALID {
 				ledgerSet.TxRwSet = nil
 				ledgerSet.TranSet = nil
-				return nil, nil, nil, txResult, err
+				return nil, nil, senderCounter, txResult, err
 			}
 		}
 	}
@@ -227,13 +227,13 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		if err != nil {
 			return nil, err
 		}
-		txsFilter.SetFlag(txIndex, txResult)
 		//txRWSet != nil => t is valid
 		committingTxHeight := version.NewHeight(block.Header.Number, uint64(txIndex))
+
+		if senderCounter != nil && (txResult == peer.TxValidationCode_VALID || txResult == peer.TxValidationCode_EXCEED_BALANCE) {
+			transferUpdates.UpdateSender(senderCounter.Sender, senderCounter.Counter, senderCounter.Ink, committingTxHeight)
+		}
 		if txResult == peer.TxValidationCode_VALID {
-			if senderCounter != nil {
-				transferUpdates.UpdateSender(senderCounter.Sender, senderCounter.Counter, senderCounter.Ink, committingTxHeight)
-			}
 			if txRWSet != nil {
 				addWriteSetToBatch(txRWSet, committingTxHeight, updates)
 			}
@@ -241,6 +241,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 				addTranSetToBatch(txTranSet, committingTxHeight, transferUpdates)
 			}
 		}
+		txsFilter.SetFlag(txIndex, txResult)
 		if txsFilter.IsValid(txIndex) {
 			logger.Debugf("Block [%d] Transaction index [%d] TxId [%s] marked as valid by state validator",
 				block.Header.Number, txIndex, chdr.TxId)
@@ -268,13 +269,13 @@ func addTranSetToBatch(tranSet *transutil.TranSet, txHeight *version.Height, tra
 	}
 }
 
-func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.TransferBatch) (peer.TxValidationCode, error) {
+func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
 	from := tranSet.From
 	fromVer := tranSet.FromVer
 	var accountBalance map[string]*big.Int
 	versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, from)
 	if err != nil {
-		return peer.TxValidationCode_TRANSFER_CONFLICT, nil
+		return peer.TxValidationCode_BAD_BALANCE, nil
 	}
 	var committedVersion *version.Height
 	if versionedValue != nil {
@@ -283,36 +284,36 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 		if !version.AreSame(committedVersion, transutil.NewVersion(fromVer)) {
 			logger.Debugf("Version mismatch for (sender) (%s). Committed version = [%s], Version in transferSet [%s]",
 				from, committedVersion, fromVer)
-			return peer.TxValidationCode_TRANSFER_CONFLICT, nil
+			return peer.TxValidationCode_BAD_BALANCE, nil
 		}
 		// check sender balance
 		account := &wallet.Account{}
 		jsonErr := json.Unmarshal(versionedValue.Value, account)
 		if jsonErr != nil {
-			return peer.TxValidationCode_TRANSFER_CONFLICT, nil
+			return peer.TxValidationCode_BAD_BALANCE, nil
 		}
 		accountBalance = account.Balance
 		if accountBalance == nil {
-			return peer.TxValidationCode_TRANSFER_CONFLICT, nil
+			return peer.TxValidationCode_BAD_BALANCE, nil
 		}
 	}
 
 	for _, kvTo := range tranSet.KvTranSet.Trans {
-		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates); !valid || err != nil {
-			return peer.TxValidationCode_TRANSFER_CONFLICT, nil
+		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates, inkFee); valid != peer.TxValidationCode_VALID || err != nil {
+			return valid, nil
 		}
 	}
 
 	return peer.TxValidationCode_VALID, nil
 }
-func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch) (bool, error) {
+func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
 	// one (from,to) in one block
 	if updates.ExistsTransfer(from, kvTo.To) {
-		return false, nil
+		return peer.TxValidationCode_TRANSFER_CONFLICT, nil
 	}
 	balance, ok := accountBalance[kvTo.BalanceType]
 	if !ok {
-		return false, nil
+		return peer.TxValidationCode_BAD_BALANCE, nil
 	}
 	if updates.ExistsFrom(from) {
 		balanceUpdate := updates.GetBalanceUpdate(from, kvTo.BalanceType)
@@ -320,10 +321,19 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 			balance = balance.Add(balance, balanceUpdate)
 		}
 	}
-	if balance.Cmp(new(big.Int).SetBytes(kvTo.Amount)) >= 0 {
-		return true, nil
+	if kvTo.BalanceType == wallet.MAIN_BALANCE_NAME {
+		transferAmount := new(big.Int).SetBytes(kvTo.Amount)
+		if balance.Cmp(transferAmount.Add(transferAmount, inkFee)) >= 0 {
+			return peer.TxValidationCode_VALID, nil
+		} else {
+			return peer.TxValidationCode_EXCEED_BALANCE, nil
+		}
+	} else {
+		if balance.Cmp(new(big.Int).SetBytes(kvTo.Amount)) >= 0 {
+			return peer.TxValidationCode_VALID, nil
+		}
 	}
-	return false, nil
+	return peer.TxValidationCode_INVALID_OTHER_REASON, nil
 }
 func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte, txHeight *version.Height) {
 	doInkDist := false
@@ -333,6 +343,7 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 	bigZero := big.NewInt(0)
 	inkTotal := big.NewInt(0)
 	for accountUpdate, _ := range transferBatch.Updates {
+		//1. Get balance change from transferSet
 		balanceChange := transferBatch.GetAllBalanceUpdates(accountUpdate)
 		inkFee, ok := transferBatch.GetSenderInk(accountUpdate)
 		if !ok || inkFee == nil {
@@ -340,7 +351,8 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		}
 		feeBalance, ok := balanceChange[wallet.MAIN_BALANCE_NAME]
 		if !ok && inkFee.Cmp(bigZero) > 0 {
-			continue
+			feeBalance = big.NewInt(0)
+			balanceChange[wallet.MAIN_BALANCE_NAME] = feeBalance
 		}
 		versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, accountUpdate)
 		if err != nil {
@@ -376,7 +388,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		}
 		batch.Put(wallet.WALLET_NAMESPACE, accountUpdate, accountBytes, transferBatch.GetBalanceVersion(accountUpdate))
 	}
-
 	if doInkDist && inkTotal.Cmp(bigZero) > 0 {
 		account := &wallet.Account{}
 		var accountVersion *version.Height

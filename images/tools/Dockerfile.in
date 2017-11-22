@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 FROM _BASE_NS_/inkchain-baseimage:_BASE_TAG_
-ENV INKCHAIN_CFG_PATH /etc/inkchain/inkchain
-VOLUME /etc/inkchain/inkchain
+ENV INKCHAIN_CFG_PATH /etc/inklabsfoundation/inkchain
+VOLUME /etc/inklabsfoundation/inkchain
 ADD  payload/sampleconfig.tar.bz2 $INKCHAIN_CFG_PATH
 COPY payload/cryptogen /usr/local/bin
 COPY payload/configtxgen /usr/local/bin

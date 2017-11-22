@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package endorser
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
@@ -14,8 +15,6 @@ import (
 	"golang.org/x/net/context"
 
 	"errors"
-
-	"encoding/json"
 
 	"github.com/inklabsfoundation/inkchain/common/policies"
 	"github.com/inklabsfoundation/inkchain/common/util"
@@ -104,30 +103,23 @@ func (*Endorser) checkInvokeSigAndSetSender(cis *pb.ChaincodeInvocationSpec, txs
 	return nil
 }
 
-func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int) error {
+func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int, account *wallet.Account) error {
 	if cis.Sig == nil || cis.SenderSpec == nil {
 		return nil
 	}
-	account := &wallet.Account{}
-	var res []byte
-	res, err := txsim.GetState(wallet.WALLET_NAMESPACE, string(cis.SenderSpec.Sender[:]))
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(res, account)
-	if err != nil {
-		return err
-	}
 	if cis.SenderSpec.Counter != account.Counter {
-		return fmt.Errorf("endorser: invalid counter.")
+		return fmt.Errorf("endorser: invalid counter")
 	}
 	inkFee, err := e.inkCalculator.CalcInk(byteCount)
 	if err != nil {
-		return fmt.Errorf("endorser: error when calculating ink.")
+		return fmt.Errorf("endorser: error when calculating ink")
 	}
-	mtcBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
-	if !ok || mtcBalance.Cmp(inkFee) < 0 {
-		return fmt.Errorf("endorser: insuffient balance for ink consumption.")
+	inkBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
+	if !ok || inkBalance.Cmp(inkFee) < 0 {
+		return fmt.Errorf("endorser: insufficient balance for ink consumption")
+	}
+	if inkFee.Cmp(wallet.MINIMUM_FEE) < 0 {
+		return fmt.Errorf("endorser: fee too low")
 	}
 	return nil
 }
@@ -301,6 +293,21 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 		version = util.GetSysCCVersion()
 	}
 
+	//*** added: get account for checking ink & counter. GetState() could not be called after GetTxSimulationResults()
+	var account *wallet.Account
+	if cis.Sig != nil && cis.SenderSpec != nil {
+		account = &wallet.Account{}
+		var resBytes []byte
+		resBytes, err = txsim.GetState(wallet.WALLET_NAMESPACE, string(cis.SenderSpec.Sender[:]))
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+		err = json.Unmarshal(resBytes, account)
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+	}
+
 	//---3. execute the proposal and get simulation results
 	var simResult []byte
 	var res *pb.Response
@@ -318,12 +325,12 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-	/*
-		err = e.checkCounterAndInk(cis, txsim, len(simResult))
-		if err != nil {
-			return nil, nil, nil, nil, err
-		}
-	*/
+
+	err = e.checkCounterAndInk(cis, txsim, len(simResult), account)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
 	return cdLedger, res, simResult, ccevent, nil
 }
 

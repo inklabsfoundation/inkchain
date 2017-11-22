@@ -92,6 +92,7 @@ peer:
     # When used as CLI config, this means the peer's endpoint to interact with
     address: 0.0.0.0:7051
 
+    minimumFee: 0
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
     addressAutoDetect: false

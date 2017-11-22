@@ -32,8 +32,10 @@ package peer
 import (
 	"fmt"
 	"io/ioutil"
+	"math/big"
 	"net"
 
+	"github.com/inklabsfoundation/inkchain/core/wallet"
 	"github.com/spf13/viper"
 
 	"github.com/inklabsfoundation/inkchain/core/comm"
@@ -87,6 +89,9 @@ func CacheConfiguration() (err error) {
 
 	localAddress, localAddressError = getLocalAddress()
 	peerEndpoint, _ = getPeerEndpoint()
+
+	wallet.MINIMUM_FEE = big.NewInt(0)
+	wallet.MINIMUM_FEE.SetString(viper.GetString("peer.minimumFee"), 10)
 
 	configurationCached = true
 

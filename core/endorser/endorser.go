@@ -105,6 +105,7 @@ func (*Endorser) checkInvokeSigAndSetSender(cis *pb.ChaincodeInvocationSpec, txs
 }
 
 func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int) error {
+	fmt.Println("============++++++++++")
 	if cis.Sig == nil || cis.SenderSpec == nil {
 		return nil
 	}
@@ -119,16 +120,23 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 		return err
 	}
 	if cis.SenderSpec.Counter != account.Counter {
-		return fmt.Errorf("endorser: invalid counter.")
+		return fmt.Errorf("endorser: invalid counter")
 	}
 	inkFee, err := e.inkCalculator.CalcInk(byteCount)
 	if err != nil {
-		return fmt.Errorf("endorser: error when calculating ink.")
+		return fmt.Errorf("endorser: error when calculating ink")
 	}
-	mtcBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
-	if !ok || mtcBalance.Cmp(inkFee) < 0 {
-		return fmt.Errorf("endorser: insuffient balance for ink consumption.")
+	inkBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
+	if !ok || inkBalance.Cmp(inkFee) < 0 {
+		return fmt.Errorf("endorser: insufficient balance for ink consumption")
 	}
+	fmt.Println("============++++++++++")
+	fmt.Println(inkFee)
+	fmt.Println(wallet.MINIMUM_FEE)
+	if inkFee.Cmp(wallet.MINIMUM_FEE) < 0 {
+		return fmt.Errorf("endorser: fee too low")
+	}
+	fmt.Println("============")
 	return nil
 }
 
@@ -260,6 +268,7 @@ func (e *Endorser) disableJavaCCInst(cid *pb.ChaincodeID, cis *pb.ChaincodeInvoc
 
 //simulate the proposal by calling the chaincode
 func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid string, signedProp *pb.SignedProposal, prop *pb.Proposal, cid *pb.ChaincodeID, txsim ledger.TxSimulator) (*ccprovider.ChaincodeData, *pb.Response, []byte, *pb.ChaincodeEvent, error) {
+	fmt.Println("asdfasdfasdfasdfasfdsadf")
 	endorserLogger.Debugf("Entry - txid: %s channel id: %s", txid, chainID)
 	defer endorserLogger.Debugf("Exit")
 	//we do expect the payload to be a ChaincodeInvocationSpec
@@ -318,12 +327,12 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-	/*
-		err = e.checkCounterAndInk(cis, txsim, len(simResult))
-		if err != nil {
-			return nil, nil, nil, nil, err
-		}
-	*/
+
+	err = e.checkCounterAndInk(cis, txsim, len(simResult))
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
 	return cdLedger, res, simResult, ccevent, nil
 }
 

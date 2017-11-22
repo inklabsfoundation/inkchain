@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package endorser
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
@@ -14,8 +15,6 @@ import (
 	"golang.org/x/net/context"
 
 	"errors"
-
-	"encoding/json"
 
 	"github.com/inklabsfoundation/inkchain/common/policies"
 	"github.com/inklabsfoundation/inkchain/common/util"
@@ -104,20 +103,9 @@ func (*Endorser) checkInvokeSigAndSetSender(cis *pb.ChaincodeInvocationSpec, txs
 	return nil
 }
 
-func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int) error {
-	fmt.Println("============++++++++++")
+func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int, account *wallet.Account) error {
 	if cis.Sig == nil || cis.SenderSpec == nil {
 		return nil
-	}
-	account := &wallet.Account{}
-	var res []byte
-	res, err := txsim.GetState(wallet.WALLET_NAMESPACE, string(cis.SenderSpec.Sender[:]))
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(res, account)
-	if err != nil {
-		return err
 	}
 	if cis.SenderSpec.Counter != account.Counter {
 		return fmt.Errorf("endorser: invalid counter")
@@ -130,13 +118,9 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if !ok || inkBalance.Cmp(inkFee) < 0 {
 		return fmt.Errorf("endorser: insufficient balance for ink consumption")
 	}
-	fmt.Println("============++++++++++")
-	fmt.Println(inkFee)
-	fmt.Println(wallet.MINIMUM_FEE)
 	if inkFee.Cmp(wallet.MINIMUM_FEE) < 0 {
 		return fmt.Errorf("endorser: fee too low")
 	}
-	fmt.Println("============")
 	return nil
 }
 
@@ -268,7 +252,6 @@ func (e *Endorser) disableJavaCCInst(cid *pb.ChaincodeID, cis *pb.ChaincodeInvoc
 
 //simulate the proposal by calling the chaincode
 func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid string, signedProp *pb.SignedProposal, prop *pb.Proposal, cid *pb.ChaincodeID, txsim ledger.TxSimulator) (*ccprovider.ChaincodeData, *pb.Response, []byte, *pb.ChaincodeEvent, error) {
-	fmt.Println("asdfasdfasdfasdfasfdsadf")
 	endorserLogger.Debugf("Entry - txid: %s channel id: %s", txid, chainID)
 	defer endorserLogger.Debugf("Exit")
 	//we do expect the payload to be a ChaincodeInvocationSpec
@@ -310,6 +293,21 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 		version = util.GetSysCCVersion()
 	}
 
+	//*** added: get account for checking ink & counter. GetState() could not be called after GetTxSimulationResults()
+	var account *wallet.Account
+	if cis.Sig != nil && cis.SenderSpec != nil {
+		account = &wallet.Account{}
+		var resBytes []byte
+		resBytes, err = txsim.GetState(wallet.WALLET_NAMESPACE, string(cis.SenderSpec.Sender[:]))
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+		err = json.Unmarshal(resBytes, account)
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+	}
+
 	//---3. execute the proposal and get simulation results
 	var simResult []byte
 	var res *pb.Response
@@ -328,7 +326,7 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 
 	//---4. check counter and ink
 
-	err = e.checkCounterAndInk(cis, txsim, len(simResult))
+	err = e.checkCounterAndInk(cis, txsim, len(simResult), account)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

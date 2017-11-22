@@ -59,7 +59,7 @@ BASE_DOCKER_TAG=$(ARCH)-$(BASEIMAGE_RELEASE)
 DOCKER_NS ?= inklabsfoundation
 DOCKER_TAG=$(ARCH)-$(PROJECT_VERSION)
 
-BASE_DOCKER_LABEL=org.inkchinklabsfoundationain.inkchain
+BASE_DOCKER_LABEL=org.inklabsfoundation.inkchain
 
 DOCKER_GO_LDFLAGS += $(GO_LDFLAGS)
 DOCKER_GO_LDFLAGS += -linkmode external -extldflags '-static -lpthread'

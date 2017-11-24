@@ -144,8 +144,7 @@ func getKeyModificationFromTran(tranEnvelope *common.Envelope, namespace string,
 	if namespace == wallet.WALLET_NAMESPACE {
 		if ledgerSet.TranSet.From == key {
 			account := &wallet.Account{}
-			account.Address = wallet.StringToAddress(key)
-			//***************** [mtc-bug] multiple key
+			//***************** [issue] multiple key
 			accountBytes, jsonErr := json.Marshal(account)
 			if jsonErr != nil {
 				return nil, errors.New("error marshaling account")
@@ -156,8 +155,7 @@ func getKeyModificationFromTran(tranEnvelope *common.Envelope, namespace string,
 		for _, senderTranSet := range ledgerSet.TranSet.KvTranSet.Trans {
 			if senderTranSet.To == key {
 				account := &wallet.Account{}
-				account.Address = wallet.StringToAddress(key)
-				//***************** [mtc-bug] multiple key
+				//***************** [issue] multiple key
 				accountBytes, jsonErr := json.Marshal(account)
 				if jsonErr != nil {
 					return nil, errors.New("error marshaling account")

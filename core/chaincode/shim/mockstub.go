@@ -437,11 +437,6 @@ func (stub *MockStub) IssueToken(address string, balanceType string, amount *big
 		return errors.New("Cannot issue token without a transactions - call stub.MockTransactionStart()?")
 	}
 	account := &wallet.Account{}
-	accountAddress, err := wallet.HexToAddress(address)
-	if err != nil {
-		return err
-	}
-
 	accountJson, ok := stub.State[address]
 	if ok {
 		err := json.Unmarshal(accountJson, account)
@@ -453,7 +448,6 @@ func (stub *MockStub) IssueToken(address string, balanceType string, amount *big
 		}
 
 	}
-	account.Address = accountAddress
 	if account.Balance == nil {
 		account.Balance = make(map[string]*big.Int)
 	}

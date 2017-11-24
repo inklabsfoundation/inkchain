@@ -378,7 +378,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 				balance = balance.Add(balance, value)
 			}
 		} else {
-			account.Address = wallet.StringToAddress(accountUpdate)
 			account.Balance = balanceChange
 		}
 		account.Counter, _ = transferBatch.GetSenderCounter(accountUpdate)
@@ -416,7 +415,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 				}
 				accountVersion = versionedValue.Version
 			} else {
-				account.Address = wallet.BytesToAddress(feeAddress)
 				accountVersion = txHeight
 			}
 		}

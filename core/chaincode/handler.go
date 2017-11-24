@@ -23,7 +23,6 @@ import (
 	"sync"
 	"time"
 
-	"encoding/hex"
 	"encoding/json"
 	"math/big"
 
@@ -1297,13 +1296,6 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 					}
 				}
 			}
-
-			addressBytes, err := hex.DecodeString(string(issueTokenInfo.Address[:]))
-			if err != nil {
-				errHandler([]byte(unmarshalErr.Error()), "[%s]Unable to ecode address. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
-				return
-			}
-			account.Address = wallet.BytesToAddress(addressBytes)
 			if account.Balance == nil {
 				account.Balance = make(map[string]*big.Int)
 				account.Counter = 0
@@ -1314,7 +1306,7 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 				errHandler([]byte(unmarshalErr.Error()), "[%s]Unable to decipher payload. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
 				return
 			}
-			err = txContext.txsimulator.SetState(wallet.WALLET_NAMESPACE, account.Address.ToString(), jsonAccount)
+			err = txContext.txsimulator.SetState(wallet.WALLET_NAMESPACE, addressStr, jsonAccount)
 		} else if msg.Type.String() == pb.ChaincodeMessage_TRANSFER.String() {
 			transferInfo := &pb.TransferInfo{}
 			unmarshalErr := proto.Unmarshal(msg.Payload, transferInfo)

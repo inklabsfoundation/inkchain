@@ -15,7 +15,7 @@ services:
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
       - CORE_PEER_MSPCONFIGPATH=/etc/inkchain/crypto/peer/msp
-      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_KEY_FILE=/etc/inkchain/crypto/peer/tls/server.key
       - CORE_PEER_TLS_CERT_FILE=/etc/inkchain/crypto/peer/tls/server.crt
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/inkchain/crypto/peer/tls/ca.crt

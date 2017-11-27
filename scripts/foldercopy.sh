@@ -14,10 +14,10 @@ if [ "$2" != "inkchain" ]; then
 
 mkdir -p $HOME/gopath/src/github.com/inkchain
 
-	echo "inkchain/inkchain folder created"
+	echo "inklabsfoundation/inkchain folder created"
 
-git clone -ql $HOME/gopath/src/github.com/$2/$3 $HOME/gopath/src/github.com/inkchain/inkchain
+git clone -ql $HOME/gopath/src/github.com/$2/$3 $HOME/gopath/src/github.com/inklabsfoundation/inkchain
 
-	echo "linked $2 user repo into inkchain/inkchain folder"
+	echo "linked $2 user repo into inklabsfoundation/inkchain folder"
 
 fi

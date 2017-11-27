@@ -18,29 +18,29 @@ BASEIMAGE_RELEASE=0.3.1
 IMG_TAG_LATEST=0.10
 
 echo_b "===Pulling inkchain images... with tag = ${IMG_TAG_LATEST}"
-docker pull inkchain/inkchain-peer:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-tools:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-orderer:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-ccenv:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-peer:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-tools:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-orderer:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-ccenv:$ARCH-$IMG_TAG_LATEST
 
-docker pull inkchain/inkchain-baseimage:$ARCH-$BASEIMAGE_RELEASE
-docker pull inkchain/inkchain-baseos:$ARCH-$BASEIMAGE_RELEASE
-docker pull inkchain/inkchain-ca:x86_64-1.0.5
+docker pull inklabsfoundation/inkchain-baseimage:$ARCH-$BASEIMAGE_RELEASE
+docker pull inklabsfoundation/inkchain-baseos:$ARCH-$BASEIMAGE_RELEASE
+docker pull inklabsfoundation/inkchain-ca:$IMG_TAG_LATEST
 
-docker pull inkchain/inkchain-couchdb:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-kafka:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-zookeeper:$ARCH-$IMG_TAG_LATEST
-docker pull inkchain/inkchain-javaenv:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-couchdb:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-kafka:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-zookeeper:$ARCH-$IMG_TAG_LATEST
+docker pull inklabsfoundation/inkchain-javaenv:$ARCH-$IMG_TAG_LATEST
 
 echo_b "===Re-tagging images to *latest* tag"
-docker tag inkchain/inkchain-peer:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-peer
-docker tag inkchain/inkchain-tools:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-tools
-docker tag inkchain/inkchain-orderer:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-orderer
-docker tag inkchain/inkchain-zookeeper:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-zookeeper
-docker tag inkchain/inkchain-kafka:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-kafka
-docker tag inkchain/inkchain-couchdb:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-couchdb
-docker tag inkchain/inkchain-javaenv:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-javaenv
-docker tag inkchain/inkchain-ccenv:$ARCH-$IMG_TAG_LATEST inkchain/inkchain-ccenv
-docker tag inkchain/inkchain-ca:x86_64-1.0.5 inkchain/inkchain-ca
+docker tag inklabsfoundation/inkchain-peer:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-peer
+docker tag inklabsfoundation/inkchain-tools:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-tools
+docker tag inklabsfoundation/inkchain-orderer:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-orderer
+docker tag inklabsfoundation/inkchain-zookeeper:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-zookeeper
+docker tag inklabsfoundation/inkchain-kafka:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-kafka
+docker tag inklabsfoundation/inkchain-couchdb:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-couchdb
+docker tag inklabsfoundation/inkchain-javaenv:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-javaenv
+docker tag inklabsfoundation/inkchain-ccenv:$ARCH-$IMG_TAG_LATEST inklabsfoundation/inkchain-ccenv
+docker tag inklabsfoundation/inkchain-ca:$IMG_TAG_LATEST inklabsfoundation/inkchain-ca
 
 echo_b "Done, now can startup the network using docker-compose..."

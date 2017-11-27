@@ -47,24 +47,24 @@ see output similar to the following:
 
 ```bash
 REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
-inkchain/inkchain-tools        latest              7b18be3a82fe        4 days ago          1.34GB
-inkchain/inkchain-tools        x86_64-0.10         7b18be3a82fe        4 days ago          1.34GB
-inkchain/inkchain-couchdb      latest              eccce4288cf5        4 days ago          1.51GB
-inkchain/inkchain-couchdb      x86_64-0.10         eccce4288cf5        4 days ago          1.51GB
-inkchain/inkchain-kafka        latest              1bb4cd5bba69        4 days ago          1.3GB
-inkchain/inkchain-kafka        x86_64-0.10         1bb4cd5bba69        4 days ago          1.3GB
-inkchain/inkchain-zookeeper    latest              4eb257be4062        4 days ago          1.33GB
-inkchain/inkchain-zookeeper    x86_64-0.10         4eb257be4062        4 days ago          1.33GB
-inkchain/inkchain-orderer      latest              85cab7e9c4cf        4 days ago          180MB
-inkchain/inkchain-orderer      x86_64-0.10         85cab7e9c4cf        4 days ago          180MB
-inkchain/inkchain-peer         latest              0a7d33a7f6f0        4 days ago          183MB
-inkchain/inkchain-peer         x86_64-0.10         0a7d33a7f6f0        4 days ago          183MB
-inkchain/inkchain-javaenv      latest              09231aa0c8f0        4 days ago          1.42GB
-inkchain/inkchain-javaenv      x86_64-0.10         09231aa0c8f0        4 days ago          1.42GB
-inkchain/inkchain-ccenv        latest              53566e6b8ae2        4 days ago          1.29GB
-inkchain/inkchain-ccenv        x86_64-0.10         53566e6b8ae2        4 days ago          1.29GB
-inkchain/inkchain-baseimage    x86_64-0.3.1        c92d9fdee998        2 months ago        1.26GB
-inkchain/inkchain-baseos       x86_64-0.3.1        4b0cab202084        6 months ago        157MB
+inklabsfoundation/inkchain-tools       latest              5420d9596cbe        4 days ago          1.342 GB
+inklabsfoundation/inkchain-tools       x86_64-0.10         5420d9596cbe        4 days ago          1.342 GB
+inklabsfoundation/inkchain-couchdb     latest              b5c33a9fe7a6        4 days ago          1.514 GB
+inklabsfoundation/inkchain-couchdb     x86_64-0.10         b5c33a9fe7a6        4 days ago          1.514 GB
+inklabsfoundation/inkchain-kafka       latest              92008d73b9d1        4 days ago          1.309 GB
+inklabsfoundation/inkchain-kafka       x86_64-0.10         92008d73b9d1        4 days ago          1.309 GB
+inklabsfoundation/inkchain-zookeeper   latest              f6a70097a8f7        4 days ago          1.327 GB
+inklabsfoundation/inkchain-zookeeper   x86_64-0.10         f6a70097a8f7        4 days ago          1.327 GB
+inklabsfoundation/inkchain-orderer     latest              4fc46e39dce7        4 days ago          180.1 MB
+inklabsfoundation/inkchain-orderer     x86_64-0.10         4fc46e39dce7        4 days ago          180.1 MB
+inklabsfoundation/inkchain-peer        latest              a4e2ecb84b3b        4 days ago          183.4 MB
+inklabsfoundation/inkchain-peer        x86_64-0.10         a4e2ecb84b3b        4 days ago          183.4 MB
+inklabsfoundation/inkchain-javaenv     latest              f71fe027949a        4 days ago          1.425 GB
+inklabsfoundation/inkchain-javaenv     x86_64-0.10         f71fe027949a        4 days ago          1.425 GB
+inklabsfoundation/inkchain-ccenv       latest              09a38d154647        4 days ago          1.293 GB
+inklabsfoundation/inkchain-ccenv       x86_64-0.10         09a38d154647        4 days ago          1.293 GB
+inkchain/inkchain-baseimage            x86_64-0.3.1        c92d9fdee998        2 months ago        1.26GB
+inkchain/inkchain-baseos               x86_64-0.3.1        4b0cab202084        6 months ago        157MB
 ```
 
 ## Run the examples

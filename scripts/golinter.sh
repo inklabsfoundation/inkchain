@@ -25,7 +25,7 @@ for i in "${arr[@]}"
 do
     echo "Checking $i"
     go vet $i/...
-    OUTPUT="$(goimports -srcdir $GOPATH/src/github.com/inkchain/inkchain -l $i)"
+    OUTPUT="$(goimports -srcdir $GOPATH/src/github.com/inklabsfoundation/inkchain -l $i)"
     if [[ $OUTPUT ]]; then
 	echo "The following files contain goimports errors"
 	echo $OUTPUT

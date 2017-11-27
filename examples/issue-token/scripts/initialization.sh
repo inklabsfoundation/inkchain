@@ -17,6 +17,7 @@ CHANNEL_NAME="$1"
 COUNTER=0
 MAX_RETRY=5
 CC_PATH=github.com/inklabsfoundation/inkchain/examples/chaincode/go/token
+ORDERER_CA=/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
 echo_b "Chaincode Path : " $CC_PATH
 echo_b "Channel name : " $CHANNEL_NAME
@@ -31,7 +32,7 @@ verifyResult () {
 }
 
 createChannel() {
-    peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/mychannel.tx >&log.txt
+    peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/mychannel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
     res=$?
     cat log.txt
 
@@ -64,7 +65,7 @@ joinChannel () {
 }
 
 updateAnchorPeers() {
-    peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/Org1MSPanchors.tx >&log.txt
+    peer channel create -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -f ./channel-artifacts/Org1MSPanchors.tx >&log.txt
     res=$?
     cat log.txt
     verifyResult $res "Anchor peer update failed"
@@ -83,7 +84,7 @@ installChaincode () {
 
 instantiateChaincode () {
     local starttime=$(date +%s)
-    peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n token -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
+    peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
     res=$?
     cat log.txt
     verifyResult $res "Chaincode instantiation on pee0.org1 on channel '$CHANNEL_NAME' failed"

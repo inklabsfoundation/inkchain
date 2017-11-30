@@ -755,8 +755,8 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	if to == "" || len(to) != wallet.AddressStringLength {
 		return fmt.Errorf(".from and to should be valid addresses.")
 	}
-	if amount.Cmp(big.NewInt(0)) <= 0 {
-		return fmt.Errorf(".transfer amount should be a positive number.")
+	if amount.Cmp(big.NewInt(0)) < 0 {
+		return fmt.Errorf(".transfer amount should be a half-positive number.")
 	}
 	to = strings.ToLower(to)
 	tran := &kvtranset.KVTrans{}

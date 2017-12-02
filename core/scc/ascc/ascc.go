@@ -125,14 +125,11 @@ func (t *AssetSysCC) registerAndIssueToken(stub shim.ChaincodeStubInterface, arg
 
 	tokenName := args[0]
 
-	_, err = strconv.Atoi(args[1])
-	if err != nil {
+	totalSupply := big.NewInt(0)
+	_, good := totalSupply.SetString(args[1], 10)
+	if !good {
 		return shim.Error("Expecting integer value for totalSupply.")
 	}
-
-	totalSupply := big.NewInt(0)
-	totalSupply.SetString(args[1], 10)
-
 	dec, _ := strconv.Atoi(args[2])
 	addr := args[3]
 

@@ -90,8 +90,8 @@ func CacheConfiguration() (err error) {
 	localAddress, localAddressError = getLocalAddress()
 	peerEndpoint, _ = getPeerEndpoint()
 
-	wallet.MINIMUM_FEE = big.NewInt(0)
-	wallet.MINIMUM_FEE.SetString(viper.GetString("peer.minimumFee"), 10)
+	wallet.InkMinimumFee = big.NewInt(0)
+	wallet.InkMinimumFee.SetString(viper.GetString("peer.minimumFee"), 10)
 
 	configurationCached = true
 

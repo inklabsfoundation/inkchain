@@ -405,7 +405,7 @@ func (v *vsccValidatorImpl) GetInfoForValidate(txid, chID, ccID string) (*sysccp
 	var policy []byte
 	var err error
 	/// ascc
-	if ccID != "lscc" && ccID != "ascc" && ccID != "qscc" {
+	if ccID != "lscc" && ccID != "ascc" {
 		// when we are validating any chaincode other than
 		// LSCC, we need to ask LSCC to give us the name
 		// of VSCC and of the policy that should be used

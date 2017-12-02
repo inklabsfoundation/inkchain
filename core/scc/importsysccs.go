@@ -63,7 +63,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "qscc",
-		Path:              "github.com/inklabsfoundation/inkchain/core/chaincode/qscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/qscc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &qscc.LedgerQuerier{},
 		InvokableExternal: true, // qscc can be invoked to retrieve blocks
@@ -72,7 +72,7 @@ var systemChaincodes = []*SystemChaincode{
 	{
 		Enabled:           true,
 		Name:              "ascc",
-		Path:              "github.com/inklabsfoundation/inkchain/core/scc/tscc",
+		Path:              "github.com/inklabsfoundation/inkchain/core/scc/ascc",
 		InitArgs:          [][]byte{[]byte("")},
 		Chaincode:         &ascc.AssetSysCC{},
 		InvokableExternal: true, // ascc is invoked for token management

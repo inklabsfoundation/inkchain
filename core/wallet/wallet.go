@@ -20,7 +20,7 @@ const (
 type Hash [HashLength]byte
 type Address [AddressLength]byte
 
-var MINIMUM_FEE *big.Int
+var InkMinimumFee *big.Int
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`

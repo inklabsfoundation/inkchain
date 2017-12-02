@@ -21,6 +21,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 	cb "github.com/inklabsfoundation/inkchain/protos/common"
 	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var closedChan chan struct{}
@@ -66,14 +67,40 @@ func CreateNextBlock(rl Reader, messages []*cb.Envelope, feeAddress string) *cb.
 		nextBlockNumber = block.Header.Number + 1
 		previousBlockHash = block.Header.Hash()
 	}
-
-	data := &cb.BlockData{
-		Data: make([][]byte, len(messages)),
-	}
-
-	var err error
+	// bubble sort transactions by sender counter
+	tx_number := len(messages)
+	txOrder := make([]int, tx_number)
+	txCounter := make([]uint64, tx_number)
+	var j, i int
 	for i, msg := range messages {
-		data.Data[i], err = proto.Marshal(msg)
+		txOrder[i] = i
+		cis, _, err := putils.GetActionFromEnvelopePayload(msg.Payload)
+		if err != nil || cis.SenderSpec == nil {
+			txCounter[i] = 0
+		} else {
+			txCounter[i] = cis.SenderSpec.Counter
+		}
+	}
+	var temp uint64
+	var temp_idx int
+	for i = tx_number - 1; i > 0; i-- {
+		for j = tx_number - 1; j > tx_number-1-i; j-- {
+			if txCounter[j] < txCounter[j-1] {
+				temp = txCounter[j]
+				txCounter[j] = txCounter[j-1]
+				txCounter[j-1] = temp
+				temp_idx = txOrder[j]
+				txOrder[j] = txOrder[j-1]
+				txOrder[j-1] = temp_idx
+			}
+		}
+	}
+	data := &cb.BlockData{
+		Data: make([][]byte, tx_number),
+	}
+	var err error
+	for i, j := range txOrder {
+		data.Data[i], err = proto.Marshal(messages[j])
 		if err != nil {
 			panic(err)
 		}

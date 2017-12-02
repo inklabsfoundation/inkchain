@@ -107,7 +107,7 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if cis.Sig == nil || cis.SenderSpec == nil {
 		return nil
 	}
-	if cis.SenderSpec.Counter != account.Counter {
+	if cis.SenderSpec.Counter < account.Counter {
 		return fmt.Errorf("endorser: invalid counter")
 	}
 	inkFee, err := e.inkCalculator.CalcInk(byteCount)

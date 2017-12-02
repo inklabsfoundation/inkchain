@@ -60,7 +60,7 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 	counterValidated := false
 	senderCounter, ok := batch.GetSenderCounter(sender)
 	if ok && senderCounter != 0 {
-		if senderCounter != cis.SenderSpec.Counter {
+		if cis.SenderSpec.Counter != senderCounter {
 			return nil, fmt.Errorf("invalid counter")
 		}
 		counterValidated = true
@@ -76,8 +76,8 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 		if jsonErr != nil {
 			return nil, jsonErr
 		}
-		if !counterValidated && account.Counter != cis.SenderSpec.Counter {
-			return nil, fmt.Errorf("counter mismatch")
+		if !counterValidated && cis.SenderSpec.Counter != account.Counter {
+			return nil, fmt.Errorf("invalide counter (database)")
 		}
 		inkFee, err := v.inkCalculator.CalcInk(ledgerByteCount)
 		if inkFee.Cmp(big.NewInt(0)) > 0 {
@@ -307,10 +307,6 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 	return peer.TxValidationCode_VALID, nil
 }
 func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
-	// one (from,to) in one block
-	if updates.ExistsTransfer(from, kvTo.To) {
-		return peer.TxValidationCode_TRANSFER_CONFLICT, nil
-	}
 	balance, ok := accountBalance[kvTo.BalanceType]
 	if !ok {
 		return peer.TxValidationCode_BAD_BALANCE, nil

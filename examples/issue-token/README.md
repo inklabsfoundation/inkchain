@@ -28,11 +28,11 @@ wait,10 seconds or so, without error log output. execute a `docker ps` to view y
 containers. you shouled see an output identical to the following:
 
 ```bash
-CONTAINER ID        IMAGE                                                                                                   COMMAND                  CREATED             STATUS              PORTS                                            NAMES
-1c3c57cb4fda        inklabsfoundation/inkchain-tools                                                                        "bash -c 'while tr..."   About an hour ago   Up About an hour                                                     cli
-cc5376420976        inklabsfoundation/inkchain-peer                                                                         "peer node start"        About an hour ago   Up About an hour    0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
-06a7356b3b93        inklabsfoundation/inkchain-orderer                                                                      "orderer"                About an hour ago   Up About an hour    0.0.0.0:7050->7050/tcp                           orderer.example.com
-094d74de2ee6        inklabsfoundation/inkchain-ca                                                                           "sh -c 'inkchain-c..."   About an hour ago   Up About an hour    0.0.0.0:7054->7054/tcp                           ca_peerOrg1
+CONTAINER ID        IMAGE                                                  COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+1c3c57cb4fda        inklabsfoundation/inkchain-tools                       "bash -c 'while tr..."   About an hour ago   Up About an hour                                                     cli
+cc5376420976        inklabsfoundation/inkchain-peer                        "peer node start"        About an hour ago   Up About an hour    0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
+06a7356b3b93        inklabsfoundation/inkchain-orderer                     "orderer"                About an hour ago   Up About an hour    0.0.0.0:7050->7050/tcp                           orderer.example.com
+094d74de2ee6        inklabsfoundation/inkchain-ca                          "sh -c 'inkchain-c..."   About an hour ago   Up About an hour    0.0.0.0:7054->7054/tcp                           ca_peerOrg1
 
 ```
 

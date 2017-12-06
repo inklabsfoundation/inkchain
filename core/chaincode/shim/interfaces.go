@@ -197,17 +197,23 @@ type ChaincodeStubInterface interface {
 	// the event will be delivered to the current event listeners.
 	SetEvent(name string, payload []byte) error
 
-	//added by inkchain
-	//Tranfer implements atomic balance changes
-	//Transfer(from string, to string, amount *big.Int) error
+	// Interfaces added by Inklabs Foundation
+
+	// Tranfer implements atomic balance changes. It allows an transaction of
+	// a specific tpye of token (e.g., INK) from one account to another one.
 	Transfer(to string, balanceType string, amount *big.Int) error
 
 	MultiTransfer(trans *kvtranset.KVTranSet) error
 
+	// GetAccount returns the account information of the given address.
+	// Account information includes its address, balances of different kinds of tokens,
+	// and a counter.
 	GetAccount(address string) (*wallet.Account, error)
 
 	IssueToken(address string, balanceType string, amount *big.Int) error
 
+	// GetSender returns the sender's address. The address is
+	// revealed from his/her signature.
 	GetSender() (string, error)
 }
 

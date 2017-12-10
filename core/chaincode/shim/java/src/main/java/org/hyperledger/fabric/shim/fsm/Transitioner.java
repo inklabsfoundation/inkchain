@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.fsm;
+package org.inklabsfoundation.inkchain.shim.fsm;
 
-import org.inkchain.inkchain.shim.fsm.exceptions.NotInTransitionException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.NotInTransitionException;
 
 public class Transitioner {
 	

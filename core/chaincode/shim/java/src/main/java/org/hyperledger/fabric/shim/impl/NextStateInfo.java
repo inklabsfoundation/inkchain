@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
 
 public class NextStateInfo {
 

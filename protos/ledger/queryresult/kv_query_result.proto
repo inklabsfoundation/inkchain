@@ -19,7 +19,7 @@ syntax = "proto3";
 package queryresult;
 
 option go_package = "github.com/inklabsfoundation/inkchain/protos/ledger/queryresult";
-option java_package = "org.inkchain.inkchain.protos.ledger.queryresult";
+option java_package = "org.inklabsfoundation.inkchain.protos.ledger.queryresult";
 
 import "google/protobuf/timestamp.proto";
 

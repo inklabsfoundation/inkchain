@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
 import static java.util.stream.Collectors.toList;
 
@@ -23,16 +23,16 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.inkchain.inkchain.protos.ledger.queryresult.KvQueryResult;
-import org.inkchain.inkchain.protos.ledger.queryresult.KvQueryResult.KV;
-import org.inkchain.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryResultBytes;
-import org.inkchain.inkchain.shim.Chaincode.Response;
-import org.inkchain.inkchain.shim.ChaincodeStub;
-import org.inkchain.inkchain.shim.ledger.CompositeKey;
-import org.inkchain.inkchain.shim.ledger.KeyModification;
-import org.inkchain.inkchain.shim.ledger.KeyValue;
-import org.inkchain.inkchain.shim.ledger.QueryResultsIterator;
+import org.inklabsfoundation.inkchain.protos.ledger.queryresult.KvQueryResult;
+import org.inklabsfoundation.inkchain.protos.ledger.queryresult.KvQueryResult.KV;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryResultBytes;
+import org.inklabsfoundation.inkchain.shim.Chaincode.Response;
+import org.inklabsfoundation.inkchain.shim.ChaincodeStub;
+import org.inklabsfoundation.inkchain.shim.ledger.CompositeKey;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyModification;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyValue;
+import org.inklabsfoundation.inkchain.shim.ledger.QueryResultsIterator;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;

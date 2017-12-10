@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.inkchain.inkchain.shim.ledger;
+package org.inklabsfoundation.inkchain.shim.ledger;
 
 /**
  * Query Result associating a state key with a value.

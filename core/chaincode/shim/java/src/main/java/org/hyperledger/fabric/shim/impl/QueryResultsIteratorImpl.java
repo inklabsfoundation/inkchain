@@ -13,16 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryResponse;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryResultBytes;
-import org.inkchain.inkchain.shim.ledger.QueryResultsIterator;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryResponse;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryResultBytes;
+import org.inklabsfoundation.inkchain.shim.ledger.QueryResultsIterator;
 
 class QueryResultsIteratorImpl<T> implements QueryResultsIterator<T> {
 		

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.equalTo;
@@ -23,8 +23,8 @@ import static org.junit.Assert.assertThat;
 
 import java.util.stream.Stream;
 
-import org.inkchain.inkchain.protos.ledger.queryresult.KvQueryResult;
-import org.inkchain.inkchain.shim.ledger.KeyModification;
+import org.inklabsfoundation.inkchain.protos.ledger.queryresult.KvQueryResult;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyModification;
 import org.junit.Test;
 
 import com.google.protobuf.ByteString;

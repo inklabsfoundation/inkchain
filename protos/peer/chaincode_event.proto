@@ -15,7 +15,7 @@ limitations under the License.
 */
 syntax = "proto3";
 package protos;
-option java_package = "org.inkchain.inkchain.protos.peer";
+option java_package = "org.inklabsfoundation.inkchain.protos.peer";
 option java_outer_classname = "ChaincodeEventPackage";
 option go_package = "github.com/inklabsfoundation/inkchain/protos/peer";
 

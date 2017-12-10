@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim;
+package org.inklabsfoundation.inkchain.shim;
 
-import static org.inkchain.inkchain.shim.Chaincode.Response.Status.INTERNAL_SERVER_ERROR;
-import static org.inkchain.inkchain.shim.Chaincode.Response.Status.SUCCESS;
+import static org.inklabsfoundation.inkchain.shim.Chaincode.Response.Status.INTERNAL_SERVER_ERROR;
+import static org.inklabsfoundation.inkchain.shim.Chaincode.Response.Status.SUCCESS;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -31,13 +31,13 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.inkchain.inkchain.protos.peer.Chaincode.ChaincodeID;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type;
-import org.inkchain.inkchain.protos.peer.ChaincodeSupportGrpc;
-import org.inkchain.inkchain.protos.peer.ChaincodeSupportGrpc.ChaincodeSupportStub;
-import org.inkchain.inkchain.shim.impl.Handler;
-import org.inkchain.inkchain.shim.impl.NextStateInfo;
+import org.inklabsfoundation.inkchain.protos.peer.Chaincode.ChaincodeID;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeSupportGrpc;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeSupportGrpc.ChaincodeSupportStub;
+import org.inklabsfoundation.inkchain.shim.impl.Handler;
+import org.inklabsfoundation.inkchain.shim.impl.NextStateInfo;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
@@ -184,7 +184,7 @@ public abstract class ChaincodeBase implements Chaincode {
 				public void onNext(ChaincodeMessage message) {
 					logger.debug("Got message from peer: " + toJsonString(message));
 					try {
-						logger.debug(String.format("[%-8s]Received message %s from org.inkchain.inkchain.shim", message.getTxid(), message.getType()));
+						logger.debug(String.format("[%-8s]Received message %s from org.inklabsfoundation.inkchain.shim", message.getTxid(), message.getType()));
 						handler.handleMessage(message);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -209,7 +209,7 @@ public abstract class ChaincodeBase implements Chaincode {
 			System.exit(-1);
 		}
 
-		// Create the org.inkchain.inkchain.shim handler responsible for all
+		// Create the org.inklabsfoundation.inkchain.shim handler responsible for all
 		// control logic
 		handler = new Handler(requestObserver, this);
 

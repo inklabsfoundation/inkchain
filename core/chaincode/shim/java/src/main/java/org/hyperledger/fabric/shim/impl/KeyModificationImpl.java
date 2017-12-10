@@ -13,12 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
 import java.time.Instant;
 
-import org.inkchain.inkchain.protos.ledger.queryresult.KvQueryResult;
-import org.inkchain.inkchain.shim.ledger.KeyModification;
+import org.inklabsfoundation.inkchain.protos.ledger.queryresult.KvQueryResult;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyModification;
 
 import com.google.protobuf.ByteString;
 
@@ -39,7 +39,7 @@ public class KeyModificationImpl implements KeyModification {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.inkchain.inkchain.shim.impl.KeyModification#getTxId()
+	 * @see org.inklabsfoundation.inkchain.shim.impl.KeyModification#getTxId()
 	 */
 	@Override
 	public String getTxId() {
@@ -49,7 +49,7 @@ public class KeyModificationImpl implements KeyModification {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.inkchain.inkchain.shim.impl.KeyModification#getValue()
+	 * @see org.inklabsfoundation.inkchain.shim.impl.KeyModification#getValue()
 	 */
 	@Override
 	public byte[] getValue() {
@@ -59,7 +59,7 @@ public class KeyModificationImpl implements KeyModification {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.inkchain.inkchain.shim.impl.KeyModification#getStringValue()
+	 * @see org.inklabsfoundation.inkchain.shim.impl.KeyModification#getStringValue()
 	 */
 	@Override
 	public String getStringValue() {
@@ -69,7 +69,7 @@ public class KeyModificationImpl implements KeyModification {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.inkchain.inkchain.shim.impl.KeyModification#getTimestamp()
+	 * @see org.inklabsfoundation.inkchain.shim.impl.KeyModification#getTimestamp()
 	 */
 	@Override
 	public java.time.Instant getTimestamp() {
@@ -79,7 +79,7 @@ public class KeyModificationImpl implements KeyModification {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.inkchain.inkchain.shim.impl.KeyModification#isDeleted()
+	 * @see org.inklabsfoundation.inkchain.shim.impl.KeyModification#isDeleted()
 	 */
 	@Override
 	public boolean isDeleted() {

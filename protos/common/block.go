@@ -25,12 +25,13 @@ import (
 )
 
 // NewBlock construct a block with no data and no metadata.
-func NewBlock(seqNum uint64, previousHash []byte, feeAddress []byte) *Block {
+func NewBlock(seqNum uint64, previousHash []byte, feeAddress []byte, version uint64) *Block {
 	block := &Block{}
 	block.Header = &BlockHeader{}
 	block.Header.Number = seqNum
 	block.Header.PreviousHash = previousHash
 	block.Header.FeeAddress = feeAddress
+	block.Header.Version = version
 	block.Data = &BlockData{}
 
 	var metadataContents [][]byte
@@ -44,6 +45,7 @@ func NewBlock(seqNum uint64, previousHash []byte, feeAddress []byte) *Block {
 
 type asn1Header struct {
 	Number       int64
+	Version      int64
 	PreviousHash []byte
 	DataHash     []byte
 	FeeAddress   []byte
@@ -60,6 +62,11 @@ func (b *BlockHeader) Bytes() []byte {
 		panic(fmt.Errorf("Golang does not currently support encoding uint64 to asn1"))
 	} else {
 		asn1Header.Number = int64(b.Number)
+	}
+	if b.Version > uint64(math.MaxInt64) {
+		panic(fmt.Errorf("Golang does not currently support encoding uint64 to asn1"))
+	} else {
+		asn1Header.Version = int64(b.Version)
 	}
 	result, err := asn1.Marshal(asn1Header)
 	if err != nil {

@@ -112,7 +112,7 @@ func (t *tokenChaincode) getAccount(stub shim.ChaincodeStubInterface, args []str
 	// Get the state from the ledger
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get balance " + A + "\"}"
+		jsonResp := "{\"Error\":\"account not exists\"}"
 		return shim.Error(jsonResp)
 	}
 
@@ -157,7 +157,7 @@ func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []str
 	A = strings.ToLower(args[0])
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get account " + A + "\"}"
+		jsonResp := "{\"Error\":\"account not exists\"}"
 		return shim.Error(jsonResp)
 	}
 

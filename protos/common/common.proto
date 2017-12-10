@@ -153,9 +153,10 @@ message Block {
 
 message BlockHeader {
     uint64 number = 1; // The position in the blockchain
-    bytes previous_hash = 2; // The hash of the previous block header
-    bytes data_hash = 3; // The hash of the BlockData, by MerkleTree
-    bytes fee_address = 4; // The address of the fee allocation account
+    uint64 version = 2; // the version of the block structure
+    bytes previous_hash = 3; // The hash of the previous block header
+    bytes data_hash = 4; // The hash of the BlockData, by MerkleTree
+    bytes fee_address = 5; // The address of the fee allocation account
 }
 
 message BlockData {

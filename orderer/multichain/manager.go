@@ -66,6 +66,7 @@ type multiLedger struct {
 	systemChannelID string
 	systemChannel   *chainSupport
 	feeAddress      string
+	blockVersion    uint64
 }
 
 func getConfigTx(reader ledger.Reader) *cb.Envelope {
@@ -83,7 +84,7 @@ func getConfigTx(reader ledger.Reader) *cb.Envelope {
 }
 
 // NewManagerImpl produces an instance of a Manager
-func NewManagerImpl(ledgerFactory ledger.Factory, consenters map[string]Consenter, signer crypto.LocalSigner, feeAddress string) Manager {
+func NewManagerImpl(ledgerFactory ledger.Factory, consenters map[string]Consenter, signer crypto.LocalSigner, feeAddress string, blockVersion uint64) Manager {
 	ml := &multiLedger{
 		chains:        make(map[string]*chainSupport),
 		ledgerFactory: ledgerFactory,
@@ -111,12 +112,14 @@ func NewManagerImpl(ledgerFactory ledger.Factory, consenters map[string]Consente
 				ledgerResources,
 				consenters,
 				signer,
-				feeAddress)
+				feeAddress,
+				blockVersion)
 			logger.Infof("Starting with system channel %s and orderer type %s", chainID, chain.SharedConfig().ConsensusType())
 			ml.chains[chainID] = chain
 			ml.systemChannelID = chainID
 			ml.systemChannel = chain
 			ml.feeAddress = feeAddress
+			ml.blockVersion = blockVersion
 			// We delay starting this chain, as it might try to copy and replace the chains map via newChain before the map is fully built
 			defer chain.start()
 		} else {
@@ -125,7 +128,8 @@ func NewManagerImpl(ledgerFactory ledger.Factory, consenters map[string]Consente
 				ledgerResources,
 				consenters,
 				signer,
-				feeAddress)
+				feeAddress,
+				blockVersion)
 			ml.chains[chainID] = chain
 			chain.start()
 		}
@@ -158,20 +162,20 @@ func (ml *multiLedger) newLedgerResources(configTx *cb.Envelope) *ledgerResource
 
 	chainID := configManager.ChainID()
 
-	ledger, err := ml.ledgerFactory.GetOrCreate(chainID)
+	newLedger, err := ml.ledgerFactory.GetOrCreate(chainID)
 	if err != nil {
 		logger.Panicf("Error getting ledger for %s", chainID)
 	}
 
 	return &ledgerResources{
 		configResources: &configResources{Manager: configManager},
-		ledger:          ledger,
+		ledger:          newLedger,
 	}
 }
 
 func (ml *multiLedger) newChain(configtx *cb.Envelope) {
 	ledgerResources := ml.newLedgerResources(configtx)
-	ledgerResources.ledger.Append(ledger.CreateNextBlock(ledgerResources.ledger, []*cb.Envelope{configtx}, ml.feeAddress))
+	ledgerResources.ledger.Append(ledger.CreateNextBlock(ledgerResources.ledger, []*cb.Envelope{configtx}, ml.feeAddress, ml.blockVersion))
 
 	// Copy the map to allow concurrent reads from broadcast/deliver while the new chainSupport is
 	newChains := make(map[string]*chainSupport)
@@ -179,7 +183,7 @@ func (ml *multiLedger) newChain(configtx *cb.Envelope) {
 		newChains[key] = value
 	}
 
-	cs := newChainSupport(createStandardFilters(ledgerResources), ledgerResources, ml.consenters, ml.signer, ml.feeAddress)
+	cs := newChainSupport(createStandardFilters(ledgerResources), ledgerResources, ml.consenters, ml.signer, ml.feeAddress, ml.blockVersion)
 	chainID := ledgerResources.ChainID()
 
 	logger.Infof("Created and starting new chain %s", chainID)

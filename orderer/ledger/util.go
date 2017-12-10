@@ -49,7 +49,7 @@ func (nfei *NotFoundErrorIterator) ReadyChan() <-chan struct{} {
 // contents and metadata for a given ledger
 // XXX This will need to be modified to accept marshaled envelopes
 //     to accommodate non-deterministic marshaling
-func CreateNextBlock(rl Reader, messages []*cb.Envelope, feeAddress string) *cb.Block {
+func CreateNextBlock(rl Reader, messages []*cb.Envelope, feeAddress string, blockVersion uint64) *cb.Block {
 	var nextBlockNumber uint64
 	var previousBlockHash []byte
 
@@ -105,7 +105,7 @@ func CreateNextBlock(rl Reader, messages []*cb.Envelope, feeAddress string) *cb.
 			panic(err)
 		}
 	}
-	block := cb.NewBlock(nextBlockNumber, previousBlockHash, wallet.StringToAddress(feeAddress).ToBytes())
+	block := cb.NewBlock(nextBlockNumber, previousBlockHash, wallet.StringToAddress(feeAddress).ToBytes(), blockVersion)
 	block.Header.DataHash = data.Hash()
 	block.Data = data
 

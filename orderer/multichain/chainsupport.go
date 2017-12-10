@@ -111,6 +111,7 @@ type chainSupport struct {
 	lastConfig    uint64
 	lastConfigSeq uint64
 	feeAddress    string
+	blockVersion  uint64
 }
 
 func newChainSupport(
@@ -119,6 +120,7 @@ func newChainSupport(
 	consenters map[string]Consenter,
 	signer crypto.LocalSigner,
 	feeAddress string,
+	blockVersion uint64,
 ) *chainSupport {
 
 	cutter := blockcutter.NewReceiverImpl(ledgerResources.SharedConfig(), filters)
@@ -134,6 +136,7 @@ func newChainSupport(
 		filters:         filters,
 		signer:          signer,
 		feeAddress:      feeAddress,
+		blockVersion:    blockVersion,
 	}
 
 	cs.lastConfigSeq = cs.Sequence()
@@ -223,7 +226,7 @@ func (cs *chainSupport) Errored() <-chan struct{} {
 }
 
 func (cs *chainSupport) CreateNextBlock(messages []*cb.Envelope) *cb.Block {
-	return ledger.CreateNextBlock(cs.ledger, messages, cs.feeAddress)
+	return ledger.CreateNextBlock(cs.ledger, messages, cs.feeAddress, cs.blockVersion)
 }
 
 func (cs *chainSupport) addBlockSignature(block *cb.Block) {

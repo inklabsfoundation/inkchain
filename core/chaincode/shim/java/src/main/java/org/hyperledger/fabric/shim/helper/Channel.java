@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.helper;
+package org.inklabsfoundation.inkchain.shim.helper;
 
 import java.io.Closeable;
 import java.util.HashSet;

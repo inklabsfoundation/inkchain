@@ -13,10 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
-import org.inkchain.inkchain.protos.ledger.queryresult.KvQueryResult.KV;
-import org.inkchain.inkchain.shim.ledger.KeyValue;
+import org.inklabsfoundation.inkchain.protos.ledger.queryresult.KvQueryResult.KV;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyValue;
 
 import com.google.protobuf.ByteString;
 

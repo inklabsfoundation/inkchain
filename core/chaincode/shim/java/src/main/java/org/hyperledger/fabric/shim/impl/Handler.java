@@ -14,26 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.impl;
+package org.inklabsfoundation.inkchain.shim.impl;
 
 import static java.lang.String.format;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.COMPLETED;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.DEL_STATE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.ERROR;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_QUERY_RESULT;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_STATE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_STATE_BY_RANGE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.INIT;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.INVOKE_CHAINCODE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.PUT_STATE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.QUERY_STATE_CLOSE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.QUERY_STATE_NEXT;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.READY;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.REGISTERED;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.RESPONSE;
-import static org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.TRANSACTION;
-import static org.inkchain.inkchain.shim.fsm.CallbackType.AFTER_EVENT;
-import static org.inkchain.inkchain.shim.fsm.CallbackType.BEFORE_EVENT;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.COMPLETED;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.DEL_STATE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.ERROR;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_QUERY_RESULT;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_STATE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.GET_STATE_BY_RANGE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.INIT;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.INVOKE_CHAINCODE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.PUT_STATE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.QUERY_STATE_CLOSE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.QUERY_STATE_NEXT;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.READY;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.REGISTERED;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.RESPONSE;
+import static org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type.TRANSACTION;
+import static org.inklabsfoundation.inkchain.shim.fsm.CallbackType.AFTER_EVENT;
+import static org.inklabsfoundation.inkchain.shim.fsm.CallbackType.BEFORE_EVENT;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -44,30 +44,30 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.inkchain.inkchain.protos.peer.Chaincode.ChaincodeID;
-import org.inkchain.inkchain.protos.peer.Chaincode.ChaincodeInput;
-import org.inkchain.inkchain.protos.peer.Chaincode.ChaincodeSpec;
-import org.inkchain.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.GetQueryResult;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.GetStateByRange;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.PutStateInfo;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryResponse;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryStateClose;
-import org.inkchain.inkchain.protos.peer.ChaincodeShim.QueryStateNext;
-import org.inkchain.inkchain.protos.peer.ProposalResponsePackage.Response;
-import org.inkchain.inkchain.protos.peer.ProposalResponsePackage.Response.Builder;
-import org.inkchain.inkchain.shim.Chaincode;
-import org.inkchain.inkchain.shim.ChaincodeBase;
-import org.inkchain.inkchain.shim.ChaincodeStub;
-import org.inkchain.inkchain.shim.fsm.CBDesc;
-import org.inkchain.inkchain.shim.fsm.Event;
-import org.inkchain.inkchain.shim.fsm.EventDesc;
-import org.inkchain.inkchain.shim.fsm.FSM;
-import org.inkchain.inkchain.shim.fsm.exceptions.CancelledException;
-import org.inkchain.inkchain.shim.fsm.exceptions.NoTransitionException;
-import org.inkchain.inkchain.shim.helper.Channel;
+import org.inklabsfoundation.inkchain.protos.peer.Chaincode.ChaincodeID;
+import org.inklabsfoundation.inkchain.protos.peer.Chaincode.ChaincodeInput;
+import org.inklabsfoundation.inkchain.protos.peer.Chaincode.ChaincodeSpec;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.ChaincodeMessage.Type;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.GetQueryResult;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.GetStateByRange;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.PutStateInfo;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryResponse;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryStateClose;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeShim.QueryStateNext;
+import org.inklabsfoundation.inkchain.protos.peer.ProposalResponsePackage.Response;
+import org.inklabsfoundation.inkchain.protos.peer.ProposalResponsePackage.Response.Builder;
+import org.inklabsfoundation.inkchain.shim.Chaincode;
+import org.inklabsfoundation.inkchain.shim.ChaincodeBase;
+import org.inklabsfoundation.inkchain.shim.ChaincodeStub;
+import org.inklabsfoundation.inkchain.shim.fsm.CBDesc;
+import org.inklabsfoundation.inkchain.shim.fsm.Event;
+import org.inklabsfoundation.inkchain.shim.fsm.EventDesc;
+import org.inklabsfoundation.inkchain.shim.fsm.FSM;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.CancelledException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.NoTransitionException;
+import org.inklabsfoundation.inkchain.shim.helper.Channel;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -474,7 +474,7 @@ public class Handler {
 		}
 	}
 
-	// handleMessage message handles loop for org.inkchain.inkchain.shim side
+	// handleMessage message handles loop for org.inklabsfoundation.inkchain.shim side
 	// of chaincode/validator stream.
 	public synchronized void handleMessage(ChaincodeMessage message) throws Exception {
 
@@ -488,7 +488,7 @@ public class Handler {
 		logger.debug(String.format("[%-8s]Handling ChaincodeMessage of type: %s(state:%s)", message.getTxid(), message.getType(), fsm.current()));
 
 		if (fsm.eventCannotOccur(message.getType().toString())) {
-			String errStr = String.format("[%s]Chaincode handler org.inkchain.inkchain.shim.fsm cannot handle message (%s) with payload size (%d) while in state: %s", message.getTxid(), message.getType(), message.getPayload().size(), fsm.current());
+			String errStr = String.format("[%s]Chaincode handler org.inklabsfoundation.inkchain.shim.fsm cannot handle message (%s) with payload size (%d) while in state: %s", message.getTxid(), message.getType(), message.getPayload().size(), fsm.current());
 			serialSend(newErrorEventMessage(message.getTxid(), errStr));
 			throw new RuntimeException(errStr);
 		}

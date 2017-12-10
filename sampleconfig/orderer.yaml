@@ -100,6 +100,7 @@ General:
             FileKeyStore:
                 KeyStore:
     FeeAddress: ACAdB8391bc793495C203D58d57776DcD5CA83AD
+    BlockVersion: 1
 ################################################################################
 #
 #   SECTION: File Ledger

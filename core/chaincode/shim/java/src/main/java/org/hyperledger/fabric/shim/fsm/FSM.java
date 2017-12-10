@@ -14,18 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.inkchain.inkchain.shim.fsm;
+package org.inklabsfoundation.inkchain.shim.fsm;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.inkchain.inkchain.shim.fsm.exceptions.AsyncException;
-import org.inkchain.inkchain.shim.fsm.exceptions.CancelledException;
-import org.inkchain.inkchain.shim.fsm.exceptions.InTrasistionException;
-import org.inkchain.inkchain.shim.fsm.exceptions.InvalidEventException;
-import org.inkchain.inkchain.shim.fsm.exceptions.NoTransitionException;
-import org.inkchain.inkchain.shim.fsm.exceptions.NotInTransitionException;
-import org.inkchain.inkchain.shim.fsm.exceptions.UnknownEventException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.AsyncException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.CancelledException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.InTrasistionException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.InvalidEventException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.NoTransitionException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.NotInTransitionException;
+import org.inklabsfoundation.inkchain.shim.fsm.exceptions.UnknownEventException;
 
 public class FSM {
 

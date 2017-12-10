@@ -81,6 +81,7 @@ type General struct {
 	LocalMSPID     string
 	BCCSP          *bccsp.FactoryOpts
 	FeeAddress     string
+	BlockVersion   uint64
 }
 
 // TLS contains config for TLS connections.
@@ -173,11 +174,12 @@ var defaults = TopLevel{
 			Enabled: false,
 			Address: "0.0.0.0:6060",
 		},
-		LogLevel:    "INFO",
-		LocalMSPDir: "msp",
-		LocalMSPID:  "DEFAULT",
-		BCCSP:       bccsp.GetDefaultOpts(),
-		FeeAddress:  "411b6f8f24F28CaAFE514c16E11800167f8EBd89",
+		LogLevel:     "INFO",
+		LocalMSPDir:  "msp",
+		LocalMSPID:   "DEFAULT",
+		BCCSP:        bccsp.GetDefaultOpts(),
+		FeeAddress:   "411b6f8f24F28CaAFE514c16E11800167f8EBd89",
+		BlockVersion: 1,
 	},
 	RAMLedger: RAMLedger{
 		HistorySize: 10000,
@@ -279,6 +281,10 @@ func (c *TopLevel) completeInitialization(configDir string) {
 		case c.General.GenesisProfile == "":
 			c.General.GenesisProfile = defaults.General.GenesisProfile
 
+		case c.General.FeeAddress == "":
+			c.General.FeeAddress = "ACAdB8391bc793495C203D58d57776DcD5CA83AD"
+		case c.General.BlockVersion == 0:
+			c.General.BlockVersion = 1
 		case c.Kafka.TLS.Enabled && c.Kafka.TLS.Certificate == "":
 			logger.Panicf("General.Kafka.TLS.Certificate must be set if General.Kafka.TLS.Enabled is set to true.")
 		case c.Kafka.TLS.Enabled && c.Kafka.TLS.PrivateKey == "":

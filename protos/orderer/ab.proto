@@ -19,7 +19,7 @@ syntax = "proto3";
 import "common/common.proto";
 
 option go_package = "github.com/inklabsfoundation/inkchain/protos/orderer";
-option java_package = "org.inkchain.inkchain.protos.orderer";
+option java_package = "org.inklabsfoundation.inkchain.protos.orderer";
 
 package orderer;
 

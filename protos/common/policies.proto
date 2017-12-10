@@ -19,7 +19,7 @@ syntax = "proto3";
 import "msp/msp_principal.proto";
 
 option go_package = "github.com/inklabsfoundation/inkchain/protos/common";
-option java_package = "org.inkchain.inkchain.protos.common";
+option java_package = "org.inklabsfoundation.inkchain.protos.common";
 
 package common;
 

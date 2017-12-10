@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.inkchain.inkchain.shim;
+package org.inklabsfoundation.inkchain.shim;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
@@ -21,12 +21,12 @@ import static java.util.stream.Collectors.toList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.inkchain.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
-import org.inkchain.inkchain.shim.Chaincode.Response;
-import org.inkchain.inkchain.shim.ledger.CompositeKey;
-import org.inkchain.inkchain.shim.ledger.KeyModification;
-import org.inkchain.inkchain.shim.ledger.KeyValue;
-import org.inkchain.inkchain.shim.ledger.QueryResultsIterator;
+import org.inklabsfoundation.inkchain.protos.peer.ChaincodeEventPackage.ChaincodeEvent;
+import org.inklabsfoundation.inkchain.shim.Chaincode.Response;
+import org.inklabsfoundation.inkchain.shim.ledger.CompositeKey;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyModification;
+import org.inklabsfoundation.inkchain.shim.ledger.KeyValue;
+import org.inklabsfoundation.inkchain.shim.ledger.QueryResultsIterator;
 
 public interface ChaincodeStub {
 

@@ -94,6 +94,9 @@ func addHeaderBytes(blockHeader *common.BlockHeader, buf *proto.Buffer) error {
 	if err := buf.EncodeVarint(blockHeader.Number); err != nil {
 		return err
 	}
+	if err := buf.EncodeVarint(blockHeader.Version); err != nil {
+		return err
+	}
 	if err := buf.EncodeRawBytes(blockHeader.DataHash); err != nil {
 		return err
 	}
@@ -147,6 +150,9 @@ func extractHeader(buf *ledgerutil.Buffer) (*common.BlockHeader, error) {
 	header := &common.BlockHeader{}
 	var err error
 	if header.Number, err = buf.DecodeVarint(); err != nil {
+		return nil, err
+	}
+	if header.Version, err = buf.DecodeVarint(); err != nil {
 		return nil, err
 	}
 	if header.DataHash, err = buf.DecodeRawBytes(false); err != nil {

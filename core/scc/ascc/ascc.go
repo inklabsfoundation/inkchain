@@ -1,9 +1,7 @@
 /*
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
 
-System Chaincode about Token
-
-Ziggurat
-
+SPDX-License-Identifier: Apache-2.0
 */
 
 package ascc

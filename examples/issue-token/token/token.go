@@ -1,12 +1,7 @@
 /*
-	user chaincode for token
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
 
-	After a token issued, users can use this chaincode to make query or transfer operations.
-
-	"query": query a specific token in an account
-
-	"transfer": transfer a specific token to another account
-
+SPDX-License-Identifier: Apache-2.0
 */
 
 package main
@@ -31,31 +26,35 @@ const (
 	Sender     string = "sender"
 )
 
+// User chaincode for token operations
+// After a token issued, users can use this chaincode to make query or transfer operations.
 type tokenChaincode struct {
 }
 
-//Init func
+// Init func
 func (t *tokenChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println("token user chaincode Init.")
 	return shim.Success([]byte("Init success."))
 }
 
-//Invoke func
+// Invoke func
 func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println("token user chaincode Invoke")
 	function, args := stub.GetFunctionAndParameters()
 
 	switch function {
 	case GetBalance:
-		if len(args) != 2 { //name
+		if len(args) != 2 {
 			return shim.Error("Incorrect number of arguments. Expecting 2.")
 		}
 		return t.getBalance(stub, args)
+
 	case GetAccount:
-		if len(args) != 1 { //name
+		if len(args) != 1 {
 			return shim.Error("Incorrect number of arguments. Expecting 1.")
 		}
 		return t.getAccount(stub, args)
+
 	case Transfer:
 		if len(args) != 3 {
 			return shim.Error("Incorrect number of arguments. Expecting 3")
@@ -77,13 +76,14 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"getBalance\", \"transfer\" or \"sender\".")
+	return shim.Error("Invalid invoke function name. Expecting \"getBalance\", \"getAccount\", \"transfer\", \"counter\" or \"sender\".")
 }
 
 // getBalance
+// Get the balance of a specific token type in an account
 func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Entities
-	var BalanceType string
+	var A string // Address
+	var BalanceType string // Token type
 	var err error
 
 	A = strings.ToLower(args[0])
@@ -91,7 +91,7 @@ func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []str
 	// Get the state from the ledger
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get balance " + A + "\"}"
+		jsonResp := "{\"Error\":\"account not exists\"}"
 		return shim.Error(jsonResp)
 	}
 
@@ -104,15 +104,17 @@ func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []str
 	return shim.Success([]byte(jsonResp))
 }
 
+// getAccount
+// Get the balances of all token types in an account
 func (t *tokenChaincode) getAccount(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Entities
+	var A string // Address
 	var err error
 
 	A = strings.ToLower(args[0])
 	// Get the state from the ledger
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get balance " + A + "\"}"
+		jsonResp := "{\"Error\":\"account not exists\"}"
 		return shim.Error(jsonResp)
 	}
 
@@ -129,14 +131,16 @@ func (t *tokenChaincode) getAccount(stub shim.ChaincodeStubInterface, args []str
 }
 
 // transfer
+// Send tokens to the specified address
 func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var B string // Entities
-	var BalanceType string
+	var B string // To address
+	var BalanceType string // Token type
 	var err error
 
 	B = strings.ToLower(args[0])
 	BalanceType = args[1]
 
+	// Amount
 	amount := big.NewInt(0)
 	_, good := amount.SetString(args[2], 10)
 	if !good {
@@ -150,14 +154,15 @@ func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []strin
 }
 
 // counter
+// Get current tx counter of an account
 func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Entities
+	var A string // Address
 	var err error
 
 	A = strings.ToLower(args[0])
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get account " + A + "\"}"
+		jsonResp := "{\"Error\":\"account not exists\"}"
 		return shim.Error(jsonResp)
 	}
 
@@ -174,6 +179,6 @@ func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []str
 func main() {
 	err := shim.Start(new(tokenChaincode))
 	if err != nil {
-		fmt.Printf("Error starting Simple chaincode: %s", err)
+		fmt.Printf("Error starting tokenChaincode: %s", err)
 	}
 }

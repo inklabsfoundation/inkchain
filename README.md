@@ -54,6 +54,6 @@ In addition, the INK consortium blockchain inherits all the superior features of
 
 ### Documentations
 
-* [Getting started](docs/getting-started.md)
+* [Getting Started](docs/getting-started.md)
 * [Smart Contract Interfaces](docs/chaincode_interfaces.md)
 * [Use Cases](docs/usecases.md)

@@ -72,6 +72,7 @@ func Cmd(cf *ChannelCmdFactory) *cobra.Command {
 	channelCmd.AddCommand(joinCmd(cf))
 	channelCmd.AddCommand(listCmd(cf))
 	channelCmd.AddCommand(updateCmd(cf))
+	channelCmd.AddCommand(signconfigtxCmd(cf))
 
 	return channelCmd
 }

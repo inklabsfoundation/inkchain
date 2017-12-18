@@ -27,8 +27,8 @@
 #   - unit-test-clean - cleans unit test state (particularly from docker)
 
 PROJECT_NAME   = inklabsfoundation/inkchain
-BASE_VERSION = 0.10.2
-PREV_VERSION = 0.10.1
+BASE_VERSION = 0.10.3
+PREV_VERSION = 0.10.2
 IS_RELEASE = true
 
 ifneq ($(IS_RELEASE),true)

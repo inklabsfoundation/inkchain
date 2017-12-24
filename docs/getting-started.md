@@ -46,25 +46,27 @@ Execute a `docker images` command in yout terminal, If the images compiled succe
 see output similar to the following:
 
 ```bash
-REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
-inklabsfoundation/inkchain-tools       latest              5420d9596cbe        4 days ago          1.342 GB
-inklabsfoundation/inkchain-tools       x86_64-0.10.2       5420d9596cbe        4 days ago          1.342 GB
-inklabsfoundation/inkchain-couchdb     latest              b5c33a9fe7a6        4 days ago          1.514 GB
-inklabsfoundation/inkchain-couchdb     x86_64-0.10.2       b5c33a9fe7a6        4 days ago          1.514 GB
-inklabsfoundation/inkchain-kafka       latest              92008d73b9d1        4 days ago          1.309 GB
-inklabsfoundation/inkchain-kafka       x86_64-0.10.2       92008d73b9d1        4 days ago          1.309 GB
-inklabsfoundation/inkchain-zookeeper   latest              f6a70097a8f7        4 days ago          1.327 GB
-inklabsfoundation/inkchain-zookeeper   x86_64-0.10.2       f6a70097a8f7        4 days ago          1.327 GB
-inklabsfoundation/inkchain-orderer     latest              4fc46e39dce7        4 days ago          180.1 MB
-inklabsfoundation/inkchain-orderer     x86_64-0.10.2       4fc46e39dce7        4 days ago          180.1 MB
-inklabsfoundation/inkchain-peer        latest              a4e2ecb84b3b        4 days ago          183.4 MB
-inklabsfoundation/inkchain-peer        x86_64-0.10.2       a4e2ecb84b3b        4 days ago          183.4 MB
-inklabsfoundation/inkchain-javaenv     latest              f71fe027949a        4 days ago          1.425 GB
-inklabsfoundation/inkchain-javaenv     x86_64-0.10.2       f71fe027949a        4 days ago          1.425 GB
-inklabsfoundation/inkchain-ccenv       latest              09a38d154647        4 days ago          1.293 GB
-inklabsfoundation/inkchain-ccenv       x86_64-0.10         09a38d154647        4 days ago          1.293 GB
-inkchain/inkchain-baseimage            x86_64-0.3.1        c92d9fdee998        2 months ago        1.26GB
-inkchain/inkchain-baseos               x86_64-0.3.1        4b0cab202084        6 months ago        157MB
+REPOSITORY                             TAG                    IMAGE ID            CREATED             SIZE
+inklabsfoundation/inkchain-tools       latest                 b94ae27d0032        8 days ago          1.342 GB
+inklabsfoundation/inkchain-tools       x86_64-0.10.3          b94ae27d0032        8 days ago          1.342 GB
+inklabsfoundation/inkchain-couchdb     latest                 71e7a843daac        8 days ago          1.514 GB
+inklabsfoundation/inkchain-couchdb     x86_64-0.10.3          71e7a843daac        8 days ago          1.514 GB
+inklabsfoundation/inkchain-kafka       latest                 1448be36a1d7        9 days ago          1.309 GB
+inklabsfoundation/inkchain-kafka       x86_64-0.10.3          1448be36a1d7        9 days ago          1.309 GB
+inklabsfoundation/inkchain-zookeeper   latest                 e9e3cc6b2883        9 days ago          1.327 GB
+inklabsfoundation/inkchain-zookeeper   x86_64-0.10.3          e9e3cc6b2883        9 days ago          1.327 GB
+inklabsfoundation/inkchain-orderer     latest                 fbb3b9b060a6        9 days ago          180.1 MB
+inklabsfoundation/inkchain-orderer     x86_64-0.10.3          fbb3b9b060a6        9 days ago          180.1 MB
+inklabsfoundation/inkchain-peer        latest                 ae96a865e213        9 days ago          183.4 MB
+inklabsfoundation/inkchain-peer        x86_64-0.10.3          ae96a865e213        9 days ago          183.4 MB
+inklabsfoundation/inkchain-javaenv     latest                 ef62109f2ad1        9 days ago          1.425 GB
+inklabsfoundation/inkchain-javaenv     x86_64-0.10.3          ef62109f2ad1        9 days ago          1.425 GB
+inklabsfoundation/inkchain-ccenv       latest                 dcaef40a4d5a        9 days ago          1.293 GB
+inklabsfoundation/inkchain-ccenv       x86_64-0.10.3          dcaef40a4d5a        9 days ago          1.293 GB
+inklabsfoundation/inkchain-ca          latest                 4f610a5b8393        7 weeks ago         238.2 MB
+inklabsfoundation/inkchain-ca          x86_64-0.10.3          4f610a5b8393        7 weeks ago         238.2 MB
+inklabsfoundation/inkchain-baseimage   x86_64-0.3.1           9f2e9ec7c527        7 months ago        1.268 GB
+inklabsfoundation/inkchain-baseos      x86_64-0.3.1           4b0cab202084        7 months ago        156.6 MB
 ```
 
 ## Run the examples

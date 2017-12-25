@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+#
+#Copyright Ziggurat Corp. 2017 All Rights Reserved.
+#
+#SPDX-License-Identifier: Apache-2.0
+#
+
 # Detecting whether can import the header file to render colorful cli output
 if [ -f ./header.sh ]; then
  source ./header.sh

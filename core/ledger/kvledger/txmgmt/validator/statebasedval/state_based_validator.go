@@ -164,7 +164,8 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		}
 		//validate transfer
 		if ledgerSet.TranSet != nil {
-			if txResult, err = v.validateTrans(ledgerSet.TranSet, transferUpdates, senderCounter.Ink); err != nil || txResult != peer.TxValidationCode_VALID {
+			if txResult, err = v.validateTrans(ledgerSet.TranSet, transferUpdates, senderCounter.Ink); err != nil ||
+				(txResult != peer.TxValidationCode_VALID && txResult != peer.TxValidationCode_EXCEED_BALANCE) {
 				ledgerSet.TxRwSet = nil
 				ledgerSet.TranSet = nil
 				return nil, nil, senderCounter, txResult, err

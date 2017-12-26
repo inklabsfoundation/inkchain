@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+#Copyright yeasy. 2017 All Rights Reserved.
+#
+#SPDX-License-Identifier: Apache-2.0
+#
 
 ## DO NOT MODIFY THE FOLLOWING PART, UNLESS YOU KNOW WHAT IT MEANS ##
 echo_r () {

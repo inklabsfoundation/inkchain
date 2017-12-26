@@ -71,4 +71,4 @@ inklabsfoundation/inkchain-baseos      x86_64-0.3.1           4b0cab202084      
 
 ## Run the examples
 
-We provide an example [token issue](../examples/issue-token) which based on inkchain.
+We provide an example [token issue](../examples/cli_test) which based on inkchain.

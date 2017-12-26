@@ -125,7 +125,7 @@ func (txmgr *LockBasedTxMgr) ShouldRecover(lastAvailableBlock uint64) (bool, uin
 // CommitLostBlock implements method in interface kvledger.Recoverer
 func (txmgr *LockBasedTxMgr) CommitLostBlock(block *common.Block) error {
 	logger.Debugf("Constructing updateSet for the block %d", block.Header.Number)
-	if err := txmgr.ValidateAndPrepare(block, false); err != nil {
+	if err := txmgr.ValidateAndPrepare(block, true); err != nil {
 		return err
 	}
 	logger.Debugf("Committing block %d to state database", block.Header.Number)

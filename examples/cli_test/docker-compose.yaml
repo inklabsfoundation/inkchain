@@ -86,6 +86,7 @@ services:
         #- /var/run/:/host/var/run/
         - ../token:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/token
         - ../marbles:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/marbles
+        - ../asset:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/asset
         - ./channel/crypto-config:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/scripts/
         - ./channel/mychannel.tx:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/channel-artifacts/mychannel.tx

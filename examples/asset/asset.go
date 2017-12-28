@@ -4,15 +4,19 @@ Copyright Ziggurat Corp. 2017 All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
 */
 
+// Asset: a demo chaincode for inkchain
+
 package main
 
 import (
 	"fmt"
-	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
-	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"strconv"
 	"encoding/json"
 	"strings"
+	"math/big"
+
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 const (
@@ -21,8 +25,9 @@ const (
 	QueryUser			string = "queryUser"
 	AddAsset			string = "addAsset"
 	ReadAsset			string = "readAsset"
+	EditAsset			string = "editAsset"
 	DeleteAsset			string = "deleteAsset"
-	TransferAsset		string = "transferAsset"
+	BuyAsset			string = "buyAsset"
 	QueryAssetsByOwner	string = "queryAssetsByOwner"
 	GetHistoryForAsset	string = "getHistoryForAsset"
 )
@@ -47,6 +52,8 @@ type asset struct {
 	Name 	string `json:"name"`
 	Type 	string `json:"type"`
 	Content	string `json:"content"`
+	PriceType	string `json:"price_type"`
+	Price	*big.Int `json:"price"`
 	Owner 	string `json:"owner"`	// store the name of the asset here
 }
 
@@ -68,8 +75,9 @@ func (t *assetChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 // Invoke func
+// ===========================
 func (t *assetChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
-	fmt.Println("assetChaincode Invoke")
+	fmt.Println("assetChaincode Invoke.")
 	function, args := stub.GetFunctionAndParameters()
 
 	switch function {
@@ -79,7 +87,7 @@ func (t *assetChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		}
 		// args[0]: user name
 		// args[1]: user age
-		// user address could be revealed from private key provided when invoking
+		// note: user address could be revealed from private key provided when invoking
 		return t.addUser(stub, args)
 
 	case QueryUser:
@@ -90,13 +98,15 @@ func (t *assetChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.queryUser(stub, args)
 
 	case AddAsset:
-		if len(args) != 4 {
-			return shim.Error("Incorrect number of arguments. Expecting 1.")
+		if len(args) != 6 {
+			return shim.Error("Incorrect number of arguments. Expecting 6.")
 		}
 		// args[0]: asset name
 		// args[1]: type
 		// args[2]: content
-		// args[3]: owner
+		// args[3]: price_type
+		// args[4]: price
+		// args[5]: owner
 		return t.addAsset(stub, args)
 
 	case ReadAsset:
@@ -106,22 +116,40 @@ func (t *assetChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		// args[0]: asset name
 		return t.readAsset(stub, args)
 
+	case EditAsset:
+		if len(args) != 3 {
+			return shim.Error("Incorrect number of arguments. Expecting 3.")
+		}
+		// args[0]: asset name
+		// args[1]: field name
+		// args[2]: new value
+		return t.editAsset(stub, args)
+
 	case DeleteAsset:
 		if len(args) != 1 {
 			return shim.Error("Incorrect number of arguments. Expecting 1.")
 		}
 		// args[0]: asset name
 		return t.delAsset(stub, args)
+
+	case BuyAsset:
+		if len(args) != 2 {
+			return shim.Error("Incorrect number of arguments. Expecting 2.")
+		}
+		// args[0]: asset name
+		// args[1]: buyer's name
+		return t.buyAsset(stub, args)
+
 		// TODO:
-	//case TransferAsset:	
-	//case QueryAssetsByOwner:
-	//case GetHistoryForAsset:
+		//case QueryAssetsByOwner:
+		//case GetHistoryForAsset:
 	}
 
 	return shim.Error("Invalid invoke function name.")
 }
 
 // addUser: Register a new user
+// ===========================
 func (t *assetChaincode) addUser(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var new_name string
 	var new_age int
@@ -164,7 +192,8 @@ func (t *assetChaincode) addUser(stub shim.ChaincodeStubInterface, args []string
 	return shim.Success([]byte("User register success."))
 }
 
-// queryUser: query the informatioin of a user
+// queryUser: query the information of a user
+// ===========================
 func (t *assetChaincode) queryUser(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	user_name := args[0]
 	user_key := UserPrefix + user_name
@@ -181,14 +210,22 @@ func (t *assetChaincode) queryUser(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Success(userAsBytes)
 }
 
-// addasset: add a new asset
+// addAsset: add a new asset
+// ===========================
 func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	asset_name := args[0]
 	asset_key := AssetPrefix + asset_name
 
 	asset_type := args[1]
 	asset_content := args[2]
-	owner_name := args[3]
+	asset_price_type := args[3]
+	// price
+	asset_price := big.NewInt(0)
+	_, good := asset_price.SetString(args[4], 10)
+	if !good {
+		return shim.Error("Expecting integer value for amount")
+	}
+	owner_name := args[5]
 
 	// verify weather the owner exists
 	owner_key := UserPrefix + owner_name
@@ -202,7 +239,7 @@ func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []strin
 	}
 
 	// register asset
-	asset := &asset{asset_name, asset_type,asset_content, owner_name}
+	asset := &asset{asset_name, asset_type,asset_content, asset_price_type, asset_price,owner_name}
 	assetJSONasBytes, err := json.Marshal(asset)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -215,7 +252,8 @@ func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []strin
 	return shim.Success([]byte("asset register success."))
 }
 
-// readassetcut: query the informatioin of a user
+// readAsset: query the informatioin of a asset
+// ===========================
 func (t *assetChaincode) readAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	asset_name := args[0]
 	asset_key := AssetPrefix + asset_name
@@ -232,13 +270,72 @@ func (t *assetChaincode) readAsset(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Success(assetAsBytes)
 }
 
-// delassetcut: del a specific asset by name
-func (t *assetChaincode) delAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+// editAsset: edit the asset
+// ===========================
+func (t *assetChaincode) editAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	asset_name := args[0]
 	asset_key := AssetPrefix + asset_name
 
+	field_name := args[1]
+	field_value := args[2]
 
-	fmt.Println( " - delete asset begin. ")
+	assetAsBytes, err := stub.GetState(asset_key)
+	if err != nil {
+		return shim.Error("Fail to get asset: " + err.Error())
+	}
+	if assetAsBytes == nil {
+		fmt.Println("This asset doesn't exist: " + asset_name)
+		return shim.Error("This asset doesn't exist: " + asset_name)
+	}
+
+	var assetJSON asset
+	err = json.Unmarshal([]byte(assetAsBytes), &assetJSON)
+
+	new_asset := &asset{assetJSON.Name, assetJSON.Type, assetJSON.Content,
+		assetJSON.PriceType, assetJSON.Price, assetJSON.Owner}
+
+	switch field_name {
+	case "Type":
+		new_asset.Type = field_value
+		goto LABEL_STORE
+	case "Content":
+		new_asset.Content = field_value
+		goto LABEL_STORE
+	case "PriceType":
+		new_asset.PriceType = field_value
+		goto LABEL_STORE
+	case "Price":
+		new_price := big.NewInt(0)
+		_, good := new_price.SetString(field_value, 10)
+		if !good {
+			return shim.Error("Expecting integer value for amount")
+		}
+		new_asset.Price = new_price
+		goto LABEL_STORE
+	}
+
+	return shim.Error("Invalid asset filed name (\"Type\", \"Content\", \"PriceType\" or \"Price\" wanted).")
+
+LABEL_STORE:
+	// store new asset
+	assetJSONasBytes, err := json.Marshal(new_asset)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	err = stub.PutState(asset_key, assetJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(assetJSONasBytes)
+}
+
+// delAsset: del a specific asset by name
+// ===========================
+func (t *assetChaincode) delAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	asset_name := args[0]
+	asset_key := AssetPrefix + asset_name
 
 	// step 1: get the asset info
 	assetAsBytes, err := stub.GetState(asset_key)
@@ -258,9 +355,6 @@ func (t *assetChaincode) delAsset(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error(jsonResp)
 	}
 
-	// test output
-	fmt.Println( " - get asset info: name: " + assetJSON.Name + "; owner:" + assetJSON.Owner)
-
 	// step 2: get the owner's address
 	user_name := assetJSON.Owner
 	user_key := UserPrefix + user_name
@@ -269,25 +363,23 @@ func (t *assetChaincode) delAsset(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("Fail to get user: " + err.Error())
 	}
 	if userAsBytes == nil {
-		fmt.Println("This user doesn't exist: " + asset_name)
-		return shim.Error("This user doesn't exist: " + asset_name)
+		fmt.Println("This user doesn't exist: " + user_name)
+		return shim.Error("This user doesn't exist: " + user_name)
 	}
 
 	var userJSON user
 
 	err = json.Unmarshal([]byte(userAsBytes), &userJSON)
+	if err != nil {
+		return shim.Error("Error when unmarshal JSON " + user_name)
+	}
 	owner_add := userJSON.Address
-	// test output
-	fmt.Println( " - get owner address: " + owner_add)
 
-	// step 3: compare sender's address and owner's
-
+	// step 3: check address and then delete the asset
 	sender_add, err := stub.GetSender()
-	// test output
-	fmt.Println( " - get sender address: " + sender_add)
-
-
-	// step 4: check address and then delete the asset
+	if err != nil {
+		return shim.Error("Fail to get sender.")
+	}
 
 	if owner_add != sender_add {
 		fmt.Println("Authorization denied. ")
@@ -301,4 +393,103 @@ func (t *assetChaincode) delAsset(stub shim.ChaincodeStubInterface, args []strin
 	}
 
 	return shim.Success([]byte("asset delete success."))
+}
+
+// buyAsset: buy a specific asset, make transfer to the owner
+// =========================================================
+func (t *assetChaincode) buyAsset(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	asset_name := args[0]
+	asset_key := AssetPrefix + asset_name
+	buyer_name := args[1]
+	buyer_key := UserPrefix + buyer_name
+
+	// step 1: confirm buyer's address
+	sender_add, err := stub.GetSender()
+	if err != nil {
+		fmt.Println("Fail to get sender.")
+		return shim.Error("Fail to get sender.")
+	}
+
+	buyerAsBytes, err := stub.GetState(buyer_key)
+	if err != nil {
+		return shim.Error("Fail to get user: " + err.Error())
+	}
+	if buyerAsBytes == nil {
+		fmt.Println("This user doesn't exist: " + buyer_name)
+		return shim.Error("This user doesn't exist: " + buyer_name)
+	}
+
+	var buyerJSON user
+
+	err = json.Unmarshal([]byte(buyerAsBytes), &buyerJSON)
+	if err != nil {
+		return shim.Error("Error when unmarshal JSON " + buyer_name)
+	}
+
+	// check whether the sender's address corresponds with the buyer's
+	if sender_add != buyerJSON.Address {
+		return shim.Error("The sender's address doesn't correspond with the buyer's.")
+	}
+
+	// step 2: get the information of the asset
+	assetAsBytes, err := stub.GetState(asset_key)
+	if err != nil {
+		return shim.Error("Fail to get asset: " + err.Error())
+	}
+	if assetAsBytes == nil {
+		fmt.Println("This asset doesn't exist: " + asset_name)
+		return shim.Error("This asset doesn't exist: " + asset_name)
+	}
+
+	var assetJSON asset
+
+	err = json.Unmarshal([]byte(assetAsBytes), &assetJSON)
+	if err != nil {
+		return shim.Error("Error when unmarshal JSON " + asset_name)
+	}
+
+	// step 3: get the information of the asset's owner
+	owner_name := assetJSON.Owner
+	owner_key := UserPrefix + owner_name
+
+	ownerAsBytes, err := stub.GetState(owner_key)
+	if err != nil {
+		return shim.Error("Fail to get user: " + err.Error())
+	}
+	if ownerAsBytes == nil {
+		fmt.Println("This user doesn't exist: " + owner_name)
+		return shim.Error("This user doesn't exist: " + owner_name)
+	}
+
+	var ownerJSON user
+
+	err = json.Unmarshal([]byte(ownerAsBytes), &ownerJSON)
+	if err != nil {
+		return shim.Error("Error when unmarshal JSON " + owner_name)
+	}
+
+	// step 4: make transfer
+	toAddress := ownerJSON.Address
+	priceType := assetJSON.PriceType
+	price := assetJSON.Price
+	err = stub.Transfer(toAddress, priceType, price)
+
+	if err != nil {
+		return shim.Error("Error when making transfer。")
+	}
+
+	// step 5: update asset info
+	assetJSON_new := &asset{assetJSON.Name, assetJSON.Type, assetJSON.Content,
+		assetJSON.PriceType, assetJSON.Price, buyer_name}
+
+	assetJSONasBytes, err := json.Marshal(assetJSON_new)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	err = stub.PutState(asset_key, assetJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success([]byte("Success buying the asset."))
 }

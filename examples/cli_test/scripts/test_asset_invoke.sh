@@ -79,6 +79,16 @@ assetInvoke_Delete () {
     verifyResult $res "query asset: To The Moon Failed."
 }
 
+assetQueryRange_Asset () {
+    echo_b "Attempting to Query asset "
+    sleep 3
+    peer chaincode query -C mychannel -n asset -c '{"Args":["readAssetByRange","",""]}' >log.txt
+
+    res=$?
+    cat log.txt
+    verifyResult $res "range query asset failed."
+}
+
 echo_b "=====================Test Asset's buyAsset invoke====================="
 echo_b "=====================1.query asset====================="
 assetQuery_Asset
@@ -99,6 +109,9 @@ echo_b "=====================Test Asset's delete invoke====================="
 echo_b "=====================4.delete asset====================="
 assetInvoke_Delete
 
+
+echo_b "=====================5. query all the assets====================="
+assetQueryRange_Asset
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

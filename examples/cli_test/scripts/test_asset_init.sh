@@ -129,6 +129,28 @@ assetInvoke_AddAsset(){
     echo
 }
 
+assetInvoke_AddAsset2(){
+    sleep 3
+
+    peer chaincode invoke -C mychannel -n asset --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["addAsset","Blockchain Guide2","BOOK","a book on blockchain 2.","INK","100","Daniel"]}' -i "10" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >&log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "asset invoke: addAsset has Failed."
+    echo_g "===================== asset invoke successfully======================= "
+    echo
+}
+
+assetInvoke_AddAsset3(){
+    sleep 3
+
+    peer chaincode invoke -C mychannel -n asset --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["addAsset","Z Blockchain Guide3","BOOK","a book on blockchain 3.","INK","1000","Daniel"]}' -i "10" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >&log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "asset invoke: addAsset has Failed."
+    echo_g "===================== asset invoke successfully======================= "
+    echo
+}
+
 assetQuery_Asset () {
     echo_b "Attempting to Query asset "
     sleep 3
@@ -163,6 +185,8 @@ assetQuery_User02
 
 echo_b "=====================0.3 add asset======================="
 assetInvoke_AddAsset
+assetInvoke_AddAsset2
+assetInvoke_AddAsset3
 
 echo_b "=====================0.4 query asset====================="
 assetQuery_Asset

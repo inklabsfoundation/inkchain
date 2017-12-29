@@ -76,10 +76,20 @@ chaincodeQueryB () {
    
 }
 
+queryToken(){
+#    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["queryToken","INK"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Issue a new token using ascc has Failed."
+    echo_g "===================== A new token has been successfully issued======================= "
+    echo
+}
+
 echo_b "=====================6.Issue a token using ascc========================"
 issueToken INK
 
-echo_b "=====================7.Transfer 100 amount of INK====================="
+echo_b "=====================7.Transfer 10 amount of INK====================="
 makeTransfer
 
 echo_b "=====================8.Query transfer result of From account====================="
@@ -89,6 +99,9 @@ chaincodeQueryA
 echo_b "=====================9.Query transfer result of To account====================="
 #checkTransferRes2
 chaincodeQueryB
+
+echo_b "=====================10.Query token====================="
+queryToken
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

@@ -26,8 +26,9 @@ var tralogger = flogging.MustGetLogger("ascc")
 // These are function names from Invoke first parameter
 const (
 	//invoke functions
-	RegisterAndIssueToken string = "registerAndIssueToken"
-	InvalidateToken       string = "invalidateToken"
+	RegisterAndIssueToken	string = "registerAndIssueToken"
+	InvalidateToken			string = "invalidateToken"
+	QueryToken				string = "queryToken"
 
 	//token status
 	Created    string = "created"
@@ -111,9 +112,20 @@ func (t *AssetSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 		return t.invalidateToken(stub, args)
 
+	case QueryToken:
+		if len(args) != 1{
+			returnMessage := fmt.Sprint("Incorrect number of arguments for QueryToken, %d", len(args))
+			tralogger.Debugf("Incorrect number of arguments for QueryToken, %d", len(args))
+			return shim.Error(returnMessage)
+		}
+
+		tralogger.Debugf("Invoke function: %s", QueryToken)
+
+		return t.queryToken(stub, args)
+
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"registerAndIssueToken\" or \"invalidateToken\".")
+	return shim.Error("Invalid invoke function name. Expecting \"registerAndIssueToken\" or \"invalidateToken\" or \"queryToken\".")
 }
 
 // issue Tokens Invoke
@@ -264,4 +276,32 @@ func (t *AssetSysCC) invalidateToken(stub shim.ChaincodeStubInterface, args []st
 	}
 
 	return shim.Success([]byte("Token invalidate success!"))
+}
+
+// query Token Invoke
+// invoke function
+func (t *AssetSysCC) queryToken(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var err error
+
+	tokenName := args[0]
+
+	//Get exist token
+	existTokenBytes, err := stub.GetState(tokenName)
+	if err != nil {
+		msgCheck := "Check token existance error, fail to getState of "
+		msgCheck += tokenName
+		tralogger.Debug(msgCheck)
+		return shim.Error(msgCheck)
+	}
+
+	//Check token status
+	//If not exist, return err
+	if existTokenBytes == nil {
+		msgCheckExist := "Token not exist, fail to get status: "
+		msgCheckExist += tokenName
+		tralogger.Debug(msgCheckExist)
+		return shim.Error(msgCheckExist)
+	}
+
+	return shim.Success(existTokenBytes)
 }

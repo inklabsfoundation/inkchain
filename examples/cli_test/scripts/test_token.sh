@@ -98,7 +98,7 @@ queryToken(){
 }
 
 echo_b "=====================6.Issue a token using ascc========================"
-issueToken
+issueToken  INK
 issueToken2
 
 echo_b "=====================7.Transfer 10 amount of INK====================="

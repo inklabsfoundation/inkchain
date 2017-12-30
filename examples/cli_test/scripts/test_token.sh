@@ -38,7 +38,18 @@ verifyResult () {
 }
 
 issueToken(){
+    sleep 3
     peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Issue a new token using ascc has Failed."
+    echo_g "===================== A new token has been successfully issued======================= "
+    echo
+}
+
+issueToken2(){
+    sleep 5
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","CCToken0","100000","9","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Issue a new token using ascc has Failed."
@@ -78,7 +89,7 @@ chaincodeQueryB () {
 
 queryToken(){
 #    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["queryToken","INK"]}' >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["queryToken","INK","INK0","CCToken0","CCToken"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Issue a new token using ascc has Failed."
@@ -87,7 +98,8 @@ queryToken(){
 }
 
 echo_b "=====================6.Issue a token using ascc========================"
-issueToken INK
+issueToken
+issueToken2
 
 echo_b "=====================7.Transfer 10 amount of INK====================="
 makeTransfer

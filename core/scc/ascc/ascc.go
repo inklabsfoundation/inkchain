@@ -18,6 +18,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/policyprovider"
 	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"bytes"
 )
 
 // Create Logger
@@ -113,9 +114,9 @@ func (t *AssetSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.invalidateToken(stub, args)
 
 	case QueryToken:
-		if len(args) != 1{
-			returnMessage := fmt.Sprint("Incorrect number of arguments for QueryToken, %d", len(args))
-			tralogger.Debugf("Incorrect number of arguments for QueryToken, %d", len(args))
+		if len(args) < 1{
+			returnMessage := fmt.Sprint("Need at least 1 arguments for QueryToken, %d", len(args))
+			tralogger.Debugf("Need at least 1 arguments for QueryToken, %d", len(args))
 			return shim.Error(returnMessage)
 		}
 
@@ -279,29 +280,47 @@ func (t *AssetSysCC) invalidateToken(stub shim.ChaincodeStubInterface, args []st
 }
 
 // query Token Invoke
+// implement for multi-token search
 // invoke function
 func (t *AssetSysCC) queryToken(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var err error
 
-	tokenName := args[0]
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
 
-	//Get exist token
-	existTokenBytes, err := stub.GetState(tokenName)
-	if err != nil {
-		msgCheck := "Check token existance error, fail to getState of "
-		msgCheck += tokenName
-		tralogger.Debug(msgCheck)
-		return shim.Error(msgCheck)
+	bArrayMemberAlreadyWritten := false
+	bArrayIndex := 1
+
+	// check every token to be searched
+	for i:=0; i<len(args); i++ {
+		tokenName := args[i]
+		tokenAsBytes, err := stub.GetState(tokenName)
+		if err != nil {
+			continue
+		}
+		if tokenAsBytes == nil {
+			continue
+		}
+
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		// index of the result
+		buffer.WriteString("{\"Number\":")
+		buffer.WriteString("\"")
+		bArrayIndexStr := strconv.Itoa(bArrayIndex)
+		buffer.WriteString(string(bArrayIndexStr))
+		bArrayIndex += 1
+		buffer.WriteString("\"")
+		// information about current asset
+		buffer.WriteString(", \"Record\":")
+		buffer.WriteString(string(tokenAsBytes))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+
 	}
 
-	//Check token status
-	//If not exist, return err
-	if existTokenBytes == nil {
-		msgCheckExist := "Token not exist, fail to get status: "
-		msgCheckExist += tokenName
-		tralogger.Debug(msgCheckExist)
-		return shim.Error(msgCheckExist)
-	}
+	buffer.WriteString("]")
 
-	return shim.Success(existTokenBytes)
+	return shim.Success(buffer.Bytes())
 }

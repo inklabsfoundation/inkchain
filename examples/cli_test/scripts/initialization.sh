@@ -83,7 +83,7 @@ updateAnchorPeers() {
 installChaincode () {
     peer chaincode install -n token -v 1.0 -p ${TOKEN_CC_PATH} -o orderer.example.com:7050 >&log.txt
 
-    peer chaincode install -n marbles -v 1.0 -p ${MARBLES_CC_PATH} -o orderer.example.com:7050 >&log.txt
+    #peer chaincode install -n marbles -v 1.0 -p ${MARBLES_CC_PATH} -o orderer.example.com:7050 >&log.txt
 
     peer chaincode install -n asset -v 1.0 -p ${ASSET_CC_PATH} -o orderer.example.com:7050 >&log.txt
     res=$?
@@ -97,7 +97,7 @@ instantiateChaincode () {
     local starttime=$(date +%s)
     peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
     #peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n marbles -v 1.0 -c '{"Args":["initMarble","marble1","blue","35","tom"]}' -P "OR ('Org1MSP.member')" >&log.txt
-    peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n marbles -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
+    #peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n marbles -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
 
     peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n asset -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org1MSP.member')" >&log.txt
 

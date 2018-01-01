@@ -18,6 +18,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/policyprovider"
 	"github.com/inklabsfoundation/inkchain/msp/mgmt"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"bytes"
 )
 
 // Create Logger
@@ -26,8 +27,9 @@ var tralogger = flogging.MustGetLogger("ascc")
 // These are function names from Invoke first parameter
 const (
 	//invoke functions
-	RegisterAndIssueToken string = "registerAndIssueToken"
-	InvalidateToken       string = "invalidateToken"
+	RegisterAndIssueToken	string = "registerAndIssueToken"
+	InvalidateToken			string = "invalidateToken"
+	QueryToken				string = "queryToken"
 
 	//token status
 	Created    string = "created"
@@ -111,9 +113,20 @@ func (t *AssetSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 		return t.invalidateToken(stub, args)
 
+	case QueryToken:
+		if len(args) < 1{
+			returnMessage := fmt.Sprint("Need at least 1 arguments for QueryToken, %d", len(args))
+			tralogger.Debugf("Need at least 1 arguments for QueryToken, %d", len(args))
+			return shim.Error(returnMessage)
+		}
+
+		tralogger.Debugf("Invoke function: %s", QueryToken)
+
+		return t.queryToken(stub, args)
+
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"registerAndIssueToken\" or \"invalidateToken\".")
+	return shim.Error("Invalid invoke function name. Expecting \"registerAndIssueToken\" or \"invalidateToken\" or \"queryToken\".")
 }
 
 // issue Tokens Invoke
@@ -264,4 +277,50 @@ func (t *AssetSysCC) invalidateToken(stub shim.ChaincodeStubInterface, args []st
 	}
 
 	return shim.Success([]byte("Token invalidate success!"))
+}
+
+// query Token Invoke
+// implement for multi-token search
+// invoke function
+func (t *AssetSysCC) queryToken(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	bArrayIndex := 1
+
+	// check every token to be searched
+	for i:=0; i<len(args); i++ {
+		tokenName := args[i]
+		tokenAsBytes, err := stub.GetState(tokenName)
+		if err != nil {
+			continue
+		}
+		if tokenAsBytes == nil {
+			continue
+		}
+
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		// index of the result
+		buffer.WriteString("{\"Number\":")
+		buffer.WriteString("\"")
+		bArrayIndexStr := strconv.Itoa(bArrayIndex)
+		buffer.WriteString(string(bArrayIndexStr))
+		bArrayIndex += 1
+		buffer.WriteString("\"")
+		// information about current asset
+		buffer.WriteString(", \"Record\":")
+		buffer.WriteString(string(tokenAsBytes))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+
+	}
+
+	buffer.WriteString("]")
+
+	return shim.Success(buffer.Bytes())
 }

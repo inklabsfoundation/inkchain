@@ -22,6 +22,7 @@ import (
 
 	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"github.com/inklabsfoundation/inkchain/common/viperutil"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
 
 	"github.com/Shopify/sarama"
 	"github.com/op/go-logging"
@@ -178,7 +179,7 @@ var defaults = TopLevel{
 		LocalMSPDir:  "msp",
 		LocalMSPID:   "DEFAULT",
 		BCCSP:        bccsp.GetDefaultOpts(),
-		FeeAddress:   "411b6f8f24F28CaAFE514c16E11800167f8EBd89",
+		FeeAddress:   wallet.ADDRESS_PREFIX + "411b6f8f24F28CaAFE514c16E11800167f8EBd89",
 		BlockVersion: 1,
 	},
 	RAMLedger: RAMLedger{

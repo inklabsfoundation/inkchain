@@ -327,7 +327,6 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-	fmt.Println(string(simResult[:]))
 	txLength := len(simResult)
 	if cis.SenderSpec != nil {
 		txLength += len(cis.SenderSpec.String())

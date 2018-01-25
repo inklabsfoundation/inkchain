@@ -29,8 +29,11 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr"
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/txmgr/lockbasedtxmgr"
 	"github.com/inklabsfoundation/inkchain/core/ledger/ledgerconfig"
+	"github.com/inklabsfoundation/inkchain/core/wallet/ink"
+	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"github.com/inklabsfoundation/inkchain/protos/common"
 	"github.com/inklabsfoundation/inkchain/protos/peer"
+	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var logger = flogging.MustGetLogger("kvledger")
@@ -38,10 +41,11 @@ var logger = flogging.MustGetLogger("kvledger")
 // KVLedger provides an implementation of `ledger.PeerLedger`.
 // This implementation provides a key-value based data model
 type kvLedger struct {
-	ledgerID   string
-	blockStore blkstorage.BlockStore
-	txtmgmt    txmgr.TxMgr
-	historyDB  historydb.HistoryDB
+	ledgerID      string
+	blockStore    blkstorage.BlockStore
+	txtmgmt       txmgr.TxMgr
+	historyDB     historydb.HistoryDB
+	inkCalculator ink.InkAlg
 }
 
 // NewKVLedger constructs new `KVLedger`
@@ -56,7 +60,7 @@ func newKVLedger(ledgerID string, blockStore blkstorage.BlockStore,
 
 	// Create a kvLedger for this chain/ledger, which encasulates the underlying
 	// id store, blockstore, txmgr (state database), history database
-	l := &kvLedger{ledgerID, blockStore, txmgmt, historyDB}
+	l := &kvLedger{ledgerID, blockStore, txmgmt, historyDB, impl.NewSimpleInkAlg()}
 
 	//Recover both state DB and history DB if they are out of sync with block storage
 	if err := l.recoverDBs(); err != nil {
@@ -144,11 +148,20 @@ func (l *kvLedger) GetTransactionByID(txID string) (*peer.ProcessedTransaction, 
 	}
 	txVResult, err := l.blockStore.RetrieveTxValidationCodeByTxID(txID)
 
+	cis, respPayload, err := putils.GetActionFromEnvelopeProp(tranEnv)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("nil tx action")
+	}
+	fee := int64(0)
+	if cis.SenderSpec != nil {
+		contentLength := len(respPayload.Results) + len(cis.SenderSpec.String())
+		fee, err = l.inkCalculator.CalcInk(contentLength)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult), BlockHash: block.Header.Hash()}
+	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult), BlockHash: block.Header.Hash(), InkFee: fee}
 	return processedTran, nil
 }
 

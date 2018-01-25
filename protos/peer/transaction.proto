@@ -55,6 +55,8 @@ message ProcessedTransaction {
     int32 validationCode = 2;
 
 	bytes block_hash = 3; // The hash of the BlockData, by MerkleTree
+
+	int64 ink_fee = 4;
 }
 
 // The transaction to be sent to the ordering service. A transaction contains

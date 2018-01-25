@@ -9,6 +9,7 @@ package endorser
 import (
 	"encoding/json"
 	"fmt"
+	"math/big"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/inklabsfoundation/inkchain/common/flogging"
@@ -111,14 +112,15 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 		return fmt.Errorf("endorser: invalid counter")
 	}
 	inkFee, err := e.inkCalculator.CalcInk(byteCount)
+	fee := big.NewInt(inkFee)
 	if err != nil {
 		return fmt.Errorf("endorser: error when calculating ink")
 	}
 	inkBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
-	if !ok || inkBalance.Cmp(inkFee) < 0 {
+	if !ok || inkBalance.Cmp(fee) < 0 {
 		return fmt.Errorf("endorser: insufficient balance for ink consumption")
 	}
-	if inkFee.Cmp(wallet.InkMinimumFee) < 0 {
+	if fee.Cmp(wallet.InkMinimumFee) < 0 {
 		return fmt.Errorf("endorser: fee too low")
 	}
 	return nil
@@ -325,8 +327,12 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-
-	err = e.checkCounterAndInk(cis, txsim, len(simResult), account)
+	fmt.Println(string(simResult[:]))
+	txLength := len(simResult)
+	if cis.SenderSpec != nil {
+		txLength += len(cis.SenderSpec.String())
+	}
+	err = e.checkCounterAndInk(cis, txsim, txLength, account)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

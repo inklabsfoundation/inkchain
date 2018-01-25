@@ -55,38 +55,38 @@ func NewValidator(db statedb.VersionedDB) *Validator {
 	return &Validator{db, impl.NewSimpleInkAlg()}
 }
 
-func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvocationSpec, batch *statedb.TransferBatch, ledgerByteCount int) (*big.Int, error) {
+func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvocationSpec, batch *statedb.TransferBatch, ledgerByteCount int) (int64, error) {
 	//validate counter
 	counterValidated := false
 	senderCounter, ok := batch.GetSenderCounter(sender)
 	if ok && senderCounter != 0 {
 		if cis.SenderSpec.Counter != senderCounter {
-			return nil, fmt.Errorf("invalid counter")
+			return 0, fmt.Errorf("invalid counter")
 		}
 		counterValidated = true
 	}
 
 	versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, sender)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	if versionedValue != nil {
 		account := &wallet.Account{}
 		jsonErr := json.Unmarshal(versionedValue.Value, account)
 		if jsonErr != nil {
-			return nil, jsonErr
+			return 0, jsonErr
 		}
 		if !counterValidated && cis.SenderSpec.Counter != account.Counter {
-			return nil, fmt.Errorf("invalide counter (database)")
+			return 0, fmt.Errorf("invalide counter (database)")
 		}
 		inkFee, err := v.inkCalculator.CalcInk(ledgerByteCount)
-		if inkFee.Cmp(big.NewInt(0)) > 0 {
+		if inkFee > 0 {
 			if err != nil {
-				return nil, fmt.Errorf("committer: error when calculating ink.")
+				return 0, fmt.Errorf("committer: error when calculating ink.")
 			}
 			inkBalance, ok := account.Balance[wallet.MAIN_BALANCE_NAME]
 			if !ok {
-				return nil, fmt.Errorf("committer: insuffient INK balance for consumption.")
+				return 0, fmt.Errorf("committer: insuffient INK balance for consumption.")
 			}
 			if batch.ExistsFrom(sender) {
 				balanceUpdate := batch.GetBalanceUpdate(sender, wallet.MAIN_BALANCE_NAME)
@@ -94,20 +94,21 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 					inkBalance = inkBalance.Add(inkBalance, balanceUpdate)
 				}
 			}
+			fee := big.NewInt(inkFee)
 			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
 			if !ok {
-				return nil, fmt.Errorf("committer: invalid inklimit.")
+				return 0, fmt.Errorf("committer: invalid inklimit.")
 			}
-			if inkFee.Cmp(inkLimit) > 0 {
-				return nil, fmt.Errorf("committer: ink exceeds inkLimit.")
+			if fee.Cmp(inkLimit) > 0 {
+				return 0, fmt.Errorf("committer: ink exceeds inkLimit.")
 			}
-			if !ok || inkBalance.Cmp(inkFee) < 0 {
-				return nil, fmt.Errorf("committer: insuffient balance for ink consumption.")
+			if !ok || inkBalance.Cmp(fee) < 0 {
+				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")
 			}
 		}
 		return inkFee, nil
 	}
-	return nil, fmt.Errorf("sender not exists")
+	return 0, fmt.Errorf("sender not exists")
 }
 
 //validate endorser transaction
@@ -142,15 +143,15 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		if senderStr != string(cis.SenderSpec.Sender) || senderStr != ledgerSet.TranSet.From {
 			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
-
-		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, len(respPayload.Results))
+		contentLength := len(respPayload.Results) + len(cis.SenderSpec.String())
+		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
 			fmt.Println(err)
 			return nil, nil, nil, peer.TxValidationCode_BAD_COUNTER, nil
 		}
 		senderCounter.Sender = sender.ToString()
 		senderCounter.Counter = cis.SenderSpec.Counter
-		senderCounter.Ink = inkFee
+		senderCounter.Ink = big.NewInt(inkFee)
 	}
 	//mvccvalidation, may invalidate transaction
 	if doMVCCValidation {

@@ -143,7 +143,11 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		if senderStr != string(cis.SenderSpec.Sender) || senderStr != ledgerSet.TranSet.From {
 			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
-		contentLength := len(respPayload.Results) + len(cis.SenderSpec.String())
+
+		contentLength := len(respPayload.Results)
+		if cis.SenderSpec != nil {
+			contentLength += len(cis.SenderSpec.String())
+		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
 			fmt.Println(err)

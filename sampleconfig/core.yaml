@@ -93,6 +93,10 @@ peer:
     address: 0.0.0.0:7051
 
     minimumFee: 0
+
+    simpleFeeK: 1
+    simpleFeeX0: 188
+    simpleFeeB: 10
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
     addressAutoDetect: false

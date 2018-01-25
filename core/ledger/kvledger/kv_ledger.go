@@ -138,13 +138,17 @@ func (l *kvLedger) GetTransactionByID(txID string) (*peer.ProcessedTransaction, 
 		return nil, err
 	}
 
+	block, err := l.blockStore.RetrieveBlockByTxID(txID)
+	if err != nil {
+		return nil, err
+	}
 	txVResult, err := l.blockStore.RetrieveTxValidationCodeByTxID(txID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult)}
+	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult), BlockHash: block.Header.Hash()}
 	return processedTran, nil
 }
 

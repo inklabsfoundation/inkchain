@@ -53,6 +53,8 @@ message ProcessedTransaction {
 
     // An indication of whether the transaction was validated or invalidated by committing peer
     int32 validationCode = 2;
+
+	bytes block_hash = 3; // The hash of the BlockData, by MerkleTree
 }
 
 // The transaction to be sent to the ordering service. A transaction contains

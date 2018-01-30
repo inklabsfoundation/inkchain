@@ -82,7 +82,7 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 // getBalance
 // Get the balance of a specific token type in an account
 func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Address
+	var A string           // Address
 	var BalanceType string // Token type
 	var err error
 
@@ -91,17 +91,19 @@ func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []str
 	// Get the state from the ledger
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"account not exists\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("account does not exists")
 	}
 
 	if account == nil || account.Balance[BalanceType] == nil {
-		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("Nil amount for " + A)
 	}
-
-	jsonResp := "{\"" + BalanceType + "\":\"" + account.Balance[BalanceType].String() + "\"}"
-	return shim.Success([]byte(jsonResp))
+	result := make(map[string]string)
+	result[BalanceType] = account.Balance[BalanceType].String()
+	balanceJson, jsonErr := json.Marshal(result)
+	if jsonErr != nil {
+		return shim.Error(jsonErr.Error())
+	}
+	return shim.Success([]byte(balanceJson))
 }
 
 // getAccount
@@ -114,26 +116,27 @@ func (t *tokenChaincode) getAccount(stub shim.ChaincodeStubInterface, args []str
 	// Get the state from the ledger
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"account not exists\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("account does not exists")
 	}
 
 	if account == nil {
-		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("Nil amount for " + A)
 	}
-	balanceJson, jsonErr := json.Marshal(account.Balance)
+	result := make(map[string]string)
+	for key, value := range account.Balance {
+		result[key] = value.String()
+	}
+	balanceJson, jsonErr := json.Marshal(result)
 	if jsonErr != nil {
 		return shim.Error(jsonErr.Error())
 	}
-	jsonResp := "{\"Name\":\"" + A + "\",\"Balance\":\"" + string(balanceJson[:]) + "\"}"
-	return shim.Success([]byte(jsonResp))
+	return shim.Success([]byte(balanceJson))
 }
 
 // transfer
 // Send tokens to the specified address
 func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var B string // To address
+	var B string           // To address
 	var BalanceType string // Token type
 	var err error
 
@@ -162,17 +165,12 @@ func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []str
 	A = strings.ToLower(args[0])
 	account, err := stub.GetAccount(A)
 	if err != nil {
-		jsonResp := "{\"Error\":\"account not exists\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("account not exists")
 	}
 
 	if account == nil {
-		jsonResp := "{\"Error\":\"account not exists for " + A + "\"}"
-		return shim.Error(jsonResp)
+		return shim.Error("account not exists for " + A)
 	}
-
-	jsonResp := "{\"Name\":\"" + A + "\",\"counter\":\"" + string(account.Counter) + "\"}"
-	fmt.Printf("Query Response:%s\n", jsonResp)
 	return shim.Success([]byte(strconv.FormatUint(account.Counter, 10)))
 }
 

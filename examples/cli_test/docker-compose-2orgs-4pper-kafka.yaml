@@ -18,13 +18,13 @@ services:
       - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/inkchain/inkchain-ca-server-config/0e729224e8b3f31784c8a93c5b8ef6f4c1c91d9e6e577c45c33163609fe40011_sk
     ports:
       - "30695:7054"
-    command: sh -c 'inkchain-ca-server start -b admin:adminpw -d'
+    command: sh -c 'inkchain-ca-server start -b admin:inkchainpassword -d'
     volumes:
       - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/inkchain/inkchain-ca-server-config
     container_name: ca.org1.example.com
 
   ca.org2.example.com:
-    image: inklabsfoundation/inkchain-ca:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-ca:x86_64-0.12.0
     environment:
       - INKCHAIN_CA_HOME=/etc/inkchain/inkchain-ca-server
       - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
@@ -34,7 +34,7 @@ services:
       - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/inkchain/inkchain-ca-server-config/a7d47efa46a6ba07730c850fed2c1375df27360d7227f48cdc2f80e505678005_sk
     ports:
       - "30795:7054"
-    command: sh -c 'inkchain-ca-server start -b admin:adminpw -d'
+    command: sh -c 'inkchain-ca-server start -b admin:inkchainpassword -d'
     volumes:
       - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/inkchain/inkchain-ca-server-config
     container_name: ca.org2.example.com
@@ -69,7 +69,7 @@ services:
 
   zookeeper2.kafka:
     container_name: zookeeper2.kafka
-    image: inklabsfoundation/inkchain-zookeeper:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-zookeeper:x86_64-0.11.0
     environment:
       - ZOO_MY_ID=3
       - ZOO_SERVERS=server.1=zookeeper0.kafka:2888:3888 server.2=zookeeper1.kafka:2888:3888 server.3=0.0.0.0:2888:3888
@@ -83,7 +83,7 @@ services:
 
   kafka0.kafka:
     container_name: kafka0.kafka
-    image: inklabsfoundation/inkchain-kafka:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
     environment:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
@@ -103,7 +103,7 @@ services:
 
   kafka1.kafka:
     container_name: kafka1.kafka
-    image: inklabsfoundation/inkchain-kafka:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
     environment:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
@@ -123,7 +123,7 @@ services:
 
   kafka2.kafka:
     container_name: kafka2.kafka
-    image: inklabsfoundation/inkchain-kafka:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
     environment:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
@@ -143,7 +143,7 @@ services:
 
   kafka3.kafka:
     container_name: kafka3.kafka
-    image: inklabsfoundation/inkchain-kafka:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
     environment:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
@@ -163,7 +163,7 @@ services:
 
   ordere0.example.com:
     container_name: orderer0.notaryoffice-ink-one
-    image: inklabsfoundation/inkchain-orderer:x86_64-0.10.6
+    image: inklabsfoundation/inkchain-orderer:x86_64-0.12.0
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0

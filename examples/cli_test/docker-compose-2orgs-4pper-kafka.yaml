@@ -1,0 +1,319 @@
+#
+# Copyright INK Labs. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+services:
+
+  ca.org1.example.com:
+    image: inklabsfoundation/inkchain-ca:x86_64-0.12.0
+    environment:
+      - INKCHAIN_CA_HOME=/etc/inkchain/inkchain-ca-server
+      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/inkchain/inkchain-ca-server-config/0e729224e8b3f31784c8a93c5b8ef6f4c1c91d9e6e577c45c33163609fe40011_sk
+      - INKCHAIN_CA_SERVER_TLS_ENABLED=true
+      - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/inkchain/inkchain-ca-server-config/0e729224e8b3f31784c8a93c5b8ef6f4c1c91d9e6e577c45c33163609fe40011_sk
+    ports:
+      - "30695:7054"
+    command: sh -c 'inkchain-ca-server start -b admin:inkchainpassword -d'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/inkchain/inkchain-ca-server-config
+    container_name: ca.org1.example.com
+
+  ca.org2.example.com:
+    image: inklabsfoundation/inkchain-ca:x86_64-0.12.0
+    environment:
+      - INKCHAIN_CA_HOME=/etc/inkchain/inkchain-ca-server
+      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/inkchain/inkchain-ca-server-config/a7d47efa46a6ba07730c850fed2c1375df27360d7227f48cdc2f80e505678005_sk
+      - INKCHAIN_CA_SERVER_TLS_ENABLED=true
+      - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/inkchain/inkchain-ca-server-config/a7d47efa46a6ba07730c850fed2c1375df27360d7227f48cdc2f80e505678005_sk
+    ports:
+      - "30795:7054"
+    command: sh -c 'inkchain-ca-server start -b admin:inkchainpassword -d'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/inkchain/inkchain-ca-server-config
+    container_name: ca.org2.example.com
+
+  zookeeper0.kafka:
+    container_name: zookeeper0.kafka
+    image: inklabsfoundation/inkchain-zookeeper:x86_64-0.11.0
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=0.0.0.0:2888:3888 server.2=zookeeper1.kafka:2888:3888 server.3=zookeeper2.kafka:2888:3888
+      - ZOO_TICK_TIME=2000
+      - ZOO_INIT_LIMIT=10
+      - ZOO_SYNC_LIMIT=2
+    expose:
+      - "2888"
+      - "3888"
+      - "2181"
+
+  zookeeper1.kafka:
+    container_name: zookeeper1.kafka
+    image: inklabsfoundation/inkchain-zookeeper:x86_64-0.11.0
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0.kafka:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zookeeper2.kafka:2888:3888
+      - ZOO_TICK_TIME=2000
+      - ZOO_INIT_LIMIT=10
+      - ZOO_SYNC_LIMIT=2
+    expose:
+      - "2888"
+      - "3888"
+      - "2181"
+
+  zookeeper2.kafka:
+    container_name: zookeeper2.kafka
+    image: inklabsfoundation/inkchain-zookeeper:x86_64-0.11.0
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0.kafka:2888:3888 server.2=zookeeper1.kafka:2888:3888 server.3=0.0.0.0:2888:3888
+      - ZOO_TICK_TIME=2000
+      - ZOO_INIT_LIMIT=10
+      - ZOO_SYNC_LIMIT=2
+    expose:
+      - "2888"
+      - "3888"
+      - "2181"
+
+  kafka0.kafka:
+    container_name: kafka0.kafka
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.kafka:2181,zookeeper1.kafka:2181,zookeeper2.kafka:2181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka0.kafka
+    expose:
+      - "9092"
+      - "9093"
+    depends_on:
+      - zookeeper0.kafka
+      - zookeeper1.kafka
+      - zookeeper2.kafka
+
+  kafka1.kafka:
+    container_name: kafka1.kafka
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_BROKER_ID=1
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.kafka:2181,zookeeper1.kafka:2181,zookeeper2.kafka:2181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka1.kafka
+    expose:
+      - "9092"
+      - "9093"
+    depends_on:
+      - zookeeper0.kafka
+      - zookeeper1.kafka
+      - zookeeper2.kafka
+
+  kafka2.kafka:
+    container_name: kafka2.kafka
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_BROKER_ID=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.kafka:2181,zookeeper1.kafka:2181,zookeeper2.kafka:2181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka2.kafka
+    expose:
+      - "9092"
+      - "9093"
+    depends_on:
+      - zookeeper0.kafka
+      - zookeeper1.kafka
+      - zookeeper2.kafka
+
+  kafka3.kafka:
+    container_name: kafka3.kafka
+    image: inklabsfoundation/inkchain-kafka:x86_64-0.11.0
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_BROKER_ID=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.kafka:2181,zookeeper1.kafka:2181,zookeeper2.kafka:2181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka3.kafka
+    expose:
+      - "9092"
+      - "9093"
+    depends_on:
+      - zookeeper0.kafka
+      - zookeeper1.kafka
+      - zookeeper2.kafka
+
+  ordere0.example.com:
+    container_name: orderer0.notaryoffice-ink-one
+    image: inklabsfoundation/inkchain-orderer:x86_64-0.12.0
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/inkchain/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/inkchain/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/inkchain/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/inkchain/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/inkchain/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/orderers
+    command: orderer
+    ports:
+      - 32002:7050
+    volumes:
+        - ./channel/crypto-config/genesis.block:/etc/inkchain/configtx/genesis.block
+        - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com:/etc/inkchain/crypto/orderer
+    depends_on:
+      - kafka0.kafka
+      - kafka1.kafka
+      - kafka2.kafka
+      - kafka3.kafka
+
+  ordere1.example.com:
+    container_name: ordere1.example.com
+    image: inklabsfoundation/inkchain-orderer:x86_64-0.12.0
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/inkchain/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/inkchain/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/inkchain/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/inkchain/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/inkchain/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/orderers
+    command: orderer
+    ports:
+      - 32001:7050
+    volumes:
+        - ./channel/crypto-config/genesis.block:/etc/inkchain/configtx/genesis.block
+        - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com:/etc/inkchain/crypto/orderer
+    depends_on:
+      - kafka0.kafka
+      - kafka1.kafka
+      - kafka2.kafka
+      - kafka3.kafka
+
+  orderer2.example.com:
+    container_name: ordere2.example.com
+    image: inklabsfoundation/inkchain-orderer:x86_64-0.12.0
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/inkchain/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/inkchain/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/inkchain/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/inkchain/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/inkchain/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/orderers
+    command: orderer
+    ports:
+      - 32000:7050
+    volumes:
+        - ./channel/crypto-config/genesis.block:/etc/inkchain/configtx/genesis.block
+        - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com:/etc/inkchain/crypto/orderer
+    depends_on:
+      - kafka0.kafka
+      - kafka1.kafka
+      - kafka2.kafka
+      - kafka3.kafka
+
+  peer0.org1.example.com:
+    container_name: peer0.org1.example.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+    ports:
+      - 30603:7051
+      - 30605:7053
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com:/etc/inkchain/crypto/peer
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com
+
+  peer1.org1.example.com:
+    container_name: peer1.org1.example.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+    ports:
+      - 30600:7051
+      - 30602:7053
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com:/etc/inkchain/crypto/peer
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com
+
+  peer0.org2.example.com:
+    container_name: peer0.university-ink-one
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org2.example.com
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+    ports:
+      - 30703:7051
+      - 30705:7053
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com:/etc/inkchain/crypto/peer
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com
+
+  peer1.org2.example.com:
+    container_name: peer1.org2.example.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org2.example.com
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+    ports:
+      - 30700:7051
+      - 30702:7053
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org1.example.com:/etc/inkchain/crypto/peer
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com

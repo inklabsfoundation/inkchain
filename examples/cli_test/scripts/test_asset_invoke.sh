@@ -50,7 +50,7 @@ assetQuery_Asset () {
 chaincodeQueryBuyer () {
     echo_b "Attempting to  query account B's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","07caf88941eafcaaa3370657fccc261acb75dfba","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","i07caf88941eafcaaa3370657fccc261acb75dfba","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account B Failed."

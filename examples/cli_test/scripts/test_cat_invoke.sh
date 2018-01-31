@@ -46,7 +46,7 @@ verifyResult () {
 }
 
 issueToken(){
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","1000","18","07caf88941eafcaaa3370657fccc261acb75dfba"]}' >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","1000","18","i07caf88941eafcaaa3370657fccc261acb75dfba"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Issue a new token using ascc has Failed."
@@ -57,7 +57,7 @@ issueToken(){
 makeTransfer(){
     echo_b "pls wait 5 secs..."
     sleep 5
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","a5ff00eb44bf19d5dfbde501c90e286badb58df4","INK","500"]}' -i "1" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","ia5ff00eb44bf19d5dfbde501c90e286badb58df4","INK","500"]}' -i "1" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Make transfer has Failed."

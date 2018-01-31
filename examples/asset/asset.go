@@ -257,6 +257,18 @@ func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("This owner doesn't exist: " + owner_name)
 	}
 
+	// check the user's address
+	var userJSON user
+	err = json.Unmarshal([]byte(userAsBytes), &userJSON)
+	if err != nil {
+		return shim.Error("Fail to unmarshal the userBytes.")
+	}
+
+	sender_add, err := stub.GetSender()
+	if sender_add != userJSON.Address {
+		return shim.Error("Not the right user invoke address.")
+	}
+
 	// register asset
 	asset := &asset{asset_name, asset_type,asset_content, asset_price_type, asset_price,owner_name}
 	assetJSONasBytes, err := json.Marshal(asset)

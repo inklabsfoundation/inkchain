@@ -39,7 +39,7 @@ verifyResult () {
 
 issueToken(){
 #    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","07caf88941eafcaaa3370657fccc261acb75dfba"]}' >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","i07caf88941eafcaaa3370657fccc261acb75dfba"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Issue a new token using ascc has Failed."
@@ -50,7 +50,7 @@ issueToken(){
 makeTransfer(){
     echo_b "pls wait 5 secs..."
     sleep 5
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","a5ff00eb44bf19d5dfbde501c90e286badb58df4","INK","30"]}' -i "1" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","ia5ff00eb44bf19d5dfbde501c90e286badb58df4","INK","30"]}' -i "1" -z 70698e364537a106b5aa5332d660e2234b37eebcb3768a2a97ffb8042dfe2fc4 >log.txt
 #    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","3c97f146e8de9807ef723538521fcecd5f64c79a","INK","10"]}' -i "1" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
 
     res=$?
@@ -63,7 +63,7 @@ makeTransfer(){
 chaincodeQueryA () {
     echo_b "Attempting to Query account A's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","07caf88941eafcaaa3370657fccc261acb75dfba","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","i07caf88941eafcaaa3370657fccc261acb75dfba","INK"]}' >log.txt
 #    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","4230a12f5b0693dd88bb35c79d7e56a68614b199","INK"]}' >log.txt
 
     res=$?
@@ -74,7 +74,7 @@ chaincodeQueryA () {
 chaincodeQueryB () {
     echo_b "Attempting to  query account B's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","a5ff00eb44bf19d5dfbde501c90e286badb58df4","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","ia5ff00eb44bf19d5dfbde501c90e286badb58df4","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account B Failed."

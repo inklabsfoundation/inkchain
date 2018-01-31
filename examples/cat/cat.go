@@ -4,23 +4,6 @@ Copyright Ziggurat Corp. 2017 All Rights Reserved.
 
 // cat: a demo chaincode for inkchain
 
-// ====CHAINCODE EXECUTION SAMPLES (CLI) =================
-
-// ==== Instantiate chaincode ====
-// peer chaincode instantiate -o orderer.example.com:7050 -c '{"Args":["init","5","5","6","60","INK","07caf88941eafcaaa3370657fccc261acb75dfba"]}'
-
-// ==== Invoke cat ====
-// peer chaincode invoke -C mychannel -n cat -c '{"Args":["initSystemCat"]}'
-// peer chaincode invoke -C mychannel -n cat -c '{"Args":["delete","7918"]}'
-// peer chaincode invoke -C mychannel -n cat -c '{"Args":["setState","7918","0","1"]}'
-// peer chaincode invoke -C mychannel -n cat -c '{"Args":["breed","5060","7918"]}'
-// peer chaincode invoke -C mychannel -n cat -c '{"Args":["buy","7918"]}'
-
-// ==== Query cat ====
-// peer chaincode query -C mychannel -n cat -c '{"Args":["query","7918"]}'
-// peer chaincode query -C mychannel -n cat -c '{"Args":["queryAll"]}'
-// peer chaincode query -C mychannel -n cat -c '{"Args":["querySale"]}'
-
 package main
 
 import (
@@ -34,7 +17,6 @@ import (
 	"strings"
 	"math/big"
 	"time"
-	"sort"
 )
 
 const (
@@ -47,8 +29,16 @@ const (
 	BreedCat 		string = "breed"
 	BuyCat			string = "buy"
 	SetState		string = "setState"
+	CreateAuction 	string = "createAuction"
+	Bid				string = "bid"
+	EndAuction 		string = "endAuction"
+	PayAuction		string = "payAuction"
+	QueryAuction 	string = "queryAuction"
 	// config
-	HistoryIndex 	string = "buyhistory"
+	BuyHistory	 	string = "buyhistory"	// cat'record, ps: time ~ price ~ catGene
+	BidHistory		string = "bidHistory"	// cat'record, ps: catGene ~ bider ~ bidTime ~ bidPrice
+	BidOrder		string = "bidOrder"		// user'bid confirm bid, ps: bider ~ bidTime ~ catGene ~ bidPrice ~ orderTime
+	BidOrderExpiryDate int = 86400			// 24 hour
 )
 
 type CatChainCode struct {
@@ -82,31 +72,34 @@ type buyHistory struct {
 	time	int64
 	price 	int
 }
-type BuySlice []*buyHistory
-
-func (b BuySlice) Len() int {
-	return len(b)
-}
-func (b BuySlice) Swap(i, j int) {
-	b[i], b[j] = b[j], b[i]
-}
-func (b BuySlice) Less(i, j int) bool {
-	return b[i].time > b[j].time
-}
 
 type cat struct {
-	Gene 		string   	`json:"gene"`		// cat unique key
-	Name 	   	string 	 	`json:"name"`
-	SaleState 	int			`json:"sale_state"`	// 0 not sale, 1 on sale
-	SalePrice 	int    	 	`json:"sale_price"`
-	GenNum		int		 	`json:"gen"`  		// Generations number
-	Birth 		int64 	 	`json:"birth"`
-	Parents		[2]string 	`json:"parents"`
-	Children	[]string	`json:"children"`
-	Owner		string 	 	`json:"owner"`
-	MateState	int			`json:"mate_state"`	// 0 forbid mate, 1 allow mate
-	MatePrice	int			`json:"mate_price"`
-	MateTime 	int64		`json:"mate_time"`
+	Gene 		 string   		`json:"gene"`		// cat unique key
+	Name 	   	 string 	 	`json:"name"`
+	SaleState 	 int			`json:"sale_state"`	// 0 not sale, 1 on sale
+	SalePrice 	 int    	 	`json:"sale_price"`
+	GenNum		 int		 	`json:"gen"`  		// Generations number
+	Birth 		 int64 	 		`json:"birth"`
+	Parents		 [2]string 		`json:"parents"`
+	Children	 []string		`json:"children"`
+	Owner		 string 	 	`json:"owner"`
+	MateState	 int			`json:"mate_state"`	// 0 forbid mate, 1 allow mate
+	MatePrice	 int			`json:"mate_price"`
+	MateTime 	 int64			`json:"mate_time"`
+	Auction		 *saleAuction	`json:"auction"`
+}
+
+type saleAuction struct {
+	AuctionState 	int			// 0not auction, 1 auction
+	LastAuctionTime int64
+
+	StartingTime    int64
+	StartingPrice   int
+	Duration        int
+
+	Bidder			string
+	BidTime 		int64
+	BidPrice 		int
 }
 
 func main() {
@@ -172,6 +165,32 @@ func (c *CatChainCode)Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error("setState, Incorrect number of arguments. Expecting 3")
 		}
 		return c.setState(stub, args)
+	case CreateAuction:
+		if len(args) != 3 {
+			return shim.Error("CreateAuction, Incorrect number of arguments. Expecting 3")
+		}
+		return c.createAuction(stub, args)
+	case Bid:
+		if len(args) != 2 {
+			return shim.Error("bid, Incorrect number of arguments. Expecting 2")
+		}
+		return c.bid(stub, args)
+	case EndAuction:
+		if len(args) != 1 {
+			return shim.Error("EndAuction, Incorrect number of arguments. Expecting 1")
+		}
+		return c.endAuction(stub, args)
+	case PayAuction:
+		if len(args) != 4 {
+			return shim.Error("PayAuction, Incorrect number of arguments. Expecting 4")
+		}
+		return c.payAuction(stub, args)
+	case QueryAuction:
+		if len(args) != 1 {
+			return shim.Error("PayAuction, Incorrect number of arguments. Expecting 1")
+		}
+		return c.queryAuction(stub, args)
+
 	}
 
 	return shim.Error("function is invalid: " + function)
@@ -238,14 +257,10 @@ func (c *CatChainCode)initSystemCat(stub shim.ChaincodeStubInterface) pb.Respons
 	historySlice := c.getBuyHistory(stub)
 	if len(historySlice) > 0 {
 		priceCount := 0
-		sort.Sort(historySlice)
 		i := 0
 		for _, v := range historySlice {
 			priceCount += v.price
 			i++
-			if i >= c.LatestBuyPrice {
-				break
-			}
 		}
 		price = priceCount/i
 	}
@@ -266,6 +281,7 @@ func (c *CatChainCode)initSystemCat(stub shim.ChaincodeStubInterface) pb.Respons
 		MateState: 	0,
 		MatePrice: 	0,
 		MateTime: 	0,
+		Auction:	&saleAuction{},
 	}
 
 	catJSONasByte, err := json.Marshal(myCat)
@@ -434,6 +450,10 @@ func (c *CatChainCode)setState(stub shim.ChaincodeStubInterface, args []string) 
 		return shim.Error("set cat sale state failed,cat owner:" + myCat.Owner + ", sender:" + new_add)
 	}
 
+	if 1 == myCat.Auction.AuctionState || c.timeDuration(myCat.Auction.LastAuctionTime) <  BidOrderExpiryDate{
+		return shim.Error("cat is on Auction state, cant sale or mate")
+	}
+
 	// 3. edit cat state according to stateType
 	switch stateType {
 	case SaleState:
@@ -586,6 +606,7 @@ func (c *CatChainCode)breed(stub shim.ChaincodeStubInterface, args []string) pb.
 		MateState: 	0,
 		MatePrice:  0,
 		MateTime: 	0,
+		Auction: 	&saleAuction{},
 	}
 
 	catJSONasByte, err := json.Marshal(myCat)
@@ -715,20 +736,9 @@ func (c *CatChainCode) buy(stub shim.ChaincodeStubInterface, args []string) pb.R
 	}
 
 	// 4. check account balance is enough or not
-	account, err := stub.GetAccount(new_add)
-	if err != nil {
-		jsonResp := "{\"Error\":\"account not exists\"}"
-		return shim.Error(jsonResp)
-	}
-	if account == nil || account.Balance[c.TokenType] == nil {
-		jsonResp := "{\"Error\":\"Nil amount for " + new_add + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	balance := account.Balance[c.TokenType].Int64()
-	if balance < int64(buyCat.SalePrice) {
-		jsonResp := "{\"Error\":\"buy failed, balance not enough, balance: " + account.Balance[c.TokenType].String() + ",price: " + strconv.Itoa(buyCat.SalePrice) + "\"}"
-		return shim.Error(jsonResp)
+	bEnough := c.checkBalace(stub, new_add, buyCat.SalePrice)
+	if bEnough == false {
+		return shim.Error("bid failed, balance not enough")
 	}
 
 	// 5. pay cat owner cost
@@ -758,7 +768,7 @@ func (c *CatChainCode) buy(stub shim.ChaincodeStubInterface, args []string) pb.R
 
 	// 7. buy record CreateCompositeKey and save
 	curTime := strconv.FormatInt(time.Now().Unix(), 10)
-	err = c.addBuyHistory(stub, []string{curTime, strconv.Itoa(buyCat.SalePrice), catGene})
+	err = c.historyByComposite(stub, BuyHistory, []string{curTime, strconv.Itoa(buyCat.SalePrice), catGene})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -767,12 +777,11 @@ func (c *CatChainCode) buy(stub shim.ChaincodeStubInterface, args []string) pb.R
 	return shim.Success([]byte(result))
 }
 
-// save buy record
-func (c *CatChainCode) addBuyHistory(stub shim.ChaincodeStubInterface, args []string) error {
-	// time ~ price ~ catGene
+// save record
+func (c *CatChainCode) historyByComposite(stub shim.ChaincodeStubInterface, sType string, args []string) error {
 	var indexKey string
 	var err error
-	indexKey, err = stub.CreateCompositeKey(HistoryIndex, args)
+	indexKey, err = stub.CreateCompositeKey(sType, args)
 	if err != nil {
 		return err
 	}
@@ -784,14 +793,13 @@ func (c *CatChainCode) addBuyHistory(stub shim.ChaincodeStubInterface, args []st
 	return nil
 }
 
-func (c *CatChainCode) getBuyHistory(stub shim.ChaincodeStubInterface) (buySlice BuySlice) {
-	buySlice = BuySlice{}
-	resultsIterator, err := stub.GetStateByPartialCompositeKey(HistoryIndex, []string{})
+func (c *CatChainCode) getBuyHistory(stub shim.ChaincodeStubInterface) (buySlice []*buyHistory) {
+	buySlice = []*buyHistory{}
+	resultsIterator, err := stub.GetStateByPartialCompositeKey(BuyHistory, []string{})
 	if err != nil {
 		fmt.Println("getBuyHistory, stub.GetStateByPartialCompositeKey failed: " + err.Error())
 		return
 	}
-
 	for i := 0; resultsIterator.HasNext(); i++ {
 		responseRange, err := resultsIterator.Next()
 		if err != nil {
@@ -809,6 +817,393 @@ func (c *CatChainCode) getBuyHistory(stub shim.ChaincodeStubInterface) (buySlice
 		price, _ := strconv.ParseInt(buyPrice, 10,32)
 		buySlice = append(buySlice, &buyHistory{gene, tm, int(price)})
 		fmt.Println("getBuyHistory, stub.GetStateByPartialCompositeKey: " +  buyTime + "," + buyPrice + "," +gene)
+		if len(buySlice) >= c.LatestBuyPrice {
+			break
+		}
 	}
 	return
+}
+func (c *CatChainCode) createAuction(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// Param1:catGene
+	// Param2:startingPrice
+	// Param3:duration(seconds)
+	// 1. check cat exist or not
+	gene := args[0]
+	startingPrice, err := strconv.Atoi(args[1])
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	duration, err := strconv.Atoi(args[2])
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	myCat, err := c.getCat(stub, gene)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if myCat.Gene == "" {
+		jsonResp := "{\"Error\":\"cat does not exist: " + gene + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	// 2. check sender is cat owner or not
+	new_add, err := stub.GetSender()
+	if err != nil {
+		return shim.Error("Fail to reveal user's address.")
+	}
+	new_add = strings.ToLower(new_add)
+	if new_add != myCat.Owner {
+		return shim.Error("auction failed,cat owner:" + myCat.Owner + ", sender:" + new_add)
+	}
+
+	// 3.check cat is on auction
+	if nil == myCat.Auction {
+		return shim.Error("Cat no Auction info")
+	}
+	if 1 == myCat.Auction.AuctionState {
+		return shim.Error("Cat is on Auction")
+	}
+	myCat.MateState = 0
+	myCat.SaleState = 0
+	myCat.Auction.AuctionState = 1
+	myCat.Auction.StartingTime = time.Now().Unix()
+	myCat.Auction.StartingPrice = startingPrice
+	myCat.Auction.Duration = duration
+	myCat.Auction.BidPrice = startingPrice
+
+	// 4. put state to save
+	catJSONasByte, err := json.Marshal(myCat)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	err = stub.PutState(gene, catJSONasByte)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	result := fmt.Sprintf("Cat:%v auctuon publish succeed", args[0])
+	return shim.Success([]byte(result))
+}
+
+func (c *CatChainCode) bid(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// Param1:bidCatGene
+	// Param2:bidPrice
+	// 1. check cat exist or not
+	gene := args[0]
+	bidPrice, err := strconv.Atoi(args[1])
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	myCat, err := c.getCat(stub, gene)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if myCat.Gene == "" {
+		jsonResp := "{\"Error\":\"cat does not exist: " + gene + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	// 2. check cat auction state
+	if 0 == myCat.Auction.AuctionState {
+		result := fmt.Sprintf("Cat:%v is not Auction", myCat.Gene)
+		return shim.Error(result)
+	}
+
+	bidder, err := stub.GetSender()
+	if err != nil {
+		return shim.Error("Fail to reveal user's address.")
+	}
+	bidder = strings.ToLower(bidder)
+	if bidder == myCat.Owner {
+		return shim.Error("cat owner cant join auction")
+	}
+
+	// 3.check auction Expiration Date
+	if c.timeDuration(myCat.Auction.StartingTime) >= myCat.Auction.Duration {
+		return shim.Error("auction already end!")
+	}
+
+	// 4.check bidPrice
+	if nil == myCat.Auction {
+		return shim.Error("Cat on Auction info")
+	}
+	if bidPrice <= myCat.Auction.BidPrice {
+		return shim.Error("bidPrice lower than current price")
+	}
+
+	// 5. check account balance is enough or not
+	bEnough := c.checkBalace(stub, bidder, bidPrice)
+	if bEnough == false {
+		return shim.Error("bid failed, balance not enough")
+	}
+
+	curTime := time.Now().Unix()
+	err = c.historyByComposite(stub, BidHistory, []string{gene, bidder, strconv.FormatInt(curTime,10), strconv.Itoa(bidPrice)})
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	myCat.Auction.Bidder = bidder
+	myCat.Auction.BidTime = curTime
+	myCat.Auction.BidPrice = bidPrice
+	// 4. put state to save
+	catJSONasByte, err := json.Marshal(myCat)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	err = stub.PutState(gene, catJSONasByte)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	result := fmt.Sprintf("bidder:%v bid cat:%v succeed", bidder, gene)
+	return shim.Success([]byte(result))
+}
+
+func (c *CatChainCode) checkBalace(stub shim.ChaincodeStubInterface, add string, amount int) bool {
+	account, err := stub.GetAccount(add)
+	if err != nil {
+		// account not exists
+		return false
+	}
+	if account == nil || account.Balance[c.TokenType] == nil {
+		return false
+	}
+
+	balance := account.Balance[c.TokenType].Int64()
+	if balance < int64(amount) {
+		// balance not enough
+		return false
+	}
+
+	return true
+}
+
+func (c *CatChainCode) getCat(stub shim.ChaincodeStubInterface, gene string) (myCat cat, err error) {
+	var valAsbytes []byte
+	myCat = cat{}
+	valAsbytes, err = stub.GetState(gene)
+	if err != nil {
+		// Failed to get state
+		return
+	} else if valAsbytes == nil {
+		// cat does not exist
+		return
+	}
+
+	err = json.Unmarshal([]byte(valAsbytes), &myCat)
+	return
+}
+
+func (c *CatChainCode) endAuction(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// Param1:catGene
+	// 1. check cat exist or not
+	gene := args[0]
+	myCat, err := c.getCat(stub, gene)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if myCat.Gene == "" {
+		jsonResp := "{\"Error\":\"cat does not exist: " + gene + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	// 2. check sender is cat owner or not
+	new_add, err := stub.GetSender()
+	if err != nil {
+		return shim.Error("Fail to reveal user's address.")
+	}
+	new_add = strings.ToLower(new_add)
+	if new_add != myCat.Owner {
+		return shim.Error("auction failed,cat owner:" + myCat.Owner + ", sender:" + new_add)
+	}
+
+	// 3.check cat is on auction
+	if 0 == myCat.Auction.AuctionState {
+		return shim.Error("Cat is not Auction")
+	}
+	if nil == myCat.Auction {
+		return shim.Error("Cat no Auction info")
+	}
+	bidder := myCat.Auction.Bidder
+	bidTime := myCat.Auction.BidTime
+	bidPrice := myCat.Auction.BidPrice
+	curTime := time.Now().Unix()
+	// 4.check auction Expiration Date
+	if c.timeDuration(myCat.Auction.StartingTime) < myCat.Auction.Duration && bidder == ""{
+		return shim.Error("auction is not end yet!")
+	}
+	if bidder != "" {
+		err = c.historyByComposite(stub, BidOrder, []string{bidder, strconv.FormatInt(bidTime,10), gene, strconv.Itoa(bidPrice),
+			strconv.FormatInt(curTime,10)})
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	}
+
+	myCat.Auction.AuctionState = 0
+	myCat.Auction.LastAuctionTime = curTime
+	myCat.Auction.StartingTime = 0
+	myCat.Auction.StartingPrice = 0
+	myCat.Auction.Duration = 0
+	myCat.Auction.Bidder = ""
+	myCat.Auction.BidTime = 0
+	myCat.Auction.BidPrice = 0
+
+	// 5. put state to save
+	catJSONasByte, err := json.Marshal(myCat)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	err = stub.PutState(gene, catJSONasByte)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	result := fmt.Sprintf("Cat:%v auctuon end", args[0])
+	return shim.Success([]byte(result))
+}
+
+func (c *CatChainCode) payAuction(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// Param1:catGene
+	// Param2:bidTime
+	// Param3:bidPrice
+	// Param4:orderTime
+	// 1. check cat exist or not
+	gene := args[0]
+	bidPrice, err := strconv.ParseInt(args[2],10,32)
+	orderTime, err := strconv.ParseInt(args[3],10,64)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	myCat, err := c.getCat(stub, gene)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if myCat.Gene == "" {
+		jsonResp := "{\"Error\":\"cat does not exist: " + gene + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	// 2. check sender is cat owner or not
+	bidder, err := stub.GetSender()
+	if err != nil {
+		return shim.Error("Fail to reveal user's address.")
+	}
+	bidder = strings.ToLower(bidder)
+	if bidder == myCat.Owner {
+		return shim.Error("pay auction failed,already is cat owner")
+	}
+
+	// 3.check order exist or not
+	bOk := c.checkBidOrder(stub, args)
+	if bOk == false {
+		return shim.Error("order is not exist!")
+	}
+
+	// 4.check order Expiration Date
+	if c.timeDuration(orderTime) >=  BidOrderExpiryDate {
+		return shim.Error("order is expired!")
+	}
+
+	// 5. check account balance is enough or not
+	bEnough := c.checkBalace(stub, bidder, int(bidPrice))
+	if bEnough == false {
+		return shim.Error("bid failed, balance not enough")
+	}
+
+	// 6. pay cat owner cost
+	amount := big.NewInt(0)
+	_, good := amount.SetString(args[2], 10)
+	if !good  {
+		return shim.Error("Expecting integer value for amount")
+	}
+	err = stub.Transfer(myCat.Owner, c.TokenType, amount)
+	if err != nil {
+		return shim.Error("transfer error" + err.Error())
+	}
+
+	// 7. edit cat date and put
+	myCat.Owner = bidder
+	myCat.SaleState = 0
+	myCat.MateState = 0
+
+	buyAsbytes, err := json.Marshal(myCat)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	err = stub.PutState(gene, buyAsbytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	result := fmt.Sprintf("user:%v pay auctuon succeed", bidder)
+	return shim.Success([]byte(result))
+}
+
+func (c *CatChainCode) checkBidOrder(stub shim.ChaincodeStubInterface, args []string) bool {
+	resultsIterator, err := stub.GetStateByPartialCompositeKey(BidOrder, args)
+	if err != nil {
+		fmt.Println("getBuyHistory, stub.GetStateByPartialCompositeKey failed: " + err.Error())
+		return false
+	}
+
+	for i := 0; resultsIterator.HasNext(); i++ {
+		responseRange, err := resultsIterator.Next()
+		if err != nil {
+			return false
+		}
+		_, _, err = stub.SplitCompositeKey(responseRange.Key)
+		if err != nil {
+			return false
+		}
+
+		return true
+	}
+	return false
+}
+
+func (c *CatChainCode) queryAuction(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	resultsIterator, err := stub.GetStateByPartialCompositeKey(BidHistory, args)
+	if err != nil {
+		result := fmt.Sprintf("queryAuction, stub.GetStateByPartialCompositeKey failed: " + err.Error())
+		return shim.Error(result)
+	}
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for i := 0; resultsIterator.HasNext(); i++ {
+		responseRange, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		_, compositeKeyParts, err := stub.SplitCompositeKey(responseRange.Key)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		// catGene ~ bider ~ bidTime ~ bidPrice
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+
+		buffer.WriteString("{\"Number\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(strconv.Itoa(i))
+		buffer.WriteString("\"")
+		buffer.WriteString(", \"catGene\":")
+		buffer.WriteString(compositeKeyParts[0])
+		buffer.WriteString("\"")
+		buffer.WriteString(", \"bidder\":")
+		buffer.WriteString(compositeKeyParts[1])
+		buffer.WriteString("\"")
+		buffer.WriteString(", \"bidTime\":")
+		buffer.WriteString(compositeKeyParts[2])
+		buffer.WriteString(", \"bidPrice\":")
+		buffer.WriteString(compositeKeyParts[3])
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	return shim.Success([]byte(buffer.String()))
 }

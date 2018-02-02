@@ -28,7 +28,7 @@ verifyResult () {
 }
 
 initBirds(){
-    peer chaincode invoke -C mychannel -n birds -v "2.0" --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["initBird","birdqt","parrot","redss","evans"]}' -i "10" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode invoke -C mychannel -n birds -v "2.0" --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["initBird","birdqtss1","parrot","redss","evans"]}' -i "1" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
     verifyResult $res "bird invoke has Failed."

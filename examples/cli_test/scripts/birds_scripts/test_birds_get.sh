@@ -30,7 +30,7 @@ verifyResult () {
 birdQuery () {
     echo "Attempting to Query bird "
     sleep 3
-    peer chaincode query -C mychannel -n birds -c '{"Args":["getBird","birdqt"]}' -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode query -C mychannel -n birds -c '{"Args":["getBird","birdqtss1"]}' -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account A Failed."

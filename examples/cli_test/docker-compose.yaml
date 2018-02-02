@@ -88,6 +88,7 @@ services:
         - ../marbles:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/marbles
         - ../birds:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/birds
         - ../asset:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/asset
+        - ../cat:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/cat
         - ./channel/crypto-config:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/scripts/
         - ./channel/mychannel.tx:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/channel-artifacts/mychannel.tx

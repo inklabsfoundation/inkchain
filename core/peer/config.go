@@ -36,6 +36,7 @@ import (
 	"net"
 
 	"github.com/inklabsfoundation/inkchain/core/wallet"
+	inkFeeImpl "github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"github.com/spf13/viper"
 
 	"github.com/inklabsfoundation/inkchain/core/comm"
@@ -91,7 +92,13 @@ func CacheConfiguration() (err error) {
 	peerEndpoint, _ = getPeerEndpoint()
 
 	wallet.InkMinimumFee = big.NewInt(0)
+	inkFeeImpl.InkFeeK = 1
+	inkFeeImpl.InkFeeX0 = 0
+	inkFeeImpl.InkFeeB = 0
 	wallet.InkMinimumFee.SetString(viper.GetString("peer.minimumFee"), 10)
+	inkFeeImpl.InkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
+	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
+	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
 
 	configurationCached = true
 

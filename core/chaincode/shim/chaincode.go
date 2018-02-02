@@ -753,12 +753,16 @@ func (stub *ChaincodeStub) SetEvent(name string, payload []byte) error {
 // ------------- inkchain wallet ----------------------
 func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.Int) error {
 	if to == "" || len(to) != wallet.AddressStringLength {
-		return fmt.Errorf(".from and to should be valid addresses.")
+		return fmt.Errorf(".invalid address length.")
 	}
 	if amount.Cmp(big.NewInt(0)) < 0 {
 		return fmt.Errorf(".transfer amount should be a half-positive number.")
 	}
 	to = strings.ToLower(to)
+	addr := wallet.StringToAddress(to)
+	if addr == nil {
+		return fmt.Errorf("must be valid address")
+	}
 	tran := &kvtranset.KVTrans{}
 	tran.To = to
 	tran.BalanceType = balanceType
@@ -770,24 +774,31 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 }
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {
 	if address == "" || len(address) != wallet.AddressStringLength {
-		return nil, fmt.Errorf("from and to must be valid addresses")
+		return nil, fmt.Errorf("invalid address length")
 	}
 	address = strings.ToLower(address)
+	addr := wallet.StringToAddress(address)
+	if addr == nil {
+		return nil, fmt.Errorf("must be valid address")
+	}
 	return stub.handler.handleGetAccount(address, stub.TxID)
 }
 
 // PutState documentation can be found in interfaces.go
 func (stub *ChaincodeStub) IssueToken(address string, balanceType string, amount *big.Int) error {
 	if address == "" || len(address) != wallet.AddressStringLength {
-		return fmt.Errorf("must be valid addresses")
+		return fmt.Errorf("invalid address length")
 	}
 	address = strings.ToLower(address)
+	addr := wallet.StringToAddress(address)
+	if addr == nil {
+		return fmt.Errorf("must be valid address")
+	}
 	return stub.handler.handleIssueToken(address, balanceType, amount, stub.TxID)
 }
 
 func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
-
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {

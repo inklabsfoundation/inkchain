@@ -6,8 +6,6 @@ SPDX-License-Identifier: Apache-2.0
 
 package ink
 
-import "math/big"
-
 type InkAlg interface {
-	CalcInk(textLength int) (*big.Int, error)
+	CalcInk(textLength int) (int64, error)
 }

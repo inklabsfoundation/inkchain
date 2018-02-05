@@ -96,7 +96,7 @@ chaincodeQueryB () {
     sleep 3
     echo_b "Attempting to  query account B's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","a5ff00eb44bf19d5dfbde501c90e286badb58df4","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","ia5ff00eb44bf19d5dfbde501c90e286badb58df4","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account B Failed."

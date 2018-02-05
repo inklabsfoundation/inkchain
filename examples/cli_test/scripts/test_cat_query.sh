@@ -70,6 +70,17 @@ catQuerySale () {
     echo
 }
 
+queryAuction() {
+    echo_b "Attempting to Query cat auction "
+    sleep 3
+    peer chaincode query -C mychannel -n cat -c '{"Args":["queryAuction","8415"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "query cat auction Failed."
+    echo_g "===================== cat query auction successfully======================= "
+    echo
+}
+
 echo_b "=====================1.cat query all====================="
 catQueryAll
 
@@ -78,6 +89,9 @@ catQuerySale
 
 echo_b "=====================3.cat query====================="
 catQuery
+
+echo_b "=====================4.cat query auction====================="
+queryAuction
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

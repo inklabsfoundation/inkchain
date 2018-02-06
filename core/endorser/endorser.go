@@ -127,7 +127,6 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if fee.Cmp(inkLimit) > 0 {
 		return fmt.Errorf("endorser: fee exceeds inkLimit.")
 	}
-	//if fee.Cmp(cis.SenderSpec.InkLimit)
 	if fee.Cmp(wallet.InkMinimumFee) < 0 {
 		return fmt.Errorf("endorser: fee too low")
 	}

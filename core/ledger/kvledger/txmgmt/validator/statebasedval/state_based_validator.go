@@ -100,7 +100,7 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 				return 0, fmt.Errorf("committer: invalid inklimit.")
 			}
 			if fee.Cmp(inkLimit) > 0 {
-				return 0, fmt.Errorf("committer: ink exceeds inkLimit.")
+				return 0, fmt.Errorf("committer: fee exceeds inkLimit.")
 			}
 			if !ok || inkBalance.Cmp(fee) < 0 {
 				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")

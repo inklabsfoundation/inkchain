@@ -289,7 +289,7 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 		return shim.Error(err.Error())
 	}
 	//sign
-	signJson,err:= wallet.SignJson([]byte(key),sender)
+	signJson,err:= wallet.SignJson([]byte("abc"),"60320b8a71bc314404ef7d194ad8cac0bee1e331")
 	if err !=nil{
 		return shim.Error(err.Error())
 	}
@@ -340,6 +340,10 @@ func (x *XcChaincode) generateId() string {
 	uuid[6] = (uuid[6] & 0x0F) | 0x40
 	uuid[8] = (uuid[8] & 0x3F) | 0x80
 	return fmt.Sprintf("%x%x%x%x%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:])
+}
+
+func (x *XcChaincode)signJson(json []byte, priKey string) ([]byte, error){
+	return []byte("f4128988cbe7df8315440adde412a8955f7f5ff9a5468a791433727f82717a6753bd71882079522207060b681fbd3f5623ee7ed66e33fc8e581f442acbcf6ab800"),nil
 }
 
 func main() {

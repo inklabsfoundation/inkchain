@@ -10,7 +10,6 @@ import (
 	"time"
 	"io"
 	"crypto/rand"
-	"github.com/inklabsfoundation/inkchain/core/wallet"
 )
 
 const (
@@ -289,7 +288,7 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 		return shim.Error(err.Error())
 	}
 	//sign
-	signJson,err:= wallet.SignJson([]byte("abc"),"60320b8a71bc314404ef7d194ad8cac0bee1e331")
+	signJson,err:= x.signJson([]byte("abc"),"60320b8a71bc314404ef7d194ad8cac0bee1e331")
 	if err !=nil{
 		return shim.Error(err.Error())
 	}

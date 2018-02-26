@@ -1,5 +1,9 @@
 # XC
 
+## Network Diagram
+
+![Network Diagram](assets/1.jpeg)
+
 ## Data Structure 
 
 ```

@@ -10,6 +10,7 @@ import (
 	"time"
 	"io"
 	"crypto/rand"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
 )
 
 const (
@@ -287,7 +288,12 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	return shim.Success([]byte("LockSuccess"))
+	//sign
+	signJson,err:= wallet.SignJson([]byte(key),sender)
+	if err !=nil{
+		return shim.Error(err.Error())
+	}
+	return shim.Success(signJson)
 }
 
 //query transaction info

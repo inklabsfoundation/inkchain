@@ -10,7 +10,7 @@
 library Data {
 
     enum Errcode {
-        Success,  
+        Success,
         NotOwner,
         PlatformTypeInvalid,
         PlatformNameNotNull,
@@ -28,11 +28,19 @@ library Data {
         address account;
     }
 
+    struct Proposal {
+        address fromAccount;
+        address toAccount;
+        uint amount;
+        address[] voters;
+    }
+
     struct Platform {
         uint8 typ;
         bytes32 name;
         uint weight;
         address[] publickeys;
+        mapping(bytes32 => Proposal) proposals;
     }
 }
 

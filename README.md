@@ -1,6 +1,6 @@
 ## INK Consortium Blockchain
 
-INK consortium blockchain is an incubating project of Ink Labs Foundation. It is currently at the version of 0.10-preview. We will keep updating and open-sourcing the design and code.
+INK consortium blockchain is an incubating project of Ink Labs Foundation. It is currently at the version of 0.11-preview. We will keep updating and open-sourcing the design and code.
 
 ### A trusted consortium blockchain solution for regional use cases
 

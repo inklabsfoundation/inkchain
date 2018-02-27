@@ -99,7 +99,7 @@ General:
             # chosen using: 'LocalMSPDir'/keystore
             FileKeyStore:
                 KeyStore:
-    FeeAddress: ACAdB8391bc793495C203D58d57776DcD5CA83AD
+    FeeAddress: iACAdB8391bc793495C203D58d57776DcD5CA83AD
     BlockVersion: 1
 ################################################################################
 #

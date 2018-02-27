@@ -425,6 +425,36 @@ func GetActionFromEnvelope(envBytes []byte) (*peer.ChaincodeInvocationSpec, *pee
 	return cis, respPayload, err
 }
 
+func GetActionFromEnvelopeProp(env *common.Envelope) (*peer.ChaincodeInvocationSpec, *peer.ChaincodeAction, error) {
+
+	payl, err := GetPayload(env)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	tx, err := GetTransaction(payl.Data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if len(tx.Actions) == 0 {
+		return nil, nil, fmt.Errorf("At least one TransactionAction is required")
+	}
+	ccPayload, respPayload, err := GetPayloads(tx.Actions[0])
+
+	cpp, err := GetChaincodeProposalPayload(ccPayload.ChaincodeProposalPayload)
+	if err != nil {
+		return nil, nil, fmt.Errorf("GetChaincodeProposalPayload failed")
+	}
+
+	cis := &peer.ChaincodeInvocationSpec{}
+	err = proto.Unmarshal(cpp.Input, cis)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Unmarshal ChaincodeInvocationSpec failed")
+	}
+	return cis, respPayload, err
+}
+
 func GetActionFromEnvelopePayload(payloadBytes []byte) (*peer.ChaincodeInvocationSpec, *peer.ChaincodeAction, error) {
 	payl := &common.Payload{}
 	err := proto.Unmarshal(payloadBytes, payl)

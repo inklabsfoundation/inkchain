@@ -16,9 +16,10 @@ const (
 	HashLength          = 32
 	AddressLength       = 20
 	HashStringLength    = 64
-	AddressStringLength = 40
+	AddressStringLength = 41
 	PriKeyLength        = 32
 	PriKeyStringLength  = 64
+	ADDRESS_PREFIX      = "i"
 	WALLET_NAMESPACE    = "ink"
 	MAIN_BALANCE_NAME   = "INK"
 )
@@ -58,8 +59,12 @@ func (a *Address) ToBytes() []byte {
 }
 
 func StringToAddress(b string) *Address {
+	if !strings.HasPrefix(b, ADDRESS_PREFIX) {
+		return nil
+	}
+	c := strings.TrimLeft(b, ADDRESS_PREFIX)
 	a := Address{}
-	bytes, err := hex.DecodeString(strings.ToLower(b))
+	bytes, err := hex.DecodeString(strings.ToLower(c))
 	if err != nil {
 		return nil
 	}
@@ -68,7 +73,7 @@ func StringToAddress(b string) *Address {
 }
 
 func (a *Address) ToString() string {
-	return string(hex.EncodeToString(a[:]))
+	return string(ADDRESS_PREFIX + hex.EncodeToString(a[:]))
 }
 
 func (a *Hash) SetBytes(b []byte) {

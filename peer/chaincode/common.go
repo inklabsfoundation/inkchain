@@ -108,6 +108,7 @@ func getSenderSpec(cmd *cobra.Command, cf *ChaincodeCmdFactory) (*pb.SenderSpec,
 	if err != nil {
 		return nil, err
 	}
+	address = wallet.ADDRESS_PREFIX + address
 	input := &pb.ChaincodeInput{}
 	queryJson := "{\"Args\":[\"counter\",\"" + address + "\"]}"
 	if err := json.Unmarshal([]byte(queryJson), &input); err != nil {

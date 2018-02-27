@@ -38,7 +38,18 @@ verifyResult () {
 }
 
 issueToken(){
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    sleep 3
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","1000000000000000000","18","i4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Issue a new token using ascc has Failed."
+    echo_g "===================== A new token has been successfully issued======================= "
+    echo
+}
+
+issueToken2(){
+    sleep 5
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","CCToken0","100000","9","i4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Issue a new token using ascc has Failed."
@@ -49,7 +60,7 @@ issueToken(){
 makeTransfer(){
     echo_b "pls wait 5 secs..."
     sleep 5
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","3c97f146e8de9807ef723538521fcecd5f64c79a","INK","10"]}' -i "1" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n token -c '{"Args":["transfer","i3c97f146e8de9807ef723538521fcecd5f64c79a","INK","10"]}' -i "1000000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Make transfer has Failed."
@@ -60,7 +71,7 @@ makeTransfer(){
 chaincodeQueryA () {
     echo_b "Attempting to Query account A's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","4230a12f5b0693dd88bb35c79d7e56a68614b199","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","i4230a12f5b0693dd88bb35c79d7e56a68614b199","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account A Failed."
@@ -69,17 +80,28 @@ chaincodeQueryA () {
 chaincodeQueryB () {
     echo_b "Attempting to  query account B's balance on peer "
     sleep 3
-    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","3c97f146e8de9807ef723538521fcecd5f64c79a","INK"]}' >log.txt
+    peer chaincode query -C mychannel -n token -c '{"Args":["getBalance","i3c97f146e8de9807ef723538521fcecd5f64c79a","INK"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "query account B Failed."
    
 }
 
-echo_b "=====================6.Issue a token using ascc========================"
-issueToken INK
+queryToken(){
+#    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["registerAndIssueToken","'$1'","100","18","4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ascc -c '{"Args":["queryToken","INK","INK0","CCToken0","CCToken"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Issue a new token using ascc has Failed."
+    echo_g "===================== A new token has been successfully issued======================= "
+    echo
+}
 
-echo_b "=====================7.Transfer 100 amount of INK====================="
+echo_b "=====================6.Issue a token using ascc========================"
+issueToken  INK
+issueToken2
+
+echo_b "=====================7.Transfer 10 amount of INK====================="
 makeTransfer
 
 echo_b "=====================8.Query transfer result of From account====================="
@@ -89,6 +111,9 @@ chaincodeQueryA
 echo_b "=====================9.Query transfer result of To account====================="
 #checkTransferRes2
 chaincodeQueryB
+
+echo_b "=====================10.Query token====================="
+queryToken
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

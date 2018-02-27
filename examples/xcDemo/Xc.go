@@ -17,8 +17,8 @@ const (
 	QueryTxInfo    = "queryTxInfo"    //query transaction info
 )
 
+//turn out state struct
 type turnOutMessage struct {
-	TxId       string   `json:"txId"`
 	FromUser   string   `json:"fromUser"`
 	Value      *big.Int `json:"value"`
 	ToPlatform string   `json:"toPlatform"`
@@ -26,6 +26,7 @@ type turnOutMessage struct {
 	DateTime   string   `json:"dateTime"`
 }
 
+//turn in state struct
 type turnInMessage struct {
 	TxId         string   `json:"txId"`
 	Value        *big.Int `json:"value"`
@@ -33,7 +34,6 @@ type turnInMessage struct {
 	FromPlatform string   `json:"fromPlatForm"`
 	ToUser       string   `json:"toUser"`
 	DateTime     string   `json:"dateTime"`
-	PublicTxId   string   `json:"publicTxId"`
 }
 
 //add platform event
@@ -193,7 +193,8 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 
 	//do transfer  `wait to change`
-	err = stub.Transfer(toUser, "INK", amount) //@todo 更换函数为由INK发币账户向toUser转相应数量INK币
+	//@todo function change to the other function that used to transfer from token address to toUser
+	err = stub.Transfer(toUser, "INK", amount)
 	if err != nil {
 		return shim.Error("transfer error " + err.Error())
 	}
@@ -310,14 +311,14 @@ func (x *XcChaincode) buildPlatformEventMessage(platform string, symbol string) 
 
 //build turn in state and change to json
 func (x *XcChaincode) buildTurnInMessage(txId string, fromUser string, fromPlatform string, value *big.Int, toUser string, pubTxId string, now string) []byte {
-	state := turnInMessage{txId, value, fromUser, fromPlatform, toUser, now, pubTxId}
+	state := turnInMessage{txId, value, fromUser, fromPlatform, toUser, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }
 
 //build turn out state and change to json
-func (x *XcChaincode) buildTurnOutMessage(txId string, fromUser string, toPlatform string, toUser string, value *big.Int, now string) []byte {
-	state := turnOutMessage{txId, fromUser, value, toPlatform, toUser, now}
+func (x *XcChaincode) buildTurnOutMessage( fromUser string, toPlatform string, toUser string, value *big.Int, now string) []byte {
+	state := turnOutMessage{fromUser, value, toPlatform, toUser, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }

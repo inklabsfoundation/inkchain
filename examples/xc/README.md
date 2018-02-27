@@ -69,7 +69,6 @@ remark：balanceOf Used for checking account transfer between various platforms.
 
 ```
 contract XC {
-
     event lockEvent(bytes32 toPlatform, address toAccount, string amount);
     event unlockEvent(bytes32 txid,bytes32 fromPlatform,address fromAccount ,string amount);
 }
@@ -103,6 +102,7 @@ interface XCInterface {
     function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
     function unlockAdmin(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode);
+
 }
 ```
 > 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.
@@ -148,6 +148,7 @@ interface XCPluginInterface {
     function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode);
 
     function getWeight(bytes32 name) external constant returns (Data.ErrCode, uint);
+
 }
 ```
 > 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.

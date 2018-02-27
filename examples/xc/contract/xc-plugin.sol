@@ -135,6 +135,7 @@ contract XCPlugin is XCPluginInterface {
         if (proposal.voters.length < platforms[fromPlatform].weight) {
             return Data.ErrCode.WeightNotSatisfied;
         }
+
         return Data.ErrCode.Success;
     }
 
@@ -236,6 +237,7 @@ contract XCPlugin is XCPluginInterface {
         name = platforms[platformName].name;
         weight = platforms[platformName].weight;
         publicKeys = platforms[platformName].publicKeys;
+
         return;
     }
 
@@ -410,7 +412,9 @@ contract XCPlugin is XCPluginInterface {
     function uintToStr(uint value, uint base) internal pure returns (string) {
 
         uint _value = value;
+
         uint length = 0;
+
         bytes16 tenStr = "0123456789abcdef";
 
         while (true) {

@@ -69,6 +69,7 @@ remark：balanceOf Used for checking account transfer between various platforms.
 
 ```
 contract XC {
+
     event lockEvent(bytes32 toPlatform, address toAccount, string amount);
     event unlockEvent(bytes32 txid,bytes32 fromPlatform,address fromAccount ,string amount);
 }

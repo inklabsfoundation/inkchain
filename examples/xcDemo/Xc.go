@@ -262,7 +262,7 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 		return shim.Error(err.Error())
 	}
 	//build turn out state
-	state := x.buildTurnOutMessage(key, sender, toPlatform, toUser, amount, txTimestamp.String())
+	state := x.buildTurnOutMessage(sender, toPlatform, toUser, amount, txTimestamp.String())
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -317,7 +317,7 @@ func (x *XcChaincode) buildTurnInMessage(txId string, fromUser string, fromPlatf
 }
 
 //build turn out state and change to json
-func (x *XcChaincode) buildTurnOutMessage( fromUser string, toPlatform string, toUser string, value *big.Int, now string) []byte {
+func (x *XcChaincode) buildTurnOutMessage(fromUser string, toPlatform string, toUser string, value *big.Int, now string) []byte {
 	state := turnOutMessage{fromUser, value, toPlatform, toUser, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson

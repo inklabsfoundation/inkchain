@@ -36,28 +36,6 @@ type turnInMessage struct {
 	PublicTxId   string   `json:"publicTxId"`
 }
 
-//transaction message
-type xcMessage struct {
-	TxId         string   `json:"txId"`
-	FromPlatform string   `json:"fromPlatform"`
-	Value        *big.Int `json:"value"`
-	ToPlatform   string   `json:"toPlatform"`
-	ToUser       string   `json:"toUser"`
-	DateTime     string   `json:"dateTime"`
-	PublicTxId   string   `json:"publicTxId"`
-}
-
-//transaction event
-type xcEvent struct {
-	FromPlatform string   `json:"fromPlatform"`
-	Value        *big.Int `json:"value"`
-	ToPlatform   string   `json:"toPlatform"`
-	ToUser       string   `json:"toUser"`
-	DateTime     string   `json:"dateTime"`
-	PublicTxId   string   `json:"publicTxId"`
-	Id           string   `json:"id"`
-}
-
 //add platform event
 type platformEvent struct {
 	PlatName string `json:"platName"` //platform name

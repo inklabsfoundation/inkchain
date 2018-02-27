@@ -7,9 +7,6 @@ import (
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"math/big"
 	"strings"
-	"time"
-	"io"
-	"crypto/rand"
 )
 
 const (
@@ -22,11 +19,12 @@ const (
 
 //transaction message
 type xcMessage struct {
+	TxId	string `json:"txId"`
 	FromPlatform string    `json:"fromPlatform"`
 	Value        *big.Int  `json:"value"`
 	ToPlatform   string    `json:"toPlatform"`
 	ToUser       string    `json:"toUser"`
-	DateTime     time.Time `json:"dateTime"`
+	DateTime     string `json:"dateTime"`
 	PublicTxId   string    `json:"publicTxId"`
 }
 
@@ -36,7 +34,7 @@ type xcEvent struct {
 	Value        *big.Int  `json:"value"`
 	ToPlatform   string    `json:"toPlatform"`
 	ToUser       string    `json:"toUser"`
-	DateTime     time.Time `json:"dateTime"`
+	DateTime     string `json:"dateTime"`
 	PublicTxId   string    `json:"publicTxId"`
 	Id           string    `json:"id"`
 }
@@ -174,7 +172,7 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	amount := big.NewInt(0)
 	toUser := strings.ToLower(args[3])
 	_, ok := amount.SetString(args[2], 10)
-	txId := strings.ToLower(args[4])
+	pubTxId := strings.ToLower(args[4])
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
@@ -188,7 +186,7 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 
 	//build state key
-	key := fromPlatform + txId
+	key := fromPlatform + pubTxId
 	//validate txId has not been processed
 	xcMs, err := stub.GetState(key)
 	if err != nil {
@@ -203,17 +201,19 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 		return shim.Error("transfer error " + err.Error())
 	}
 
-	now := time.Now()
+	txTimestamp,err := stub.GetTxTimestamp()
+	if err!=nil{
+		return shim.Error(err.Error())
+	}
 	//build event and state
-	state, event := x.buildXcEventMessage(fromPlatform, amount, x.platName, toUser, txId, key, now)
+	state, event := x.buildXcEventMessage(stub.GetTxID(),fromPlatform, amount, x.platName, toUser, pubTxId, key, txTimestamp.String())
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	//build composite key
-	indexName := "type～address~datetime~platform~key"
-	timeStr := fmt.Sprintf("%d", now.Unix())
-	indexKey, err := stub.CreateCompositeKey(indexName, []string{"in", toUser, timeStr, fromPlatform, key})
+	indexName := "type～address~platform~key"
+	indexKey, err := stub.CreateCompositeKey(indexName, []string{"in", toUser, fromPlatform, key})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -255,28 +255,26 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 		return shim.Error("The platform named " + toPlatform + " is not registered")
 	}
 
-	//build state key
-	key := x.generateId()
-	if key == "" {
-		return shim.Error("Id generate failed")
-	}
-
+	//set txId to be key
+	key:=stub.GetTxID()
 	//do transfer
 	err = stub.Transfer(x.inkTokenAddr, "INK", amount)
 	if err != nil {
 		return shim.Error("Transfer error " + err.Error())
 	}
-	now := time.Now()
+	txTimestamp,err := stub.GetTxTimestamp()
+	if err!=nil{
+		return shim.Error(err.Error())
+	}
 	//build event and state
-	state, event := x.buildXcEventMessage(toPlatform, amount, x.platName, toUser, "", key, now)
+	state, event := x.buildXcEventMessage(key,toPlatform, amount, x.platName, toUser, "", key, txTimestamp.String())
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	//build composite key
 	indexName := "type~address~datetime~platform~key"
-	timeStr := fmt.Sprintf("%d", now.Unix())
-	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, timeStr, x.platName, key})
+	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, txTimestamp.String(), x.platName, key})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -321,24 +319,12 @@ func (x *XcChaincode) buildPlatformEventMessage(platform string, symbol string) 
 }
 
 //build transaction state and event
-func (x *XcChaincode) buildXcEventMessage(fromPlatform string, value *big.Int, toPlatform string, toUser string, txId string, key string, now time.Time) ([]byte, []byte) {
-	state := xcMessage{fromPlatform, value, toPlatform, toUser, now, txId}
-	event := xcEvent{fromPlatform, value, toPlatform, toUser, now, txId, key}
+func (x *XcChaincode) buildXcEventMessage(txId string,fromPlatform string, value *big.Int, toPlatform string, toUser string, pubTxId string, key string, now string) ([]byte, []byte) {
+	state := xcMessage{txId,fromPlatform, value, toPlatform, toUser, now, pubTxId}
+	event := xcEvent{fromPlatform, value, toPlatform, toUser, now, pubTxId, key}
 	stateJson, _ := json.Marshal(state)
 	eventJson, _ := json.Marshal(event)
 	return stateJson, eventJson
-}
-
-//build id
-func (x *XcChaincode) generateId() string {
-	uuid := make([]byte, 16)
-	_, err := io.ReadFull(rand.Reader, uuid)
-	if err != nil {
-		return ""
-	}
-	uuid[6] = (uuid[6] & 0x0F) | 0x40
-	uuid[8] = (uuid[8] & 0x3F) | 0x80
-	return fmt.Sprintf("%x%x%x%x%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:])
 }
 
 func (x *XcChaincode)signJson(json []byte, priKey string) ([]byte, error){

@@ -301,7 +301,6 @@ func (t *AssetSysCC) queryToken(stub shim.ChaincodeStubInterface, args []string)
 		if tokenAsBytes == nil {
 			continue
 		}
-
 		if bArrayMemberAlreadyWritten == true {
 			buffer.WriteString(",")
 		}

@@ -1,19 +1,22 @@
 pragma solidity ^0.4.13;
 
 contract Token {
+
     uint256 public totalSupply;
 
-    mapping (address => uint256) public balanceOf;
-    mapping (address => mapping (address => uint256)) public allowance;
+    mapping(address => uint256) public balanceOf;
+
+    mapping(address => mapping(address => uint256)) public allowance;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
     function _transfer(address _from, address _to, uint _value) internal {
-        require (balanceOf[_from] > _value);               
-        require (balanceOf[_to] + _value > balanceOf[_to]);
-        balanceOf[_from] -= _value;                        
-        balanceOf[_to] += _value;                          
+        require(balanceOf[_from] > _value);
+        require(balanceOf[_to] + _value > balanceOf[_to]);
+        balanceOf[_from] -= _value;
+        balanceOf[_to] += _value;
         Transfer(_from, _to, _value);
     }
 
@@ -28,8 +31,7 @@ contract Token {
         return true;
     }
 
-    function approve(address _spender, uint256 _value)
-        returns (bool success) {
+    function approve(address _spender, uint256 _value) returns (bool success) {
         allowance[msg.sender][_spender] = _value;
         Approval(msg.sender, _spender, _value);
         return true;
@@ -37,9 +39,13 @@ contract Token {
 }
 
 contract INK is Token {
+
     uint8 public constant decimals = 9;
+
     uint256 public constant initialSupply = 10 * (10 ** 8) * (10 ** uint256(decimals));
+
     string public constant name = 'INK Coin';
+
     string public constant symbol = 'INK';
 
 
@@ -48,14 +54,13 @@ contract INK is Token {
     }
 
     function INK() {
-        balanceOf[msg.sender] = initialSupply;           
-        totalSupply = initialSupply;                     
+        balanceOf[msg.sender] = initialSupply;
+        totalSupply = initialSupply;
     }
 
-    function approveAndCall(address _spender, uint256 _value, bytes _extraData)
-        returns (bool success) {
+    function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
         if (approve(_spender, _value)) {
-            if(!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)){
+            if (!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) {
                 revert();
             }
             return true;

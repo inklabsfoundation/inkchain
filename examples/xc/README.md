@@ -1,30 +1,26 @@
 # XC
 
-## Network Diagram
-
-![Network Diagram](assets/1.jpeg)
-
 ## Data Structure 
 
 ```
 library Data {
 
-    enum Errcode {
+    enum ErrCode {
         Success,
-        NotOwner,
+        NotAdmin,
         PlatformTypeInvalid,
         PlatformNameNotNull,
-        CatNotOwenerPlatformName,
+        CatNotOwnerPlatformName,
         NotCredible,
         InsufficientBalance,
         TransferFailed,
-        PublickeyNotExist,
+        PublicKeyNotExist,
         VoterNotChange,
         WeightNotSatisfied
     }
 
     struct Admin {
-        bytes32 name;
+        bytes32 platformName;
         address account;
     }
 
@@ -39,7 +35,7 @@ library Data {
         uint8 typ;
         bytes32 name;
         uint weight;
-        address[] publickeys;
+        address[] publicKeys;
         mapping(bytes32 => Proposal) proposals;
     }
 }
@@ -85,22 +81,27 @@ contract XC {
 ```
 interface XCInterface {
 
-    function setAdmin(address account) external;
-    function getAdmin() external constant returns (address);
-    
+    function setAdmin(bytes32 platformName, address account) external;
+
+    function getAdmin() external constant returns (bytes32, address);
+
     function setINK(address account) external;
+
     function getINK() external constant returns (address);
-    
+
     function setXCPlugin(address account) external;
+
     function getXCPlugin() external constant returns (address);
-    
-    function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.Errcode);
-    function unlockAdmin(bytes32 fromPlatform,address fromAccount, address toAccount, uint amount, bytes32 txid) external payable returns (Data.Errcode);
-    
-    function withdrawal(address account,uint amount) external payable returns (Data.Errcode);
-    
-    function lock(bytes32 toPlatform, address toAccount, uint amount) external  payable returns (Data.Errcode);
-    function unlock(bytes32 fromPlatform,address fromAccount, address toAccount, uint amount, bytes32 txid) external payable returns (Data.Errcode);  
+
+    function lock(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
+
+    function unlock(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode);
+
+    function withdrawal(address account, uint amount) external payable returns (Data.ErrCode);
+
+    function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
+
+    function unlockAdmin(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode);
 }
 ```
 > 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.
@@ -117,26 +118,35 @@ interface XCInterface {
 remark：1）2）3）4）The administrator maintains the interface. 5）Open interface.
 
 ```
-interface XCPluginInterface { 
+interface XCPluginInterface {
 
-    function voter(bytes32 name, bytes32 txid, bytes sig) external returns (Data.Errcode errcode,bool verify);
-    function verify(bytes32 name, bytes32 txid) external constant returns (Data.Errcode);
-    function deleteProposal(bytes32 platformName, bytes32 txid) external constant returns (Data.Errcode);
-    
-    function setAdmin(bytes32 name,address account) external;
-    function getAdmin() external constant returns (bytes32,address);
-    
-    function addPlatform(uint8 typ, bytes32 name) external returns (Data.Errcode);
-    function deletePlatfrom(bytes32 name) external constant returns (Data.Errcode);
-    function getPlatfrom(bytes32 name) external returns (Data.Errcode errcode, uint8 typ, bytes32 name, uint balance, uint weight, address[] publickeys);
-    function existPlatfrom(bytes32 name) external constant returns (bool);
-    
-    function setWeight(bytes32 name, uint weight) external returns (Data.Errcode);
-    function getWeight(bytes32 name) external constant returns (Data.Errcode, uint);
-    
-    function addPublickey(bytes32 platfromName, address publickey) external constant returns (Data.Errcode);
-    function deletePublickey(bytes32 platfromName, address publickey) external returns (Data.Errcode);
-    function countOfPublickey(bytes32 platfromName) external constant returns (Data.Errcode, uint);
+    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, bytes v) external returns (Data.ErrCode ErrCode, bool verify);
+
+    function verify(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+
+    function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode);
+
+    function setAdmin(bytes32 platformName, address account) external;
+
+    function getAdmin() external constant returns (bytes32, address);
+
+    function addPlatform(uint8 typ, bytes32 name) external returns (Data.ErrCode);
+
+    function deletePlatform(bytes32 name) external constant returns (Data.ErrCode);
+
+    function getPlatform(bytes32 platformName) external returns (Data.ErrCode ErrCode, uint8 typ, bytes32 name, uint weight, address[] publicKeys);
+
+    function existPlatform(bytes32 name) external constant returns (bool);
+
+    function addPublicKey(bytes32 platformName, address publicKey) external constant returns (Data.ErrCode);
+
+    function deletePublicKey(bytes32 platformName, address publicKey) external returns (Data.ErrCode);
+
+    function countOfPublicKey(bytes32 platformName) external constant returns (Data.ErrCode, uint);
+
+    function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode);
+
+    function getWeight(bytes32 name) external constant returns (Data.ErrCode, uint);
 }
 ```
 > 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.

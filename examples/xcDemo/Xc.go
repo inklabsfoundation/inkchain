@@ -17,26 +17,45 @@ const (
 	QueryTxInfo    = "queryTxInfo"    //query transaction info
 )
 
+type turnOutMessage struct {
+	TxId       string   `json:"txId"`
+	FromUser   string   `json:"fromUser"`
+	Value      *big.Int `json:"value"`
+	ToPlatform string   `json:"toPlatform"`
+	ToUser     string   `json:"toUser"`
+	DateTime   string   `json:"dateTime"`
+}
+
+type turnInMessage struct {
+	TxId         string   `json:"txId"`
+	Value        *big.Int `json:"value"`
+	FromUser     string   `json:"fromUser"`
+	FromPlatform string   `json:"fromPlatForm"`
+	ToUser       string   `json:"toUser"`
+	DateTime     string   `json:"dateTime"`
+	PublicTxId   string   `json:"publicTxId"`
+}
+
 //transaction message
 type xcMessage struct {
-	TxId	string `json:"txId"`
-	FromPlatform string    `json:"fromPlatform"`
-	Value        *big.Int  `json:"value"`
-	ToPlatform   string    `json:"toPlatform"`
-	ToUser       string    `json:"toUser"`
-	DateTime     string `json:"dateTime"`
-	PublicTxId   string    `json:"publicTxId"`
+	TxId         string   `json:"txId"`
+	FromPlatform string   `json:"fromPlatform"`
+	Value        *big.Int `json:"value"`
+	ToPlatform   string   `json:"toPlatform"`
+	ToUser       string   `json:"toUser"`
+	DateTime     string   `json:"dateTime"`
+	PublicTxId   string   `json:"publicTxId"`
 }
 
 //transaction event
 type xcEvent struct {
-	FromPlatform string    `json:"fromPlatform"`
-	Value        *big.Int  `json:"value"`
-	ToPlatform   string    `json:"toPlatform"`
-	ToUser       string    `json:"toUser"`
-	DateTime     string `json:"dateTime"`
-	PublicTxId   string    `json:"publicTxId"`
-	Id           string    `json:"id"`
+	FromPlatform string   `json:"fromPlatform"`
+	Value        *big.Int `json:"value"`
+	ToPlatform   string   `json:"toPlatform"`
+	ToUser       string   `json:"toUser"`
+	DateTime     string   `json:"dateTime"`
+	PublicTxId   string   `json:"publicTxId"`
+	Id           string   `json:"id"`
 }
 
 //add platform event
@@ -170,9 +189,9 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 
 	fromPlatform := strings.ToLower(args[0])
 	amount := big.NewInt(0)
-	toUser := strings.ToLower(args[3])
-	_, ok := amount.SetString(args[2], 10)
-	pubTxId := strings.ToLower(args[4])
+	toUser := strings.ToLower(args[2])
+	_, ok := amount.SetString(args[1], 10)
+	pubTxId := strings.ToLower(args[3])
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
@@ -201,16 +220,17 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 		return shim.Error("transfer error " + err.Error())
 	}
 
-	txTimestamp,err := stub.GetTxTimestamp()
-	if err!=nil{
+	txTimestamp, err := stub.GetTxTimestamp()
+	if err != nil {
 		return shim.Error(err.Error())
 	}
-	//build event and state
-	state, event := x.buildXcEventMessage(stub.GetTxID(),fromPlatform, amount, x.platName, toUser, pubTxId, key, txTimestamp.String())
+	//build turn in state and change to json
+	state := x.buildTurnInMessage(stub.GetTxID(), "", fromPlatform, amount, toUser, pubTxId, txTimestamp.String())
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
+
 	//build composite key
 	indexName := "type～address~platform~key"
 	indexKey, err := stub.CreateCompositeKey(indexName, []string{"in", toUser, fromPlatform, key})
@@ -219,11 +239,7 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 	value := []byte{0x00}
 	stub.PutState(indexKey, value)
-	//trigger event
-	err = stub.SetEvent("xcEvent", event)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+
 	return shim.Success([]byte("unlockSuccess"))
 }
 
@@ -256,18 +272,18 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	}
 
 	//set txId to be key
-	key:=stub.GetTxID()
+	key := stub.GetTxID()
 	//do transfer
 	err = stub.Transfer(x.inkTokenAddr, "INK", amount)
 	if err != nil {
 		return shim.Error("Transfer error " + err.Error())
 	}
-	txTimestamp,err := stub.GetTxTimestamp()
-	if err!=nil{
+	txTimestamp, err := stub.GetTxTimestamp()
+	if err != nil {
 		return shim.Error(err.Error())
 	}
-	//build event and state
-	state, event := x.buildXcEventMessage(key,toPlatform, amount, x.platName, toUser, "", key, txTimestamp.String())
+	//build turn out state
+	state := x.buildTurnOutMessage(key, sender, toPlatform, toUser, amount, txTimestamp.String())
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -280,14 +296,10 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	}
 	value := []byte{0x00}
 	stub.PutState(indexKey, value)
-	//trigger event
-	err = stub.SetEvent("xcEvent", event)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+
 	//sign
-	signJson,err:= x.signJson([]byte("abc"),"60320b8a71bc314404ef7d194ad8cac0bee1e331")
-	if err !=nil{
+	signJson, err := x.signJson([]byte("abc"), "60320b8a71bc314404ef7d194ad8cac0bee1e331")
+	if err != nil {
 		return shim.Error(err.Error())
 	}
 	return shim.Success(signJson)
@@ -318,17 +330,22 @@ func (x *XcChaincode) buildPlatformEventMessage(platform string, symbol string) 
 	return msgJson
 }
 
-//build transaction state and event
-func (x *XcChaincode) buildXcEventMessage(txId string,fromPlatform string, value *big.Int, toPlatform string, toUser string, pubTxId string, key string, now string) ([]byte, []byte) {
-	state := xcMessage{txId,fromPlatform, value, toPlatform, toUser, now, pubTxId}
-	event := xcEvent{fromPlatform, value, toPlatform, toUser, now, pubTxId, key}
+//build turn in state and change to json
+func (x *XcChaincode) buildTurnInMessage(txId string, fromUser string, fromPlatform string, value *big.Int, toUser string, pubTxId string, now string) []byte {
+	state := turnInMessage{txId, value, fromUser, fromPlatform, toUser, now, pubTxId}
 	stateJson, _ := json.Marshal(state)
-	eventJson, _ := json.Marshal(event)
-	return stateJson, eventJson
+	return stateJson
 }
 
-func (x *XcChaincode)signJson(json []byte, priKey string) ([]byte, error){
-	return []byte("f4128988cbe7df8315440adde412a8955f7f5ff9a5468a791433727f82717a6753bd71882079522207060b681fbd3f5623ee7ed66e33fc8e581f442acbcf6ab800"),nil
+//build turn out state and change to json
+func (x *XcChaincode) buildTurnOutMessage(txId string, fromUser string, toPlatform string, toUser string, value *big.Int, now string) []byte {
+	state := turnOutMessage{txId, fromUser, value, toPlatform, toUser, now}
+	stateJson, _ := json.Marshal(state)
+	return stateJson
+}
+
+func (x *XcChaincode) signJson(json []byte, priKey string) ([]byte, error) {
+	return []byte("f4128988cbe7df8315440adde412a8955f7f5ff9a5468a791433727f82717a6753bd71882079522207060b681fbd3f5623ee7ed66e33fc8e581f442acbcf6ab800"), nil
 }
 
 func main() {

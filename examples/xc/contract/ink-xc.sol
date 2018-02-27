@@ -40,6 +40,7 @@ library Data {
 contract INK {
 
     mapping(address => uint256) public balanceOf;
+
     mapping(address => mapping(address => uint256)) public allowance;
 
     function transferFrom(address _from, address _to, uint256 value) public returns (bool success);
@@ -85,12 +86,15 @@ interface XCInterface {
 contract XC is XCInterface {
 
     Data.Admin private admin;
+
     mapping(bytes32 => uint) public balanceOf;
 
     INK private inkToken;
+
     XCPlugin private xcPlugin;
 
     event lockEvent(bytes32 toPlatform, address toAccount, string amount);
+
     event unlockEvent(bytes32 txId, bytes32 fromPlatform, address fromAccount, string amount);
 
     function XC(bytes32 name) public payable {
@@ -131,11 +135,13 @@ contract XC is XCInterface {
         }
 
         uint allowance = inkToken.allowance(msg.sender, this);
+
         if (allowance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
         bool success = inkToken.transferFrom(msg.sender, this, amount);
+
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
@@ -145,6 +151,7 @@ contract XC is XCInterface {
         balanceOf[toPlatform] += amount;
 
         lockEvent(toPlatform, toAccount, uintAppendToString(amount));
+
         return Data.ErrCode.Success;
     }
 
@@ -155,21 +162,25 @@ contract XC is XCInterface {
         }
 
         Data.ErrCode ErrCode = xcPlugin.verify(fromPlatform, fromAccount, toAccount, amount, txId);
+
         if (ErrCode == Data.ErrCode.Success) {
             return ErrCode;
         }
 
         uint balanceOfContract = inkToken.balanceOf(this);
+
         if (balanceOfContract < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
         bool success = inkToken.transfer(toAccount, amount);
+
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
 
         ErrCode = xcPlugin.deleteProposal(fromPlatform, txId);
+
         if (ErrCode == Data.ErrCode.Success) {
             return ErrCode;
         }
@@ -179,24 +190,30 @@ contract XC is XCInterface {
         balanceOf[fromPlatform] -= amount;
 
         unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
+
         return Data.ErrCode.Success;
     }
 
     function withdrawal(address account, uint amount) external payable returns (Data.ErrCode) {
+
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
         }
 
         uint balanceOfContract = inkToken.balanceOf(this);
+
         uint balance = balanceOf[admin.platformName];
+
         if (balanceOfContract - balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
         bool success = inkToken.transfer(account, amount);
+
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
+
         return Data.ErrCode.Success;
     }
 
@@ -211,11 +228,13 @@ contract XC is XCInterface {
         }
 
         uint allowance = inkToken.allowance(msg.sender, this);
+
         if (allowance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
         bool success = inkToken.transferFrom(msg.sender, this, amount);
+
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
@@ -241,20 +260,24 @@ contract XC is XCInterface {
         }
 
         uint balanceOfContract = inkToken.balanceOf(this);
+
         if (balanceOfContract < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
         bool success = inkToken.transfer(toAccount, amount);
+
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
 
         balanceOf[admin.platformName] -= amount;
+
         if (fromPlatform != admin.platformName) {
             balanceOf[fromPlatform] -= amount;
             unlockEvent(txid, fromPlatform, fromAccount, uintAppendToString(amount));
         }
+
         return Data.ErrCode.Success;
     }
 
@@ -266,23 +289,29 @@ contract XC is XCInterface {
      */
 
     function uintAppendToString(uint v) pure internal returns (string){
+
         uint length = 100;
+
         bytes memory reversed = new bytes(length);
+
         bytes16 sixTeenStr = "0123456789abcdef";
 
         uint i = 0;
+
         while (v != 0) {
             uint remainder = v % 16;
             v = v / 16;
             reversed[i++] = byte(sixTeenStr[remainder]);
-
         }
+
         string memory bytesList = "0000000000000000000000000000000000000000000000000000000000000000";
+
         bytes memory str = bytes(bytesList);
 
         for (uint j = 0; j < i; j++) {
             str[str.length - j - 1] = reversed[i - j - 1];
         }
+
         return string(str);
     }
 }

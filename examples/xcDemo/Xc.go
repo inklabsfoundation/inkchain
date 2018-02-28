@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
-	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"math/big"
 	"strings"
 )
@@ -43,7 +42,6 @@ type XcChaincode struct {
 	inkTokenAddr string //coin account
 }
 
-var logger = flogging.MustGetLogger("xscc")
 //init chain code
 func (x *XcChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	_, args := stub.GetFunctionAndParameters()
@@ -153,10 +151,12 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 
 	fromPlatform := strings.ToLower(args[0])
+	fromUser := strings.ToLower(args[1])
 	amount := big.NewInt(0)
-	toUser := strings.ToLower(args[2])
-	_, ok := amount.SetString(args[1], 10)
-	pubTxId := strings.ToLower(args[3])
+	_, ok := amount.SetString(args[2], 10)
+	fmt.Println(args[2])
+	toUser := strings.ToLower(args[3])
+	pubTxId := strings.ToLower(args[4])
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
@@ -169,11 +169,11 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 		return shim.Error("The platform named " + fromPlatform + " is not registered")
 	}
 
-	validtTxRes, err := x.validateTxId(fromPlatform, pubTxId)
+	validateTxRes, err := x.validateTxId(fromPlatform, pubTxId)
 	if err != nil {
 		return shim.Error(err.Error())
-	} else if !validtTxRes {
-		return shim.Error(fmt.Sprintf("The txId from % platform's tdId %s validat faild", fromPlatform, pubTxId))
+	} else if !validateTxRes {
+		return shim.Error(fmt.Sprintf("The txId from %s platform's tdId %s validat faild", fromPlatform, pubTxId))
 	}
 
 	//build state key
@@ -197,16 +197,17 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	if err != nil {
 		return shim.Error(err.Error())
 	}
+	timeStr := fmt.Sprintf("%d", txTimestamp.GetSeconds())
 	//build turn in state and change to json
-	state := x.buildTurnInMessage(stub.GetTxID(), "", fromPlatform, amount, toUser, pubTxId, txTimestamp.String())
+	state := x.buildTurnInMessage(stub.GetTxID(), fromUser, fromPlatform, amount, toUser, pubTxId, timeStr)
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
 	//build composite key
-	indexName := "type～address~platform~key"
-	indexKey, err := stub.CreateCompositeKey(indexName, []string{"in", toUser, fromPlatform, key})
+	indexName := "type～address~datetime~platform~key"
+	indexKey, err := stub.CreateCompositeKey(indexName, []string{"in", toUser, timeStr, fromPlatform, key})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -255,15 +256,16 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	if err != nil {
 		return shim.Error(err.Error())
 	}
+	timeStr := fmt.Sprintf("%d", txTimestamp.GetSeconds())
 	//build turn out state
-	state := x.buildTurnOutMessage(sender, toPlatform, toUser, amount, txTimestamp.String())
+	state := x.buildTurnOutMessage(sender, toPlatform, toUser, amount, timeStr)
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	//build composite key
 	indexName := "type~address~datetime~platform~key"
-	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, txTimestamp.String(), x.platName, key})
+	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, timeStr, x.platName, key})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -310,7 +312,7 @@ func (x *XcChaincode) buildTurnOutMessage(fromUser string, toPlatform string, to
 	return stateJson
 }
 
-//validate txId by call fullnode
+//validate txId by call full node
 func (x *XcChaincode) validateTxId(platform string, txId string) (bool, error) {
 	result := true
 	return result, nil

@@ -42,6 +42,7 @@ type XcChaincode struct {
 	platName     string //platform name
 	inkTokenAddr string //coin account
 }
+
 var logger = flogging.MustGetLogger("xscc")
 //init chain code
 func (x *XcChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
@@ -110,7 +111,6 @@ func (x *XcChaincode) registPlatform(stub shim.ChaincodeStubInterface, args []st
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	logger.Debugf("Validating %s for cc %s version %s", lsccFunc, cdRWSet.Name, cdRWSet.Version)
 	return shim.Success([]byte("Operate Success"))
 }
 
@@ -167,6 +167,13 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
 		return shim.Error("The platform named " + fromPlatform + " is not registered")
+	}
+
+	validtTxRes, err := x.validateTxId(fromPlatform, pubTxId)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if !validtTxRes {
+		return shim.Error(fmt.Sprintf("The txId from % platform's tdId %s validat faild", fromPlatform, pubTxId))
 	}
 
 	//build state key
@@ -303,6 +310,13 @@ func (x *XcChaincode) buildTurnOutMessage(fromUser string, toPlatform string, to
 	return stateJson
 }
 
+//validate txId by call fullnode
+func (x *XcChaincode) validateTxId(platform string, txId string) (bool, error) {
+	result := true
+	return result, nil
+}
+
+//sign
 func (x *XcChaincode) signJson(json []byte, priKey string) ([]byte, error) {
 	return []byte("f4128988cbe7df8315440adde412a8955f7f5ff9a5468a791433727f82717a6753bd71882079522207060b681fbd3f5623ee7ed66e33fc8e581f442acbcf6ab800"), nil
 }

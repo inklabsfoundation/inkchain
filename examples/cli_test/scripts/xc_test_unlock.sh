@@ -40,7 +40,7 @@ verifyResult () {
 invokeInke () {
     echo_b "Attempting to Query account "
     sleep 3
-    peer chaincode invoke -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n xc -c '{"Args":["unlock","QTUM","1","10","3c97f146e8de9807ef723538521fcecd5f64c79a","tex1111111111"]}' -i "10" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode invoke -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n xc -c '{"Args":["unlock","QTUM","3c97f146e8de9807ef723538521fcecd5f64c79a","10","i3c97f146e8de9807ef723538521fcecd5f64c79a","tex1111111114"]}' -i "20000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
 #    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n xc -c '{"Args":["lock","QTUM","HelloWorld","10","3c97f146e8de9807ef723538521fcecd5f64c79a"]}' -i "5" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt

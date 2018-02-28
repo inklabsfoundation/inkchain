@@ -23,7 +23,7 @@ COUNTER=0
 MAX_RETRY=5
 XC_CC_PATH=github.com/inklabsfoundation/inkchain/examples/chaincode/go/xcDemo
 ORDERER_CA=/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-XC_V=1.3
+XC_V=1.6
 
 echo_b "Chaincode Path : " $CC_PATH
 echo_b "Channel name : " $CHANNEL_NAME

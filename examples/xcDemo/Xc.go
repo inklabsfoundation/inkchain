@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
 	"math/big"
 	"strings"
 )
@@ -36,25 +37,19 @@ type turnInMessage struct {
 	DateTime     string   `json:"dateTime"`
 }
 
-//add platform event
-type platformEvent struct {
-	PlatName string `json:"platName"` //platform name
-	Symbol   string `json:"symbol"`   //sign `+` add `-`remove
-}
-
 type XcChaincode struct {
 	owner        string //chain code owner
 	platName     string //platform name
 	inkTokenAddr string //coin account
 }
-
+var logger = flogging.MustGetLogger("xscc")
 //init chain code
 func (x *XcChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	_, args := stub.GetFunctionAndParameters()
 	if len(args) < 2 {
 		return shim.Error("Params Error")
 	}
-	x.owner = "4230a12f5b0693dd88bb35c79d7e56a68614b199"
+	x.owner = "i4230a12f5b0693dd88bb35c79d7e56a68614b199"
 	if len(x.owner) <= 0 || x.owner == "" {
 		return shim.Error("Please input the right inkToken owner address")
 	}
@@ -62,7 +57,7 @@ func (x *XcChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	if x.platName == "" || x.platName == "nil" {
 		return shim.Error("Please the right plat name")
 	}
-	x.inkTokenAddr = args[1]
+	x.inkTokenAddr = "i3c97f146e8de9807ef723538521fcecd5f64c79a"
 	if x.inkTokenAddr == "" || len(x.inkTokenAddr) <= 0 {
 		return shim.Error("Please input the right inkToken owner address")
 	}
@@ -115,11 +110,7 @@ func (x *XcChaincode) registPlatform(stub shim.ChaincodeStubInterface, args []st
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-
-	err = stub.SetEvent("platformEvent", x.buildPlatformEventMessage(platform, "+"))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+	logger.Debugf("Validating %s for cc %s version %s", lsccFunc, cdRWSet.Name, cdRWSet.Version)
 	return shim.Success([]byte("Operate Success"))
 }
 
@@ -151,11 +142,7 @@ func (x *XcChaincode) removePlatform(stub shim.ChaincodeStubInterface, args []st
 	if err != nil {
 		return shim.Error("Failed to delete platform:" + err.Error())
 	}
-	//trigger event
-	err = stub.SetEvent("platformEvent", x.buildPlatformEventMessage(platform, "-"))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+
 	return shim.Success([]byte("Operate Success"))
 }
 
@@ -300,13 +287,6 @@ func (x *XcChaincode) queryTxInfo(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("Can't find state with named " + key)
 	}
 	return shim.Success(stateJson)
-}
-
-//build platform change event
-func (x *XcChaincode) buildPlatformEventMessage(platform string, symbol string) []byte {
-	msg := platformEvent{platform, symbol}
-	msgJson, _ := json.Marshal(msg)
-	return msgJson
 }
 
 //build turn in state and change to json

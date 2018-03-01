@@ -364,7 +364,7 @@ contract XCPlugin is XCPluginInterface {
     function signMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
         return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", bytes32ToStr(txId));
     }
-    
+
     function notExist(bytes32 name) internal constant returns (bool){
         return (platforms[name].typ == 0);
     }

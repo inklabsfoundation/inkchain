@@ -9,12 +9,12 @@ SPDX-License-Identifier: Apache-2.0
 package main
 
 import (
-	"fmt"
-	"strconv"
-	"encoding/json"
-	"strings"
-	"math/big"
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"math/big"
+	"strconv"
+	"strings"
 
 	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
@@ -22,20 +22,20 @@ import (
 
 const (
 	// invoke func name
-	AddUser				string = "addUser"
-	QueryUser			string = "queryUser"
-	AddAsset			string = "addAsset"
-	ReadAsset			string = "readAsset"
-	EditAsset			string = "editAsset"
-	DeleteAsset			string = "deleteAsset"
-	BuyAsset			string = "buyAsset"
-	ReadAssetByRange	string = "readAssetByRange"
+	AddUser          = "addUser"
+	QueryUser        = "queryUser"
+	AddAsset         = "addAsset"
+	ReadAsset        = "readAsset"
+	EditAsset        = "editAsset"
+	DeleteAsset      = "deleteAsset"
+	BuyAsset         = "buyAsset"
+	ReadAssetByRange = "readAssetByRange"
 )
 
 // Prefixes for user and asset separately
 const (
-	UserPrefix	= "USER_"
-	AssetPrefix	= "ASSET_"
+	UserPrefix  = "USER_"
+	AssetPrefix = "ASSET_"
 )
 
 // Demo chaincode for asset registering, querying and transferring
@@ -43,18 +43,18 @@ type assetChaincode struct {
 }
 
 type user struct {
-	Name	string `json:"name"`
-	Age		int	   `json:"age"`
-	Address string `json:"address"`	// the address actually decides a user
+	Name    string `json:"name"`
+	Age     int    `json:"age"`
+	Address string `json:"address"` // the address actually decides a user
 }
 
 type asset struct {
-	Name 	string `json:"name"`
-	Type 	string `json:"type"`
-	Content	string `json:"content"`
-	PriceType	string `json:"price_type"`
-	Price	*big.Int `json:"price"`
-	Owner 	string `json:"owner"`	// store the name of the asset here
+	Name      string   `json:"name"`
+	Type      string   `json:"type"`
+	Content   string   `json:"content"`
+	PriceType string   `json:"price_type"`
+	Price     *big.Int `json:"price"`
+	Owner     string   `json:"owner"` // store the name of the asset here
 }
 
 // ===================================================================================
@@ -229,7 +229,7 @@ func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []strin
 	if len(asset_name) == 0 {
 		return shim.Error("Asset's Name needed.")
 	}
-	if !((asset_name[0] >='a' && asset_name[0]<='z') || (asset_name[0] >='A' && asset_name[0]<='Z')) {
+	if !((asset_name[0] >= 'a' && asset_name[0] <= 'z') || (asset_name[0] >= 'A' && asset_name[0] <= 'Z')) {
 		return shim.Error("The name of an asset must start with letters.")
 	}
 
@@ -270,7 +270,7 @@ func (t *assetChaincode) addAsset(stub shim.ChaincodeStubInterface, args []strin
 	}
 
 	// register asset
-	asset := &asset{asset_name, asset_type,asset_content, asset_price_type, asset_price,owner_name}
+	asset := &asset{asset_name, asset_type, asset_content, asset_price_type, asset_price, owner_name}
 	assetJSONasBytes, err := json.Marshal(asset)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -352,7 +352,7 @@ func (t *assetChaincode) editAsset(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Error("Invalid asset filed name (\"Type\", \"Content\", \"PriceType\" or \"Price\" wanted).")
 
 LABEL_STORE:
-// store new asset
+	// store new asset
 	assetJSONasBytes, err := json.Marshal(new_asset)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -543,10 +543,10 @@ func (t *assetChaincode) readAssetByRange(stub shim.ChaincodeStubInterface, args
 
 	startKey := ""
 	endKey := ""
-	if args[0] != ""{
+	if args[0] != "" {
 		startKey = AssetPrefix + args[0] + "*"
 	}
-	if args[1] != ""{
+	if args[1] != "" {
 		endKey = AssetPrefix + args[1] + "*"
 	}
 

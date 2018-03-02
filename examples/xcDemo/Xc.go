@@ -19,20 +19,20 @@ const (
 
 //turn out state struct
 type turnOutMessage struct {
-	FromAccount   string   `json:"fromAccount"`
-	Value      *big.Int `json:"value"`
-	ToPlatform string   `json:"toPlatform"`
-	ToAccount     string   `json:"toAccount"`
-	DateTime   string   `json:"dateTime"`
+	FromAccount string   `json:"fromAccount"`
+	Value       *big.Int `json:"value"`
+	ToPlatform  string   `json:"toPlatform"`
+	ToAccount   string   `json:"toAccount"`
+	DateTime    string   `json:"dateTime"`
 }
 
 //turn in state struct
 type turnInMessage struct {
 	TxId         string   `json:"txId"`
 	Value        *big.Int `json:"value"`
-	FromAccount     string   `json:"fromAccount"`
+	FromAccount  string   `json:"fromAccount"`
 	FromPlatform string   `json:"fromPlatForm"`
-	ToAccount       string   `json:"toAccount"`
+	ToAccount    string   `json:"toAccount"`
 	DateTime     string   `json:"dateTime"`
 }
 
@@ -177,7 +177,7 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 
 	//build state key
-	key := fromPlatform + pubTxId
+	key := fromPlatform + "|" + pubTxId
 	//validate txId has not been processed
 	xcMs, err := stub.GetState(key)
 	if err != nil {

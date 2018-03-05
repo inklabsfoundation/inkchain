@@ -3,10 +3,11 @@ package main
 
 const (
 	// function
-	GetWork			string = "getWork"
+	RegisterWork	string = "registerWork"
 	Purchase 		string = "purchase"
 	Sell			string = "sell"
 	Query			string = "query"
+	QueryInkwork 	string = "queryInkwork"
 	FreeHistory		string = "user_address ~ workId "	
 )
 
@@ -42,7 +43,7 @@ const (
 type WorkDef struct {
 	WorkId		string	`json:"work_id"`
 	Level 		int 	`json:"level"`
-	Birth		int64	`json:"birth"`
+	Birth		string	`json:"birth"`
 	Owner		string	`json:"owner"`
 	Sale		int		`json:"sale"`	// 0not sale, 1sale
 	Price 		int		`json:"price"`

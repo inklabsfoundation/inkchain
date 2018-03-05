@@ -78,6 +78,7 @@ contract XCPlugin is XCPluginInterface {
         admin = Data.Admin(name, msg.sender);
     }
 
+    //verify sign and verify sign amount meet weight
     function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, byte v) external returns (Data.ErrCode ErrCode, bool verify) {
 
         if (notExist(fromPlatform)) {
@@ -120,8 +121,9 @@ contract XCPlugin is XCPluginInterface {
         return;
     }
 
+    //verify args
     function verify(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode) {
-
+        //determine whether fromPlatform exist in xcPlugin's existPlatform
         if (notExist(fromPlatform)) {
             return Data.ErrCode.NotCredible;
         }
@@ -139,6 +141,7 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
+    //remove processed proposal
     function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -157,7 +160,7 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
-
+    //set xc-plugin contract's admin
     function setAdmin(bytes32 platformName, address account) external {
         if (admin.account == msg.sender) {
             admin.platformName = platformName;
@@ -244,7 +247,7 @@ contract XCPlugin is XCPluginInterface {
     function existPlatform(bytes32 name) external constant returns (bool){
         return (platforms[name].typ != 0);
     }
-
+    //set platform weight
     function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -272,7 +275,7 @@ contract XCPlugin is XCPluginInterface {
 
         return (Data.ErrCode.Success, platforms[name].weight);
     }
-
+    //add union chain side peer's public key
     function addPublicKey(bytes32 platformName, address publicKey) external constant returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -295,7 +298,7 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
-
+    //remove union chain side peer's public key
     function deletePublicKey(bytes32 platformName, address publickey) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -325,7 +328,7 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
-
+    //count union chain side peer's public key
     function countOfPublicKey(bytes32 platformName) external constant returns (Data.ErrCode, uint){
 
         if (admin.account != msg.sender) {
@@ -357,7 +360,7 @@ contract XCPlugin is XCPluginInterface {
             }
         }
     }
-
+    //build sign message
     function signMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
         return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", bytes32ToStr(txId));
     }

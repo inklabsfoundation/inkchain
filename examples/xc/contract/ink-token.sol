@@ -13,7 +13,7 @@ contract Token {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
     function _transfer(address _from, address _to, uint _value) internal {
-        require(balanceOf[_from] > _value);
+        require(balanceOf[_from] >= _value);
         require(balanceOf[_to] + _value > balanceOf[_to]);
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
@@ -25,7 +25,7 @@ contract Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        require(_value < allowance[_from][msg.sender]);
+        require(_value <= allowance[_from][msg.sender]);
         allowance[_from][msg.sender] -= _value;
         _transfer(_from, _to, _value);
         return true;

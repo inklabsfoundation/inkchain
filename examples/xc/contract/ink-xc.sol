@@ -11,6 +11,7 @@ library Data {
         PlatformNameNotNull,
         CatNotOwnerPlatformName,
         NotCredible,
+        InvalidTransferAmount,
         InsufficientBalance,
         TransferFailed,
         PublicKeyNotExist,
@@ -68,9 +69,15 @@ interface XCInterface {
 
     function stop() external;
 
-    function setAdmin(bytes32 platformName, address account) external;
+    function getStatus() external constant returns (bool);
 
-    function getAdmin() external constant returns (bool, bytes32, address);
+    function setPlatformName(bytes32 platformName) external;
+
+    function getPlatformName() external constant returns (bytes32);
+
+    function setAdmin(address account) external;
+
+    function getAdmin() external constant returns (address);
 
     function setINK(address account) external;
 
@@ -95,7 +102,7 @@ contract XC is XCInterface {
 
     Data.Admin private admin;
 
-    mapping(bytes32 => uint) public balanceOf;
+    uint public lockBalance;
 
     INK private inkToken;
 
@@ -122,17 +129,30 @@ contract XC is XCInterface {
         }
     }
 
-    //reset admin info
-    function setAdmin(bytes32 platformName, address account) external {
+    function getStatus() external constant returns (bool) {
+        return admin.status;
+    }
+
+    function setPlatformName(bytes32 platformName) external {
         if (admin.account == msg.sender) {
             admin.platformName = platformName;
+        }
+    }
+
+    function getPlatformName() external constant returns (bytes32) {
+        return admin.platformName;
+    }
+
+    //reset admin info
+    function setAdmin(address account) external {
+        if (admin.account == msg.sender) {
             admin.account = account;
         }
     }
-    
+
     //get admin info  platformName and account
-    function getAdmin() external constant returns (bool, bytes32, address) {
-        return (admin.status, admin.platformName, admin.account);
+    function getAdmin() external constant returns (address) {
+        return admin.account;
     }
 
     //instantiation inkTOKEN
@@ -161,10 +181,15 @@ contract XC is XCInterface {
         if (!admin.status) {
             return Data.ErrCode.StatusClosed;
         }
-        
-        //determine whether toPlatform exist in xcPlugin's existPlatfor       
+
+        //determine whether toPlatform exist in xcPlugin's existPlatfor
         if (!xcPlugin.existPlatform(toPlatform)) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         //get user approve the contract quota
@@ -182,9 +207,8 @@ contract XC is XCInterface {
         }
 
         //record the amount of local platform turn out
-        balanceOf[admin.platformName] += amount;
-        //record the amount of local platform turn to toPlatform
-        balanceOf[toPlatform] += amount;
+        lockBalance += amount;
+
         //trigger lockEvent
         lockEvent(toPlatform, toAccount, uintAppendToString(amount));
 
@@ -198,10 +222,15 @@ contract XC is XCInterface {
         if (!admin.status) {
             return Data.ErrCode.StatusClosed;
         }
-        
+
         //determine whether fromPlatform exist in xcPlugin's existPlatform
         if (!xcPlugin.existPlatform(fromPlatform)) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         //verify args by function xcPlugin.verify
@@ -211,9 +240,9 @@ contract XC is XCInterface {
             return ErrCode;
         }
         //get contracts balance
-        uint balanceOfContract = inkToken.balanceOf(this);
+        uint balance = inkToken.balanceOf(this);
         //validate the balance of contract were less than amount
-        if (balanceOfContract < amount) {
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -229,9 +258,8 @@ contract XC is XCInterface {
             return ErrCode;
         }
 
-        balanceOf[admin.platformName] -= amount;
+        lockBalance -= amount;
 
-        balanceOf[fromPlatform] -= amount;
         //trigger unlockEvent
         unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
 
@@ -244,12 +272,17 @@ contract XC is XCInterface {
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
         }
-        //get balance of contract
-        uint balanceOfContract = inkToken.balanceOf(this);
 
-        uint balance = balanceOf[admin.platformName];
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
+
+        //get balance of contract
+        uint balance = inkToken.balanceOf(this);
+
         //validate availability of non-cross-chain balance were less than amount
-        if (balanceOfContract - balance < amount) {
+        if (balance - lockBalance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -273,6 +306,11 @@ contract XC is XCInterface {
             return Data.ErrCode.NotCredible;
         }
 
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
+
         uint allowance = inkToken.allowance(msg.sender, this);
 
         if (allowance < amount) {
@@ -285,10 +323,9 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf[admin.platformName] += amount;
+        lockBalance += amount;
 
         if (admin.platformName != toPlatform && xcPlugin.existPlatform(toPlatform)) {
-            balanceOf[toPlatform] += amount;
             lockEvent(toPlatform, toAccount, uintAppendToString(amount));
         }
 
@@ -305,9 +342,14 @@ contract XC is XCInterface {
             return Data.ErrCode.NotCredible;
         }
 
-        uint balanceOfContract = inkToken.balanceOf(this);
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
 
-        if (balanceOfContract < amount) {
+        uint balance = inkToken.balanceOf(this);
+
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -317,10 +359,9 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf[admin.platformName] -= amount;
+        lockBalance -= amount;
 
         if (fromPlatform != admin.platformName) {
-            balanceOf[fromPlatform] -= amount;
             unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
         }
 

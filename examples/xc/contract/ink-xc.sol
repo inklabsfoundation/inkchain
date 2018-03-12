@@ -102,7 +102,7 @@ contract XC is XCInterface {
 
     Data.Admin private admin;
 
-    uint public balanceOf;
+    uint public lockBalance;
 
     INK private inkToken;
 
@@ -207,7 +207,7 @@ contract XC is XCInterface {
         }
 
         //record the amount of local platform turn out
-        balanceOf += amount;
+        lockBalance += amount;
 
         //trigger lockEvent
         lockEvent(toPlatform, toAccount, uintAppendToString(amount));
@@ -240,9 +240,9 @@ contract XC is XCInterface {
             return ErrCode;
         }
         //get contracts balance
-        uint balanceOfContract = inkToken.balanceOf(this);
+        uint balance = inkToken.balanceOf(this);
         //validate the balance of contract were less than amount
-        if (balanceOfContract < amount) {
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -258,7 +258,7 @@ contract XC is XCInterface {
             return ErrCode;
         }
 
-        balanceOf -= amount;
+        lockBalance -= amount;
 
         //trigger unlockEvent
         unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
@@ -279,10 +279,10 @@ contract XC is XCInterface {
         }
 
         //get balance of contract
-        uint balanceOfContract = inkToken.balanceOf(this);
+        uint balance = inkToken.balanceOf(this);
 
         //validate availability of non-cross-chain balance were less than amount
-        if (balanceOfContract - balanceOf < amount) {
+        if (balance - lockBalance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -323,7 +323,7 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf += amount;
+        lockBalance += amount;
 
         if (admin.platformName != toPlatform && xcPlugin.existPlatform(toPlatform)) {
             lockEvent(toPlatform, toAccount, uintAppendToString(amount));
@@ -347,9 +347,9 @@ contract XC is XCInterface {
             return Data.ErrCode.InvalidTransferAmount;
         }
 
-        uint balanceOfContract = inkToken.balanceOf(this);
+        uint balance = inkToken.balanceOf(this);
 
-        if (balanceOfContract < amount) {
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -359,7 +359,7 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf -= amount;
+        lockBalance -= amount;
 
         if (fromPlatform != admin.platformName) {
             unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));

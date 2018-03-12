@@ -11,6 +11,7 @@ library Data {
         PlatformNameNotNull,
         CatNotOwnerPlatformName,
         NotCredible,
+        InvalidTransferAmount,
         InsufficientBalance,
         TransferFailed,
         PublicKeyNotExist,
@@ -181,9 +182,14 @@ contract XC is XCInterface {
             return Data.ErrCode.StatusClosed;
         }
 
-        //determine whether toPlatform exist in xcPlugin's existPlatfor       
+        //determine whether toPlatform exist in xcPlugin's existPlatfor
         if (!xcPlugin.existPlatform(toPlatform)) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         //get user approve the contract quota
@@ -220,6 +226,11 @@ contract XC is XCInterface {
         //determine whether fromPlatform exist in xcPlugin's existPlatform
         if (!xcPlugin.existPlatform(fromPlatform)) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         //verify args by function xcPlugin.verify
@@ -261,6 +272,12 @@ contract XC is XCInterface {
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
         }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
+
         //get balance of contract
         uint balanceOfContract = inkToken.balanceOf(this);
 
@@ -287,6 +304,11 @@ contract XC is XCInterface {
 
         if (!xcPlugin.existPlatform(toPlatform) && admin.platformName != toPlatform) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         uint allowance = inkToken.allowance(msg.sender, this);
@@ -318,6 +340,11 @@ contract XC is XCInterface {
 
         if (!xcPlugin.existPlatform(fromPlatform) && fromPlatform != admin.platformName) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         uint balanceOfContract = inkToken.balanceOf(this);

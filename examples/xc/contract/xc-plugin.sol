@@ -1,7 +1,9 @@
 pragma solidity ^0.4.19;
 
+//data structs
 library Data {
 
+    //error code
     enum ErrCode {
         Success,
         NotAdmin,
@@ -9,6 +11,7 @@ library Data {
         PlatformNameNotNull,
         CatNotOwnerPlatformName,
         NotCredible,
+        InvalidTransferAmount,
         InsufficientBalance,
         TransferFailed,
         PublicKeyNotExist,
@@ -16,6 +19,7 @@ library Data {
         WeightNotSatisfied
     }
 
+    //admin info
     struct Admin {
         bool status;
         bytes32 platformName;
@@ -29,6 +33,7 @@ library Data {
         address[] voters;
     }
 
+    //platform info
     struct Platform {
         bytes32 name;
         uint weight;
@@ -43,9 +48,15 @@ interface XCPluginInterface {
 
     function stop() external;
 
-    function setAdmin(bytes32 platformName, address account) external;
+    function getStatus() external constant returns (bool);
 
-    function getAdmin() external constant returns (bool, bytes32, address);
+    function setPlatformName(bytes32 platformName) external;
+
+    function getPlatformName() external constant returns (bytes32);
+
+    function setAdmin(address account) external;
+
+    function getAdmin() external constant returns (address);
 
     function addPlatform(bytes32 name) external returns (Data.ErrCode);
 
@@ -87,16 +98,28 @@ contract XCPlugin is XCPluginInterface {
             admin.status = true;
         }
     }
+
     function stop() external {
         if (admin.account == msg.sender) {
             admin.status = false;
         }
     }
-    
+
+    function getStatus() external constant returns (bool) {
+        return admin.status;
+    }
+
+    function setPlatformName(bytes32 platformName) external {
+        if (admin.account == msg.sender) {
+            admin.platformName = platformName;
+        }
+    }
+
+    function getPlatformName() external constant returns (bytes32) {
+        return admin.platformName;
+    }
+
     //verify sign and verify sign amount meet weight
-    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, byte v) external returns (Data.ErrCode ErrCode, bool verify) {
-
-
     function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify) {
 
         if (!admin.status) {
@@ -181,17 +204,16 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
-    
+
     //set xc-plugin contract's admin
-    function setAdmin(bytes32 platformName, address account) external {
+    function setAdmin(address account) external {
         if (admin.account == msg.sender) {
-            admin.platformName = platformName;
             admin.account = account;
         }
     }
 
-    function getAdmin() external constant returns (bool, bytes32, address) {
-        return (admin.status, admin.platformName, admin.account);
+    function getAdmin() external constant returns (address) {
+        return admin.account;
     }
 
     function addPlatform(bytes32 platformName) external returns (Data.ErrCode) {
@@ -263,6 +285,7 @@ contract XCPlugin is XCPluginInterface {
     function existPlatform(bytes32 name) external constant returns (bool){
         return (platforms[name].name != "");
     }
+
     //set platform weight
     function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode) {
 
@@ -315,7 +338,7 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
-    
+
     //remove union chain side peer's public key
     function deletePublicKey(bytes32 platformName, address publickey) external returns (Data.ErrCode) {
 
@@ -395,8 +418,8 @@ contract XCPlugin is XCPluginInterface {
             }
         }
     }
-    
-    
+
+
     //build hash message
     function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
         return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", bytes32ToStr(txId));

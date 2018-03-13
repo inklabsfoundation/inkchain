@@ -58,6 +58,10 @@ interface XCPluginInterface {
 
     function getAdmin() external constant returns (address);
 
+    function addCaller(address caller) external;
+
+    function deleteCaller(address caller) external;
+
     function addPlatform(bytes32 name) external returns (Data.ErrCode);
 
     function deletePlatform(bytes32 name) external returns (Data.ErrCode);
@@ -86,6 +90,8 @@ interface XCPluginInterface {
 contract XCPlugin is XCPluginInterface {
 
     Data.Admin private admin;
+
+    address[] public callers;
 
     mapping(bytes32 => Data.Platform) private platforms;
 
@@ -188,8 +194,8 @@ contract XCPlugin is XCPluginInterface {
             return Data.ErrCode.StatusClosed;
         }
 
-        if (admin.account != msg.sender) {
-            return Data.ErrCode.NotAdmin;
+        if (callers.length > 0 && !existCaller(msg.sender)) {
+            return Data.ErrCode.NotCredible;
         }
 
         if (platformName == "") {
@@ -203,6 +209,30 @@ contract XCPlugin is XCPluginInterface {
         delete platforms[platformName].proposals[txId];
 
         return Data.ErrCode.Success;
+    }
+
+    //add caller
+    function addCaller(address caller) external {
+        if (admin.account == msg.sender) {
+            callers.push(caller);
+        }
+    }
+
+    //remove caller
+    function deleteCaller(address caller) external {
+        bool exist;
+        for (uint i = 0; i <= callers.length; i++) {
+            if (exist) {
+                if (i == callers.length) {
+                    delete callers[i - 1];
+                    callers.length--;
+                } else {
+                    callers[i - 1] = callers[i];
+                }
+            } else if (callers[i] == caller) {
+                exist = true;
+            }
+        }
     }
 
     //set xc-plugin contract's admin
@@ -369,6 +399,7 @@ contract XCPlugin is XCPluginInterface {
 
         return Data.ErrCode.Success;
     }
+
     //count union chain side peer's public key
     function countOfPublicKey(bytes32 platformName) external constant returns (Data.ErrCode, uint){
 
@@ -388,6 +419,17 @@ contract XCPlugin is XCPluginInterface {
      *  #  private function  #
      * ######################
      */
+
+    function existCaller(address caller) internal returns (bool) {
+
+        for (uint i = 0; i < callers.length; i++) {
+            if (callers[i] == caller) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     function verifyWeight(bytes32 name, bytes32 txId) internal returns (bool) {
 
@@ -418,7 +460,6 @@ contract XCPlugin is XCPluginInterface {
             }
         }
     }
-
 
     //build hash message
     function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {

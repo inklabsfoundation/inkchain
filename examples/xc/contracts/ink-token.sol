@@ -122,8 +122,8 @@ contract INK is StandardToken {
 
     function INK() {
         name = 'INK Coin';
-        decimals = 9;
         symbol = 'INK';
+        decimals = 9;
         totalSupply = 10 * (10 ** 8) * (10 ** uint256(decimals));
         balances[msg.sender] = totalSupply;
     }

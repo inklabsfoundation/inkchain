@@ -1,14 +1,17 @@
 pragma solidity ^0.4.19;
 
+//data structs
 library Data {
 
+    //error code
     enum ErrCode {
         Success,
         NotAdmin,
-        PlatformTypeInvalid,
+        StatusClosed,
         PlatformNameNotNull,
         CatNotOwnerPlatformName,
         NotCredible,
+        InvalidTransferAmount,
         InsufficientBalance,
         TransferFailed,
         PublicKeyNotExist,
@@ -16,7 +19,9 @@ library Data {
         WeightNotSatisfied
     }
 
+    //admin info
     struct Admin {
+        bool status;
         bytes32 platformName;
         address account;
     }
@@ -28,8 +33,8 @@ library Data {
         address[] voters;
     }
 
+    //platform info
     struct Platform {
-        uint8 typ;
         bytes32 name;
         uint weight;
         address[] publicKeys;
@@ -39,25 +44,33 @@ library Data {
 
 interface XCPluginInterface {
 
-    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, bytes v) external returns (Data.ErrCode ErrCode, bool verify);
+    function start() external;
 
-    function verify(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+    function stop() external;
 
-    function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode);
+    function getStatus() external constant returns (bool);
 
-    function setAdmin(bytes32 platformName, address account) external;
+    function setPlatformName(bytes32 platformName) external;
 
-    function getAdmin() external constant returns (bytes32, address);
+    function getPlatformName() external constant returns (bytes32);
 
-    function addPlatform(uint8 typ, bytes32 name) external returns (Data.ErrCode);
+    function setAdmin(address account) external;
 
-    function deletePlatform(bytes32 name) external constant returns (Data.ErrCode);
+    function getAdmin() external constant returns (address);
 
-    function getPlatform(bytes32 platformName) external returns (Data.ErrCode ErrCode, uint8 typ, bytes32 name, uint weight, address[] publicKeys);
+    function addCaller(address caller) external;
+
+    function deleteCaller(address caller) external;
+
+    function addPlatform(bytes32 name) external returns (Data.ErrCode);
+
+    function deletePlatform(bytes32 name) external returns (Data.ErrCode);
+
+    function getPlatform(bytes32 platformName) external constant returns (Data.ErrCode ErrCode, bytes32 name, uint weight, address[] publicKeys);
 
     function existPlatform(bytes32 name) external constant returns (bool);
 
-    function addPublicKey(bytes32 platformName, address publicKey) external constant returns (Data.ErrCode);
+    function addPublicKey(bytes32 platformName, address publicKey) external returns (Data.ErrCode);
 
     function deletePublicKey(bytes32 platformName, address publicKey) external returns (Data.ErrCode);
 
@@ -66,45 +79,75 @@ interface XCPluginInterface {
     function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode);
 
     function getWeight(bytes32 name) external constant returns (Data.ErrCode, uint);
+
+    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify);
+
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+
+    function deleteProposal(bytes32 platformName, bytes32 txId) external returns (Data.ErrCode);
 }
 
 contract XCPlugin is XCPluginInterface {
 
     Data.Admin private admin;
 
+    address[] public callers;
+
     mapping(bytes32 => Data.Platform) private platforms;
 
     function XCPlugin(bytes32 name) public {
-        admin = Data.Admin(name, msg.sender);
+        admin = Data.Admin(false, name, msg.sender);
     }
 
-    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, byte v) external returns (Data.ErrCode ErrCode, bool verify) {
+    function start() external {
+        if (admin.account == msg.sender) {
+            admin.status = true;
+        }
+    }
+
+    function stop() external {
+        if (admin.account == msg.sender) {
+            admin.status = false;
+        }
+    }
+
+    function getStatus() external constant returns (bool) {
+        return admin.status;
+    }
+
+    function setPlatformName(bytes32 platformName) external {
+        if (admin.account == msg.sender) {
+            admin.platformName = platformName;
+        }
+    }
+
+    function getPlatformName() external constant returns (bytes32) {
+        return admin.platformName;
+    }
+
+    //verify sign and verify sign amount meet weight
+    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify) {
+
+        if (!admin.status) {
+            ErrCode = Data.ErrCode.StatusClosed;
+            return;
+        }
 
         if (notExist(fromPlatform)) {
             ErrCode = Data.ErrCode.NotCredible;
             return;
         }
 
-        bytes32 msgHash = signMsg(fromPlatform, fromAccount, admin.platformName, toAccount, amount, txId);
+        bytes32 msgHash = hashMsg(fromPlatform, fromAccount, admin.platformName, toAccount, amount, txId);
 
-        uint8 v_uint8 = uint8(v);
-
-        if (v_uint8 == 0 || v_uint8 == 1) {
-            v_uint8 += 27;
-        }
-
-        address publicKey = ecrecover(msgHash, v_uint8, r, s);
+        address publicKey = ecrecover(msgHash, v, r, s);
 
         if (!existPublicKey(fromPlatform, publicKey)) {
             ErrCode = Data.ErrCode.PublicKeyNotExist;
             return;
         }
 
-        if (platforms[fromPlatform].proposals[txId].amount == 0) {
-            platforms[fromPlatform].proposals[txId].fromAccount = fromAccount;
-            platforms[fromPlatform].proposals[txId].toAccount = toAccount;
-            platforms[fromPlatform].proposals[txId].amount = amount;
-        }
+        initProposal(fromPlatform, txId, fromAccount, toAccount, amount);
 
         bool change = changeVoters(fromPlatform, publicKey, txId);
 
@@ -114,14 +157,19 @@ contract XCPlugin is XCPluginInterface {
             ErrCode = Data.ErrCode.VoterNotChange;
         }
 
-        if (platforms[fromPlatform].proposals[txId].voters.length >= platforms[fromPlatform].weight) {
-            verify = true;
-        }
+        verify = verifyWeight(fromPlatform, txId);
+
         return;
     }
 
-    function verify(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode) {
+    //verify proposal
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode) {
 
+        if (!admin.status) {
+            return Data.ErrCode.StatusClosed;
+        }
+
+        //determine whether fromPlatform exist in xcPlugin's existPlatform
         if (notExist(fromPlatform)) {
             return Data.ErrCode.NotCredible;
         }
@@ -139,10 +187,15 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
-    function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode) {
+    //remove processed proposal
+    function deleteProposal(bytes32 platformName, bytes32 txId) external returns (Data.ErrCode) {
 
-        if (admin.account != msg.sender) {
-            return Data.ErrCode.NotAdmin;
+        if (!admin.status) {
+            return Data.ErrCode.StatusClosed;
+        }
+
+        if (callers.length > 0 && !existCaller(msg.sender)) {
+            return Data.ErrCode.NotCredible;
         }
 
         if (platformName == "") {
@@ -158,25 +211,45 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
-    function setAdmin(bytes32 platformName, address account) external {
+    //add caller
+    function addCaller(address caller) external {
         if (admin.account == msg.sender) {
-            admin.platformName = platformName;
+            callers.push(caller);
+        }
+    }
+
+    //remove caller
+    function deleteCaller(address caller) external {
+        bool exist;
+        for (uint i = 0; i <= callers.length; i++) {
+            if (exist) {
+                if (i == callers.length) {
+                    delete callers[i - 1];
+                    callers.length--;
+                } else {
+                    callers[i - 1] = callers[i];
+                }
+            } else if (callers[i] == caller) {
+                exist = true;
+            }
+        }
+    }
+
+    //set xc-plugin contract's admin
+    function setAdmin(address account) external {
+        if (admin.account == msg.sender) {
             admin.account = account;
         }
     }
 
-    function getAdmin() external constant returns (bytes32, address) {
-        return (admin.platformName, admin.account);
+    function getAdmin() external constant returns (address) {
+        return admin.account;
     }
 
-    function addPlatform(uint8 platformType, bytes32 platformName) external returns (Data.ErrCode) {
+    function addPlatform(bytes32 platformName) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
-        }
-
-        if (platformType != 1 && platformType != 2) {
-            return Data.ErrCode.PlatformTypeInvalid;
         }
 
         if (platformName == "") {
@@ -188,7 +261,6 @@ contract XCPlugin is XCPluginInterface {
         }
 
         if (notExist(platformName)) {
-            platforms[platformName].typ = platformType;
             platforms[platformName].name = platformName;
             platforms[platformName].weight = 1;
         }
@@ -196,7 +268,7 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
-    function deletePlatform(bytes32 name) external constant returns (Data.ErrCode){
+    function deletePlatform(bytes32 name) external returns (Data.ErrCode){
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
@@ -215,7 +287,7 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
-    function getPlatform(bytes32 platformName) external returns (Data.ErrCode ErrCode, uint8 typ, bytes32 name, uint weight, address[] publicKeys) {
+    function getPlatform(bytes32 platformName) external constant returns (Data.ErrCode ErrCode, bytes32 name, uint weight, address[] publicKeys) {
 
         if (admin.account != msg.sender) {
             ErrCode = Data.ErrCode.NotAdmin;
@@ -233,7 +305,6 @@ contract XCPlugin is XCPluginInterface {
         }
 
         ErrCode = Data.ErrCode.Success;
-        typ = platforms[platformName].typ;
         name = platforms[platformName].name;
         weight = platforms[platformName].weight;
         publicKeys = platforms[platformName].publicKeys;
@@ -242,9 +313,10 @@ contract XCPlugin is XCPluginInterface {
     }
 
     function existPlatform(bytes32 name) external constant returns (bool){
-        return (platforms[name].typ != 0);
+        return (platforms[name].name != "");
     }
 
+    //set platform weight
     function setWeight(bytes32 name, uint weight) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -273,7 +345,8 @@ contract XCPlugin is XCPluginInterface {
         return (Data.ErrCode.Success, platforms[name].weight);
     }
 
-    function addPublicKey(bytes32 platformName, address publicKey) external constant returns (Data.ErrCode) {
+    //add union chain side peer's public key
+    function addPublicKey(bytes32 platformName, address publicKey) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
@@ -296,6 +369,7 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
+    //remove union chain side peer's public key
     function deletePublicKey(bytes32 platformName, address publickey) external returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -326,6 +400,7 @@ contract XCPlugin is XCPluginInterface {
         return Data.ErrCode.Success;
     }
 
+    //count union chain side peer's public key
     function countOfPublicKey(bytes32 platformName) external constant returns (Data.ErrCode, uint){
 
         if (admin.account != msg.sender) {
@@ -344,6 +419,34 @@ contract XCPlugin is XCPluginInterface {
      *  #  private function  #
      * ######################
      */
+
+    function existCaller(address caller) internal returns (bool) {
+
+        for (uint i = 0; i < callers.length; i++) {
+            if (callers[i] == caller) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function verifyWeight(bytes32 name, bytes32 txId) internal returns (bool) {
+
+        if (platforms[name].proposals[txId].voters.length >= platforms[name].weight) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function initProposal(bytes32 name, bytes32 txId, address fromAccount, address toAccount, uint amount) internal {
+        if (platforms[name].proposals[txId].amount == 0) {
+            address[] voters;
+            platforms[name].proposals[txId] = Data.Proposal({fromAccount : fromAccount, toAccount : toAccount, amount : amount, voters : voters});
+        }
+    }
+
     function existPublicKey(bytes32 platformName, address publicKey) internal constant returns (bool exist) {
 
         address[] memory listOfPublicKey = platforms[platformName].publicKeys;
@@ -358,12 +461,13 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function signMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
+    //build hash message
+    function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
         return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", bytes32ToStr(txId));
     }
 
     function notExist(bytes32 name) internal constant returns (bool){
-        return (platforms[name].typ == 0);
+        return (platforms[name].name == "");
     }
 
     function changeVoters(bytes32 platformName, address publicKey, bytes32 txId) internal constant returns (bool change) {

@@ -1,14 +1,17 @@
 pragma solidity ^0.4.19;
 
+//data structs
 library Data {
 
+    //error code
     enum ErrCode {
         Success,
         NotAdmin,
-        PlatformTypeInvalid,
+        StatusClosed,
         PlatformNameNotNull,
         CatNotOwnerPlatformName,
         NotCredible,
+        InvalidTransferAmount,
         InsufficientBalance,
         TransferFailed,
         PublicKeyNotExist,
@@ -16,7 +19,9 @@ library Data {
         WeightNotSatisfied
     }
 
+    //admin info
     struct Admin {
+        bool status;
         bytes32 platformName;
         address account;
     }
@@ -28,8 +33,8 @@ library Data {
         address[] voters;
     }
 
+    //platform info
     struct Platform {
-        uint8 typ;
         bytes32 name;
         uint weight;
         address[] publicKeys;
@@ -52,7 +57,7 @@ contract XCPlugin {
 
     function existPlatform(bytes32 name) external constant returns (bool);
 
-    function verify(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
 
     function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode);
 }
@@ -60,9 +65,19 @@ contract XCPlugin {
 
 interface XCInterface {
 
-    function setAdmin(bytes32 platformName, address account) external;
+    function start() external;
 
-    function getAdmin() external constant returns (bytes32, address);
+    function stop() external;
+
+    function getStatus() external constant returns (bool);
+
+    function setPlatformName(bytes32 platformName) external;
+
+    function getPlatformName() external constant returns (bytes32);
+
+    function setAdmin(address account) external;
+
+    function getAdmin() external constant returns (address);
 
     function setINK(address account) external;
 
@@ -74,20 +89,20 @@ interface XCInterface {
 
     function lock(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
-    function unlock(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode);
+    function unlock(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
     function withdrawal(address account, uint amount) external payable returns (Data.ErrCode);
 
     function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
-    function unlockAdmin(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode);
+    function unlockAdmin(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
 }
 
 contract XC is XCInterface {
 
     Data.Admin private admin;
 
-    mapping(bytes32 => uint) public balanceOf;
+    uint public lockBalance;
 
     INK private inkToken;
 
@@ -97,79 +112,137 @@ contract XC is XCInterface {
 
     event unlockEvent(bytes32 txId, bytes32 fromPlatform, address fromAccount, string amount);
 
+    //init contract
     function XC(bytes32 name) public payable {
-        admin = Data.Admin(name, msg.sender);
+        admin = Data.Admin(false, name, msg.sender);
     }
 
-    function setAdmin(bytes32 platformName, address account) external {
+    function start() external {
+        if (admin.account == msg.sender) {
+            admin.status = true;
+        }
+    }
+
+    function stop() external {
+        if (admin.account == msg.sender) {
+            admin.status = false;
+        }
+    }
+
+    function getStatus() external constant returns (bool) {
+        return admin.status;
+    }
+
+    function setPlatformName(bytes32 platformName) external {
         if (admin.account == msg.sender) {
             admin.platformName = platformName;
+        }
+    }
+
+    function getPlatformName() external constant returns (bytes32) {
+        return admin.platformName;
+    }
+
+    //reset admin info
+    function setAdmin(address account) external {
+        if (admin.account == msg.sender) {
             admin.account = account;
         }
     }
 
-    function getAdmin() external constant returns (bytes32, address) {
-        return (admin.platformName, admin.account);
+    //get admin info  platformName and account
+    function getAdmin() external constant returns (address) {
+        return admin.account;
     }
 
+    //instantiation inkTOKEN
     function setINK(address account) external {
         inkToken = INK(account);
     }
 
+    //get variable inkToken
     function getINK() external constant returns (address) {
         return inkToken;
     }
 
+    //instantiation variable xcPlugin
     function setXCPlugin(address account) external {
         xcPlugin = XCPlugin(account);
     }
 
+    //get private variable xcPlugin
     function getXCPlugin() external constant returns (address) {
         return xcPlugin;
     }
 
+    //turn out
     function lock(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode) {
 
+        if (!admin.status) {
+            return Data.ErrCode.StatusClosed;
+        }
+
+        //determine whether toPlatform exist in xcPlugin's existPlatfor
         if (!xcPlugin.existPlatform(toPlatform)) {
             return Data.ErrCode.NotCredible;
         }
 
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
+
+        //get user approve the contract quota
         uint allowance = inkToken.allowance(msg.sender, this);
 
+        //judge whether the amount authorized by user to the contract is less than amount
         if (allowance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
+        //do transferFrom
         bool success = inkToken.transferFrom(msg.sender, this, amount);
-
         if (!success) {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf[admin.platformName] += amount;
+        //record the amount of local platform turn out
+        lockBalance += amount;
 
-        balanceOf[toPlatform] += amount;
-
+        //trigger lockEvent
         lockEvent(toPlatform, toAccount, uintAppendToString(amount));
 
         return Data.ErrCode.Success;
     }
 
-    function unlock(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external payable returns (Data.ErrCode) {
 
+    //turn in
+    function unlock(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
+
+        if (!admin.status) {
+            return Data.ErrCode.StatusClosed;
+        }
+
+        //determine whether fromPlatform exist in xcPlugin's existPlatform
         if (!xcPlugin.existPlatform(fromPlatform)) {
             return Data.ErrCode.NotCredible;
         }
 
-        Data.ErrCode ErrCode = xcPlugin.verify(fromPlatform, fromAccount, toAccount, amount, txId);
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
+
+        //verify args by function xcPlugin.verify
+        Data.ErrCode ErrCode = xcPlugin.verifyProposal(fromPlatform, fromAccount, toAccount, amount, txId);
 
         if (ErrCode == Data.ErrCode.Success) {
             return ErrCode;
         }
-
-        uint balanceOfContract = inkToken.balanceOf(this);
-
-        if (balanceOfContract < amount) {
+        //get contracts balance
+        uint balance = inkToken.balanceOf(this);
+        //validate the balance of contract were less than amount
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -181,30 +254,35 @@ contract XC is XCInterface {
 
         ErrCode = xcPlugin.deleteProposal(fromPlatform, txId);
 
-        if (ErrCode == Data.ErrCode.Success) {
+        if (ErrCode != Data.ErrCode.Success) {
             return ErrCode;
         }
 
-        balanceOf[admin.platformName] -= amount;
+        lockBalance -= amount;
 
-        balanceOf[fromPlatform] -= amount;
-
+        //trigger unlockEvent
         unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
 
         return Data.ErrCode.Success;
     }
 
+    //refund
     function withdrawal(address account, uint amount) external payable returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
         }
 
-        uint balanceOfContract = inkToken.balanceOf(this);
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
 
-        uint balance = balanceOf[admin.platformName];
+        //get balance of contract
+        uint balance = inkToken.balanceOf(this);
 
-        if (balanceOfContract - balance < amount) {
+        //validate availability of non-cross-chain balance were less than amount
+        if (balance - lockBalance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -217,6 +295,7 @@ contract XC is XCInterface {
         return Data.ErrCode.Success;
     }
 
+    //build union chain consume record before cross-chain publish
     function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
@@ -225,6 +304,11 @@ contract XC is XCInterface {
 
         if (!xcPlugin.existPlatform(toPlatform) && admin.platformName != toPlatform) {
             return Data.ErrCode.NotCredible;
+        }
+
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
         }
 
         uint allowance = inkToken.allowance(msg.sender, this);
@@ -239,17 +323,16 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf[admin.platformName] += amount;
+        lockBalance += amount;
 
         if (admin.platformName != toPlatform && xcPlugin.existPlatform(toPlatform)) {
-            balanceOf[toPlatform] += amount;
             lockEvent(toPlatform, toAccount, uintAppendToString(amount));
         }
 
         return Data.ErrCode.Success;
     }
 
-    function unlockAdmin(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txid) external payable returns (Data.ErrCode) {
+    function unlockAdmin(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;
@@ -259,9 +342,14 @@ contract XC is XCInterface {
             return Data.ErrCode.NotCredible;
         }
 
-        uint balanceOfContract = inkToken.balanceOf(this);
+        // The amount must be greater than 0.
+        if (amount <= 0) {
+            return Data.ErrCode.InvalidTransferAmount;
+        }
 
-        if (balanceOfContract < amount) {
+        uint balance = inkToken.balanceOf(this);
+
+        if (balance < amount) {
             return Data.ErrCode.InsufficientBalance;
         }
 
@@ -271,23 +359,16 @@ contract XC is XCInterface {
             return Data.ErrCode.TransferFailed;
         }
 
-        balanceOf[admin.platformName] -= amount;
+        lockBalance -= amount;
 
         if (fromPlatform != admin.platformName) {
-            balanceOf[fromPlatform] -= amount;
-            unlockEvent(txid, fromPlatform, fromAccount, uintAppendToString(amount));
+            unlockEvent(txId, fromPlatform, fromAccount, uintAppendToString(amount));
         }
 
         return Data.ErrCode.Success;
     }
 
-
-    /**
-     *   ######################
-     *  #  private function  #
-     * ######################
-     */
-
+    //private function change uint to string
     function uintAppendToString(uint v) pure internal returns (string){
 
         uint length = 100;

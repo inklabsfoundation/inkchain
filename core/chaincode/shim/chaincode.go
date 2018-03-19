@@ -772,6 +772,27 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	kvTranSet := &kvtranset.KVTranSet{Trans: tranSet}
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
+
+func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {
+	if pubTxId == "" {
+		return fmt.Errorf(".public chain txId should be valid code.")
+	}
+	if to == "" || len(to) != wallet.AddressStringLength {
+		return fmt.Errorf(".from and to should be valid addresses.")
+	}
+	if amount.Cmp(big.NewInt(0)) < 0 {
+		return fmt.Errorf(".transfer amount should be a half-positive number.")
+	}
+	to = strings.ToLower(to)
+	tran := &kvcrosstranset.KVCrossTrans{}
+	tran.To = to
+	tran.BalanceType = balanceType
+	tran.Amount = amount.Bytes()
+	var tranSet []*kvcrosstranset.KVCrossTrans
+	tranSet = append(tranSet, tran)
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform}
+	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
+}
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {
 	if address == "" || len(address) != wallet.AddressStringLength {
 		return nil, fmt.Errorf("invalid address length")

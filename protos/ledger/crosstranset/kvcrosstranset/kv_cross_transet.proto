@@ -1,0 +1,25 @@
+/*
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+option go_package = "github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset";
+option java_package = "org.inklabsfoundation.inkchain.protos.ledger.transet.kvcrosstranset";
+
+package kvcrosstranset;
+
+message KVCrossTranSet {
+    repeated KVCrossTrans trans = 1;
+    string tokenAddr =2;
+    string pubTxId = 3;
+    string fromPlatForm = 4;
+
+}
+message KVCrossTrans {
+    string to = 1;
+    string balance_type = 2;
+    bytes amount = 3;
+}

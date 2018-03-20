@@ -50,6 +50,8 @@ interface XCPluginInterface {
 
     function getStatus() external constant returns (bool);
 
+    function kill() external;
+
     function setPlatformName(bytes32 platformName) external;
 
     function getPlatformName() external constant returns (bytes32);
@@ -113,6 +115,13 @@ contract XCPlugin is XCPluginInterface {
 
     function getStatus() external constant returns (bool) {
         return admin.status;
+    }
+
+    /* Function to recover the funds on the contract */
+    function kill() external {
+        if (admin.account == msg.sender) {
+            selfdestruct(admin.account);
+        }
     }
 
     function setPlatformName(bytes32 platformName) external {

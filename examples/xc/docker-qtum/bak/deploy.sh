@@ -19,7 +19,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of INK contract bytecode. ###"
 
-    INKBytecode=`cat ../contracts/src/ink-token/INK.bin`
+    INKBytecode=`cat ../contracts/src/INK/INK.bin`
     echo "INK Bytecode:${INKBytecode:0:16}..."
 
     echo "### 3）Deployment of INK contract. ###"
@@ -40,7 +40,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of XCPlugin contract bytecode. ###"
 
-    XCPluginBytecode=`cat ../contracts/src/xc-plugin/XCPlugin.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
+    XCPluginBytecode=`cat ../contracts/src/XCPlugin/XCPlugin.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
     echo "XCPlugin Bytecode:${XCPluginBytecode:0:16}..."
 
     echo "### 3）Deployment of XCPlugin contract. ###"
@@ -61,7 +61,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of XC contract bytecode. ###"
 
-    XCBytecode=`cat ../contracts/src/ink-xc/XC.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
+    XCBytecode=`cat ../contracts/src/XC/XC.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
     echo "XC Bytecode:${XCBytecode:0:16}..."
 
     echo "### 3）Deployment of XC contract. ###"
@@ -81,7 +81,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of INK contract bytecode. ###"
 
-    INKBytecode=`cat ../contracts/src/ink-token/INK.bin`
+    INKBytecode=`cat ../contracts/src/INK/INK.bin`
     echo "INK Bytecode:${INKBytecode:0:16}..."
 
     echo "### 3）Deployment of INK contract. ###"
@@ -103,7 +103,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of XCPlugin contract bytecode. ###"
 
-    XCPluginBytecode=`cat ../contracts/src/xc-plugin/XCPlugin.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
+    XCPluginBytecode=`cat ../contracts/src/XCPlugin/XCPlugin.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
     echo "XCPlugin Bytecode:${XCPluginBytecode:0:16}..."
 
     echo "### 3）Deployment of XCPlugin contract. ###"
@@ -125,7 +125,7 @@ case ${aNum} in
     sh qtum-cli.sh sendtoaddress ${deployAccount} 3
     echo "### 2）Preparation of XC contract bytecode. ###"
 
-    XCBytecode=`cat ../contracts/src/ink-xc/XC.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
+    XCBytecode=`cat ../contracts/src/XC/XC.bin && docker run --rm -v ${PWD}:/ethabi cryptominder/ethabi:latest encode params -v string ${platform} --lenient`
     echo "XC Bytecode:${XCBytecode:0:16}..."
 
     echo "### 3）Deployment of XC contract. ###"

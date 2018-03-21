@@ -6,23 +6,28 @@
 
 > https://docs.docker.com/engine/installation/
 >
-
 ##### 1.2）Pull the Qtum Docker Image
 
-Download qtum,ethabi,solc Images.
 ```
 $ cd docker-qtum
 $ sh download_images.sh
+
 ```
-##### 1.3）Using the Qtum Docker
+##### 1.3）Installing solar
+
+```
+$ go get -u github.com/qtumproject/solar/cli/solar
+```
+##### 1.4）Using the Qtum Docker
+
+
 
 Starting up
 ```
 $ cd docker-qtum
 $ sh start.sh
 ```
- 
-Stop Running 
+Stopping 
 ```
 $ cd docker-qtum
 $ sh stop.sh
@@ -32,11 +37,10 @@ Remove Containers
 $ cd docker-qtum
 $ sh remove.sh
 ```
-
-##### 1.4）Installing solar
-
+login
 ```
-$ go get -u github.com/qtumproject/solar/cli/solar
+$ cd docker-qtum
+$ sh login.sh
 ```
 
 #### 2）Script Commands.
@@ -46,7 +50,6 @@ $ go get -u github.com/qtumproject/solar/cli/solar
 $ cd docker-qtum
 $ sh qtum-cli.sh help
 ```
-
 ##### 2.2）Common commands
 
 Get New Address
@@ -58,33 +61,37 @@ $ sh qtum-cli.sh getnewaddress
 Get the account address
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh getaccountaddress sender
+$ sh qtum-cli.sh getaccountaddress ${account} // lilei
 ```
 
 Get Hex Address
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh gethexaddress sender_address
+$ sh qtum-cli.sh gethexaddress ${account_address} // qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i
 ```
 
 fromhexaddress
+```
+$ cd docker-qtum
+$ sh qtum-cli.sh fromhexaddress ${account_hexaddress} // 019680a2de9e2d8753dfb86437ed52865f0a135c
+```
 
 Check accounts balance
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh listaccounts
+$ sh qtum-cli.sh listaccounts 
 ```
 
 Send to address
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh sendtoaddress sender 3
+$ sh qtum-cli.sh sendtoaddress ${toAccount} ${amount} // qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i 1000
 ```
 
 List unspent
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh listunspent 1 9999999 [\"sender_address\"]
+$ sh qtum-cli.sh listunspent 1 9999999 [\"${account_address}\"] // [\"qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i\\"] 
 ```
 
 List contracts
@@ -96,50 +103,55 @@ $ sh qtum-cli.sh listcontracts
 Get Account Info
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh  getaccountinfo contractaddress
+$ sh qtum-cli.sh  getaccountinfo ${account_address} // contract address
 ```
 
 Create contract 
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh createcontract bytecode gasLimit gasPrice senderaddress
+$ sh qtum-cli.sh createcontract ${bytecode} ${gasLimit} ${gasPrice} ${senderaddress} 
 ```
 
 Call contract
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh  callcontract "contractaddress" "data"
+$ sh qtum-cli.sh  callcontract ${contractaddress} ${bytecode}
 ```
 
 Send to contract
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh  sendtocontract "contractaddress" "data"
+$ sh qtum-cli.sh  sendtocontract ${contractaddress} ${bytecode}
 ```
 
 Estimate fee
 ```
 $ cd docker-qtum
-$ sh qtum-cli.sh  estimatefee "contractaddress" "data"
+$ sh qtum-cli.sh  estimatefee ${contractaddress} ${bytecode}
 ```
 
 #### 3）Deploy The Smart Contracts.
 
 ##### 3.1）deploy
 ```
-$ cd docker-qtum
-$ sh deploy.sh
+$ cd docker-qtum/contracts
+$ sh solar_deploy.sh
 ```
-
 ##### 3.2）deploy status
 ```
 $ cd docker-qtum
-$ sh deploy-status.sh
+$ sh solar_deploy_status.sh
 ```
-#### 4) method sig
 
-INK
+#### 4) method signature
 
+login
+```
+$ sh login.sh
+$ qcli generate 600
+```
+
+#### 4.1) INK
 ##### 4.1.1) allowance(address,address)
 
 ```
@@ -160,9 +172,11 @@ $ solar encode contracts/INK.sol approve '["d6b39eb631df8ee60e46a576231ccf1fcd20
 
 ```
 $ solar encode contracts/INK.sol balanceOf '["18ac89acd86ea466cfb964dd9847d72e427c7886"]'
+
 70a0823100000000000000000000000018ac89acd86ea466cfb964dd9847d72e427c7886
 
 $ solar encode contracts/INK.sol balanceOf '["d6b39eb631df8ee60e46a576231ccf1fcd204a5e"]'
+
 70a08231000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e
 ```
 
@@ -201,7 +215,7 @@ $ solar encode contracts/INK.sol name
 ##### 4.1.9) symbol()
 
 ```
-$ solar encode contracts/INK.sol name 
+$ solar encode contracts/INK.sol symbol 
 95d89b41
 ```
 
@@ -222,7 +236,7 @@ d73dd623000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000
 $ solar encode contracts/INK.sol approveAndCall  '["d6b39eb631df8ee60e46a576231ccf1fcd204a5e",1000,"41"]'
 cae9ca51000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000000000000000000000000000000000000000000000000000000003e8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000014100000000000000000000000000000000000000000000000000000000000000
 ```
-XCPlugin
+#### 4.2) XCPlugin
 
 ##### 4.2.1) addCaller(address)
 ```
@@ -337,7 +351,7 @@ $ solar encode contracts/XCPlugin.sol voter  '["41000000000000000000000000000000
 ffe6bf064100000000000000000000000000000000000000000000000000000000000000000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000000000000000000000000000000000000000000000000000000003e8420000000000000000000000000000000000000000000000000000000000000041000000000000000000000000000000000000000000000000000000000000004100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001b
 ```
 
-XC
+#### 4.3) XC
 
 ##### 4.3.1) getAdmin()
 ```
@@ -425,57 +439,70 @@ $ solar encode contracts/XC.sol withdrawal '["d6b39eb631df8ee60e46a576231ccf1fcd
 5a6b26ba000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000000000000000000000000000000000000000000000000000000003e8
 ```
 
+#### 5）Testing The Smart Contracts.
 
-#### 5）Using The Smart Contracts.
-
-##### 5.1）prepare
-
-Contract Sender
+##### 5.1）prepare account 
 ```
-$ sender=sender_address
-$ echo $sender
-$ qebSYuKdceWs56rQpMgMx1MdZkZga4qD9s
-```
+$ qcli getaccountaddress ma
+$ qcli getaccountaddress sender
+$ qcli listaccounts
 
-Contract address
-```
-$ INK=INK_contract_address
-$ echo $INK
-$ 8cfd2f23a79b11058ea6dc15effe4469d3121220
-
-$ XCP=XCP_contract_address
-$ echo $XCP
-$ 0cc9ff4b777099f0614a606f4e9daf4fc54a07c4
-
-$ XC=XC_contract_address
-$ echo $XC
-$ 302d26110a145a1b36e642d78e92a1c803411c9b
-```
-
-##### 5.3）callcontract & sendtocontract
-
-callcontract
-```
-$ cd docker-qtum
-$ sh qtum-cli.sh callcontract $INK 06fdde03
-result
 {
-    ...
-    executionResult:{
-        output:"00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000008494e4b20436f696e000000000000000000000000000000000000000000000000"
-    },
-    ...
+  "": 2360000.00000000,
+  "ma": 0.00000000,
+  "sender": 0.00000000
 }
 
-$ sh ethabi-util.sh
-enter [1~3]:2
-decode data type enter : string
-decode data enter : result.executionResult.output
-string INK Coin
+```
+##### 5.2）Contract
+```
+$ sh deploy.sh
+... ...
+$ sh deploy_status.sh
+
+✅  contracts/XCPlugin.sol
+      txid: d70dd064f8144cf6df82018fcf812a009304eed69a0953f4f13cd9a5b560e32d
+   address: fdfe183ff6d196a2871d3b856629222f1dd1264b
+ confirmed: true
+     owner: qf2FFX6c5qohyqPvbUoyy8Xo4Q6QrjsaKX
+
+
+✅  contracts/INK.sol
+        txid: df3cda23e2b31f154bb31777b45ddbddff1eabbad636f9dea255528952261615
+     address: 223a30419a3dc234ec659e390d7bc65e70dcea0b
+   confirmed: true
+       owner: qP2RGcwGunqiZvSUidSQyEW64G1XuyGUyM
+
+✅  contracts/XC.sol
+        txid: 74a98da3dc957d90bce9040d66ab0175f65f913acb07df7f857d3a2e716e516f
+     address: 54acd8f45dad524584003ee4d4f4d4f8b00ef4c1
+   confirmed: true
+       owner: qMqd6usqYmUXpTB3FShUiKP59TfMrXFQJf
+
+```
+##### 5.3）prepare Contract address
+
+```
+$ vim p_init.sh
+$ sh p_read.sh
 ```
 
-sendtocontract
+#### 6） examples
+
+##### 6.1）callcontract INK name
 ```
-$ cd docker-qtum
-$ sh qtum-cli.sh sendtocontract $INK 06fdde03
+$ sh test/INK_name.sh
 ```
+##### 6.2）callcontract INK symbol
+```
+$ sh test/INK_symbol.sh
+```
+##### 6.2）callcontract INK balanceOf(address) 
+```
+$ sh test/INK_balanceOf.sh
+```
+##### 6.3）sendtocontract INK transfer(address,uint)
+```
+$ sh test/INK_transfer.sh
+```
+... ...

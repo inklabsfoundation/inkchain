@@ -32,13 +32,13 @@ case ${aNum} in
 
     case ${contract} in
     1)
-    docker run --rm -v ${PWD}/../contracts/src/ink-token:/ethabi cryptominder/ethabi:latest encode function /ethabi/INK.abi ${method} --lenient
+    docker run --rm -v ${PWD}/contracts/src/INK:/ethabi cryptominder/ethabi:latest encode function /ethabi/INK.abi ${method} --lenient
     ;;
     2)
-    docker run --rm -v ${PWD}/../contracts/src/xc-plugin:/ethabi cryptominder/ethabi:latest encode function /ethabi/XCPlugin.abi ${method} --lenient
+    docker run --rm -v ${PWD}/contracts/src/XCPlugin:/ethabi cryptominder/ethabi:latest encode function /ethabi/XCPlugin.abi ${method} --lenient
     ;;
     3)
-    docker run --rm -v ${PWD}/../contracts/src/ink-xc:/ethabi cryptominder/ethabi:latest encode function /ethabi/XC.abi ${method} --lenient
+    docker run --rm -v ${PWD}/contracts/src/XC:/ethabi cryptominder/ethabi:latest encode function /ethabi/XC.abi ${method} --lenient
     ;;
     esac
 esac

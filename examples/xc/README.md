@@ -236,6 +236,7 @@ d73dd623000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000
 $ solar encode contracts/INK.sol approveAndCall  '["d6b39eb631df8ee60e46a576231ccf1fcd204a5e",1000,"41"]'
 cae9ca51000000000000000000000000d6b39eb631df8ee60e46a576231ccf1fcd204a5e00000000000000000000000000000000000000000000000000000000000003e8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000014100000000000000000000000000000000000000000000000000000000000000
 ```
+
 #### 4.2) XCPlugin
 
 ##### 4.2.1) addCaller(address)
@@ -491,18 +492,18 @@ $ sh p_read.sh
 
 ##### 6.1）callcontract INK name
 ```
-$ sh test/INK_name.sh
+$ sh test/INK/call/name.sh
 ```
 ##### 6.2）callcontract INK symbol
 ```
-$ sh test/INK_symbol.sh
+$ sh test/INK/call/symbol.sh
 ```
 ##### 6.2）callcontract INK balanceOf(address) 
 ```
-$ sh test/INK_balanceOf.sh
+$ sh test/INK/call/balanceOf.sh
 ```
 ##### 6.3）sendtocontract INK transfer(address,uint)
 ```
-$ sh test/INK_transfer.sh
+$ sh test/INK/send/transfer.sh
 ```
 ... ...

@@ -1,18 +1,18 @@
 #! /bin/bash
 
-INKHexAddress="223a30419a3dc234ec659e390d7bc65e70dcea0b"
+INKHexAddress="3a1ee4aee3fb23ac65874cba182c98d18ccbae9e"
 INKAddress=`qcli fromhexaddress $INKHexAddress`
-INKOwner="qP2RGcwGunqiZvSUidSQyEW64G1XuyGUyM"
+INKOwner="qejjheVXroaEcyqEDrdF7HSdAGCR6EveeX"
 INKHexOwner=`qcli gethexaddress $INKOwner`
 
 
-XCHexAddress="54acd8f45dad524584003ee4d4f4d4f8b00ef4c1"
+XCHexAddress="4efd25089b49f3ddefdbebf7c7c4d8e7fa9a86d5"
 XCAddress=`qcli fromhexaddress ${XCHexAddress}`
-XCOwner="qMqd6usqYmUXpTB3FShUiKP59TfMrXFQJf"
+XCOwner="qbhM5imeTbZc3GavqJLDebbXNpzzHu54y5"
 XCHexOwner=`qcli gethexaddress ${XCOwner}`
 
 
-XCPluginHexAddress="fdfe183ff6d196a2871d3b856629222f1dd1264b"
+XCPluginHexAddress="98553eeaf215c1c586ffd2453ac3a6eff78cb541"
 XCPluginAddress=`qcli fromhexaddress ${XCPluginHexAddress}`
-XCPluginOwner="qf2FFX6c5qohyqPvbUoyy8Xo4Q6QrjsaKX"
+XCPluginOwner="qLRqiZWbnj1s667W6M67iPeamWVMHoBiay"
 XCPluginHexOwner=`qcli gethexaddress ${XCPluginOwner}`

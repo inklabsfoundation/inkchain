@@ -786,11 +786,10 @@ func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *
 	to = strings.ToLower(to)
 	tran := &kvcrosstranset.KVCrossTrans{}
 	tran.To = to
-	tran.BalanceType = balanceType
 	tran.Amount = amount.Bytes()
 	var tranSet []*kvcrosstranset.KVCrossTrans
 	tranSet = append(tranSet, tran)
-	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform}
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform,BalanceType:balanceType}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {

@@ -102,13 +102,13 @@ message QueryResponse {
 
 message CrossTransfer {
     bytes to=1;
-    bytes balanceType = 2;
     bytes amount = 3;
 }
 message CrossTransferInfo {
     repeated CrossTransfer tranSet = 1;
     bytes pubTxId = 2;
     bytes fromPlatForm = 3;
+    bytes balanceType =4;
 }
 
 message Transfer {

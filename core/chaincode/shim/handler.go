@@ -776,10 +776,10 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 	//we constructed a valid object. No need to check for error
 	var tranSet []*pb.CrossTransfer
 	for _, tran := range trans.Trans {
-		protoTran := pb.CrossTransfer{To: []byte(strings.ToLower(tran.To)), BalanceType: []byte(tran.BalanceType), Amount: tran.Amount}
+		protoTran := pb.CrossTransfer{To: []byte(strings.ToLower(tran.To)), Amount: tran.Amount}
 		tranSet = append(tranSet, &protoTran)
 	}
-	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm)}
+	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm),BalanceType:[]byte(trans.BalanceType)}
 	payloadBytes, err := proto.Marshal(crossTransferInfo)
 	// Create the channel on which to communicate the response from validating peer
 	if err != nil {
@@ -804,7 +804,7 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 
 	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
 		// Success response
-		chaincodeLogger.Debugf("[%s]Received %s. Successfully cross transfered", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		chaincodeLogger.Debugf("[%s]Received %s. Successfully cross transferred", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
 		return nil
 	}
 

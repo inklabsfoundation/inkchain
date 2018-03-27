@@ -16,10 +16,9 @@ message KVCrossTranSet {
     string tokenAddr =2;
     string pubTxId = 3;
     string fromPlatForm = 4;
-
+    string balance_type = 5;
 }
 message KVCrossTrans {
     string to = 1;
-    string balance_type = 2;
     bytes amount = 3;
 }

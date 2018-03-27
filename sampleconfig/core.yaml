@@ -262,6 +262,10 @@ peer:
         enabled:     false
         listenAddress: 0.0.0.0:6060
 
+    # Setting for restful api provided from full node
+    qtumAddress: 192.168.2.5:3001
+    ethAddress: 192.168.2.5:8545
+
 ###############################################################################
 #
 #    VM section

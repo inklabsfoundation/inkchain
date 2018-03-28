@@ -6,4 +6,6 @@ source p_init.sh
 
 #qcli callcontract $INKHexAddress `solar encode contracts/INK.sol balanceOf '["'$XCHexAddress'"]'`
 
-qcli callcontract $INKHexAddress `solar encode contracts/INK.sol balanceOf '["d2e12af1eda54d3a7b29fb1f53813819733697e4"]' `
+qcli callcontract $INKHexAddress `solar encode contracts/INK.sol balanceOf '["'$XCHexOwner'"]'`
+
+#qcli callcontract $INKHexAddress `solar encode contracts/INK.sol balanceOf '["d6b39eb631df8ee60e46a576231ccf1fcd204a5e"]' `

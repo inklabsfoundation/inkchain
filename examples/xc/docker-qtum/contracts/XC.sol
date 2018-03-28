@@ -191,7 +191,7 @@ contract XC is XCInterface {
             return Data.ErrCode.StatusClosed;
         }
 
-        //determine whether toPlatform exist in xcPlugin's existPlatfor
+        //determine whether toPlatform exist in xcPlugin's existPlatform
         if (!xcPlugin.existPlatform(toPlatform)) {
             return Data.ErrCode.NotCredible;
         }

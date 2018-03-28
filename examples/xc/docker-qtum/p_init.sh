@@ -1,18 +1,19 @@
 #! /bin/bash
 
-INKHexAddress="3a1ee4aee3fb23ac65874cba182c98d18ccbae9e"
+# INK
+INKHexAddress="bd557ae7ea1030262af6cfaa3d0e1b556dc61d6d"
 INKAddress=`qcli fromhexaddress $INKHexAddress`
-INKOwner="qejjheVXroaEcyqEDrdF7HSdAGCR6EveeX"
+INKOwner="qKSb9J7F5RHGgtnsgZTJ3rvM9GF29oE9Dz"
 INKHexOwner=`qcli gethexaddress $INKOwner`
 
-
-XCHexAddress="4efd25089b49f3ddefdbebf7c7c4d8e7fa9a86d5"
+# XC
+XCHexAddress="b3ba697c5ff1e0bff5bf17f3bebbb0ccf9234ca9"
 XCAddress=`qcli fromhexaddress ${XCHexAddress}`
-XCOwner="qbhM5imeTbZc3GavqJLDebbXNpzzHu54y5"
+XCOwner="qVuZrmVB4mALHEbYMSBH63Vm4ysfDBxR5B"
 XCHexOwner=`qcli gethexaddress ${XCOwner}`
 
-
-XCPluginHexAddress="98553eeaf215c1c586ffd2453ac3a6eff78cb541"
+# XCPlugin
+XCPluginHexAddress="dbed340e3a3d8bfe2aacbc2289ac3dfa2b27f93b"
 XCPluginAddress=`qcli fromhexaddress ${XCPluginHexAddress}`
-XCPluginOwner="qLRqiZWbnj1s667W6M67iPeamWVMHoBiay"
+XCPluginOwner="qUgv6rtYnhPZmhsb1U3pSAFNsX4d82eXf6"
 XCPluginHexOwner=`qcli gethexaddress ${XCPluginOwner}`

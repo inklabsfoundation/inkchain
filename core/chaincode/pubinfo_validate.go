@@ -91,7 +91,6 @@ func (handler *Handler) validateEthTrans(pubTxId string, amount *big.Int) (resul
 //validate pubTxId from qtum
 func (handler *Handler) validateQtumPubTxId(pubTxId string, amount *big.Int) (result bool, err error) {
 	url := wallet.FullNodeIps["qtum"]
-	fmt.Println(wallet.FullNodeIps)
 	if url == "" {
 		err = errors.New("not support this public chain")
 		return
@@ -195,13 +194,13 @@ func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
 }
 
 //get block hash from qtum
-func getQtumBlockHashByHeight(url string, height int) (map[string]string, error) {
-	url = fmt.Sprintf("%s/qtum-insight-api/block_index/%d", url, height)
+func getQtumBlockHashByHeight(url string, height int) (map[string]interface{}, error) {
+	url = fmt.Sprintf("%s/qtum-insight-api/block-index/%d", url, height)
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	data := map[string]string{}
+	data := map[string]interface{}{}
 	err = json.Unmarshal(res, &data)
 	if err != nil {
 		return nil, err

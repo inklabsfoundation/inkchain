@@ -40,7 +40,7 @@ verifyResult () {
 queryTxInfo () {
     echo_b "Attempting to Query Tx Info "
     sleep 3
-    peer chaincode query  -C ${CHANNEL_NAME} -n xc -c '{"Args":["queryTxInfo","qtumtex1111111114"]}' >log.txt
+    peer chaincode query  -C ${CHANNEL_NAME} -n xc -c '{"Args":["queryTxInfo","qtum|tex1111111112"]}' >log.txt
     res=$?
     cat log.txt
     verifyResult $res "Query Tx Info Failed."

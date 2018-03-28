@@ -1,0 +1,8 @@
+dd62ed3e: allowance(address,address)
+095ea7b3: approve(address,uint256)
+70a08231: balanceOf(address)
+66188463: decreaseApproval(address,uint256)
+d73dd623: increaseApproval(address,uint256)
+18160ddd: totalSupply()
+a9059cbb: transfer(address,uint256)
+23b872dd: transferFrom(address,address,uint256)

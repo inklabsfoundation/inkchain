@@ -99,6 +99,15 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
+	wallet.FullNodeIps = map[string]string{}
+	ethIp := viper.GetString("peer.ethAddress")
+	qtumIp := viper.GetString("peer.qtumAddress")
+	if ethIp != "" {
+		wallet.FullNodeIps["eth"] = ethIp
+	}
+	if qtumIp != "" {
+		wallet.FullNodeIps["qtum"] = qtumIp
+	}
 
 	configurationCached = true
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright IBM Corp. All Rights Reserved.
+# Copyright Ziggurat Corp. All Rights Reserved.
 #
 # SPDX-License-Identifier: Apache-2.0
 #

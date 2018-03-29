@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright IBM Corp. All Rights Reserved.
+# Copyright Ziggurat Corp. All Rights Reserved.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -148,7 +148,7 @@ GC_FILE_SUFFIX='-gc.log'
 GC_LOG_FILE_NAME=''
 if [ "x$GC_LOG_ENABLED" = "xtrue" ]; then
   GC_LOG_FILE_NAME=$DAEMON_NAME$GC_FILE_SUFFIX
-  if $JAVA -XshowSettings:properties -version 2>&1 | grep --silent "^\s*java.vendor\s*=\s*IBM Corporation" ; then
+  if $JAVA -XshowSettings:properties -version 2>&1 | grep --silent "^\s*java.vendor\s*=\s*Ziggurat Corporation" ; then
     KAFKA_GC_LOG_OPTS="-Xverbosegclog:$LOG_DIR/$GC_LOG_FILE_NAME -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps "
   else
     KAFKA_GC_LOG_OPTS="-Xloggc:$LOG_DIR/$GC_LOG_FILE_NAME -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps "

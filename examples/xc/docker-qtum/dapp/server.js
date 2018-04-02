@@ -16,7 +16,7 @@ const contracts = {
     "XCPlugin": "contracts/XCPlugin.sol",
 }
 
-// 创建 application/x-www-form-urlencoded 编码解析
+// application/x-www-form-urlencoded
 var urlencodedParser = bodyParser.urlencoded({extended: false})
 
 app.use(express.static('public'));
@@ -62,7 +62,6 @@ app.post('/xc/out/', urlencodedParser,async function (req, res) {
     var result4 = await call("XC","lockBalance")
     console.log("lock:",result4)
 
-    // 输出 JSON 格式
     var response = {
         "lockBalance":result4.toString()
     };
@@ -91,7 +90,6 @@ app.post('/xc/in/', urlencodedParser,async function (req, res) {
     var result3 = await call("XC","lockBalance")
     console.log("lock:",result3)
 
-    // 输出 JSON 格式
     var response = {
         "lockBalance":result3.toString()
     };
@@ -102,5 +100,5 @@ app.post('/xc/in/', urlencodedParser,async function (req, res) {
 var server = app.listen(8080, function () {
     var host = server.address().address
     var port = server.address().port
-    console.log("应用实例，访问地址为 http://%s:%s", host, port)
+    console.log("http://%s:%s", host, port)
 })

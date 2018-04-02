@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>跨链转账转出</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+</head>
+<body>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>跨链转出</h2>
+    <label style="width: 200px;display: inline-block;">发起平台(fromPlatform):</label>
+    <input style="width: 500px;" readonly name="fromPlatform"
+           value="qutm:7174756d00000000000000000000000000000000000000000000000000000000"/><br/>
+    <label style="width: 200px;display: inline-block;">发起账户(fromAccount):</label>
+    <input style="width: 500px;" readonly name="fromAccount"
+           value="INK.sender:qaQ16UVKUgTCa6W1xatj3PeaCnwesaexX9"/><br/>
+    <label style="width: 200px;display: inline-block;">目标平台(toPlatform):</label>
+    <select style="width: 500px;" id="toPlatform" name="toPlatform">
+        <option value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            INK:494e4b0000000000000000000000000000000000000000000000000000000000
+        </option>
+        <option disabled value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            A:4100000000000000000000000000000000000000000000000000000000000000
+        </option>
+    </select><br/>
+    <label style="width: 200px;display: inline-block;">目标账户(toAccount):</label>
+    <input style="width: 500px;" name="toAccount"
+           value="d6b39eb631df8ee60e46a576231ccf1fcd204a5e"/><br/>
+    <label style="width: 200px;display: inline-block;">跨链金额(value):</label>
+    <input style="width: 500px;" name="value" value="1000"/><br/>
+    <button id="submit">确定</button>
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding: 20px;">
+    <h2>跨链转入</h2>
+    <label style="width: 200px;display: inline-block;">发起平台(fromPlatform):</label>
+    <select style="width: 500px;" id="fromPlatform2" name="fromPlatform2">
+        <option value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            INK:494e4b0000000000000000000000000000000000000000000000000000000000
+        </option>
+        <option disabled value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            A:4100000000000000000000000000000000000000000000000000000000000000
+        </option>
+    </select><br/>
+    <label style="width: 200px;display: inline-block;">发起账户(fromAccount):</label>
+    <input style="width: 500px;" name="fromAccount2"
+           value="4230a12f5b0693dd88bb35c79d7e56a68614b199"/><br/>
+    <label style="width: 200px;display: inline-block;">目标平台(toPlatform):</label>
+    <input style="width: 500px;" readonly name="toPlatform2"
+           value="qutm:7174756d00000000000000000000000000000000000000000000000000000000"/><br/>
+    <label style="width: 200px;display: inline-block;">目标账户(toAccount):</label>
+    <input style="width: 500px;" name="toAccount2"
+           value="42cae74a99da4cea4c1c6b9e783f858aa9fe16bb"/><br/>
+    <label style="width: 200px;display: inline-block;">跨链金额(value): </label>
+    <input style="width: 500px;" name="value2" value="500"/><br/>
+    <label style="width: 200px;display: inline-block;">交易ID(txid):</label>
+    <input style="width: 500px;" name="txid"
+           value="ec286f7dd3463a6a9c5384747bc64a8685de44b2c3d3a1156dc0085f758fcd28"/><br/>
+    <label style="width: 200px;display: inline-block;">交易签名(sign):</label>
+    <input style="width: 500px;" name="sign"
+           value="fc9e9be0aec70f4d14752ca4ab12cb14ff29aec10ab8e29b66c01db1d05ee14879679cf1bf133d73156520533bbc514571b9b834dc5c6282b265ffbc2342ada800"/><br/>
+    <button id="submit2">确定</button>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#submit").click(function () {
+            var toPlatform = $.trim($("select[name=toPlatform]").find("option:selected").text());
+            toPlatform = toPlatform.substr(toPlatform.length - 64, 64)
+            var toAccount = $.trim($("input[name=toAccount]").val())
+            var value = $("input[name=value]").val()
+            $.post("/xc/out", {
+                toPlatform: toPlatform,
+                toAccount: toAccount,
+                value: value
+            }, function (data, status) {
+                alert("数据: \n" + data + "\n状态: " + status);
+            });
+        });
+        $("#submit2").click(function () {
+            var fromPlatform = $.trim($("select[name=fromPlatform2]").find("option:selected").text());
+            fromPlatform = fromPlatform.substr(fromPlatform.length - 64, 64)
+            // alert(fromPlatform)
+            var fromAccount = $.trim($("input[name=fromAccount2]").val())
+            // alert(fromAccount)
+            var toAccount = $.trim($("input[name=toAccount2]").val())
+            // alert(toAccount)
+            var value = $("input[name=value2]").val()
+            // alert(value)
+            var txid = $.trim($("input[name=txid]").val())
+            // alert(txid)
+            var sign = $.trim($("input[name=sign]").val())
+
+            $.post("/xc/in", {
+                fromPlatform: fromPlatform,
+                fromAccount: fromAccount,
+                toAccount: toAccount,
+                value: value,
+                txid: txid,
+                sign: sign,
+            }, function (data, status) {
+                alert("数据: \n" + data + "\n状态: " + status);
+            });
+        });
+    })
+</script>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "ethjs-abi": "^0.2.1",
+    "express": "^4.16.3",
+    "minimist": "^1.2.0",
+    "multer": "^1.3.0",
+    "ora": "^2.0.0",
+    "qtumjs": "^1.7.3"
+  }
+}

@@ -66,7 +66,6 @@ services:
       - 7053:7053
     volumes:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/inkchain/crypto/peer
-        - ./per:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer
     depends_on:
       - orderer.example.com
 
@@ -88,7 +87,6 @@ services:
       - 7058:7053
     volumes:
       - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/etc/inkchain/crypto/peer
-      - ./per1:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer
     depends_on:
       - orderer.example.com
 

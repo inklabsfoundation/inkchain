@@ -38,7 +38,7 @@ library Data {
         bytes32 name;
         uint weight;
         address[] publicKeys;
-        mapping(bytes32 => Proposal) proposals;
+        mapping(string => Proposal) proposals;
     }
 }
 
@@ -57,9 +57,9 @@ contract XCPlugin {
 
     function existPlatform(bytes32 name) external constant returns (bool);
 
-    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, string txId) external constant returns (Data.ErrCode);
 
-    function deleteProposal(bytes32 platformName, bytes32 txId) external constant returns (Data.ErrCode);
+    function deleteProposal(bytes32 platformName, string txId) external constant returns (Data.ErrCode);
 }
 
 
@@ -91,13 +91,13 @@ interface XCInterface {
 
     function lock(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
-    function unlock(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
+    function unlock(string txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
     function withdrawal(address account, uint amount) external payable returns (Data.ErrCode);
 
     function lockAdmin(bytes32 toPlatform, address toAccount, uint amount) external payable returns (Data.ErrCode);
 
-    function unlockAdmin(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
+    function unlockAdmin(string txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode);
 }
 
 contract XC is XCInterface {
@@ -112,7 +112,7 @@ contract XC is XCInterface {
 
     event lockEvent(bytes32 toPlatform, address toAccount, string amount);
 
-    event unlockEvent(bytes32 txId, bytes32 fromPlatform, address fromAccount, string amount);
+    event unlockEvent(string txId, bytes32 fromPlatform, address fromAccount, string amount);
 
     //init contract
     function XC(bytes32 name) public payable {
@@ -191,7 +191,7 @@ contract XC is XCInterface {
             return Data.ErrCode.StatusClosed;
         }
 
-        //determine whether toPlatform exist in xcPlugin's existPlatfor
+        //determine whether toPlatform exist in xcPlugin's existPlatform
         if (!xcPlugin.existPlatform(toPlatform)) {
             return Data.ErrCode.NotCredible;
         }
@@ -226,7 +226,7 @@ contract XC is XCInterface {
 
 
     //turn in
-    function unlock(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
+    function unlock(string txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
 
         if (!admin.status) {
             return Data.ErrCode.StatusClosed;
@@ -245,7 +245,7 @@ contract XC is XCInterface {
         //verify args by function xcPlugin.verify
         Data.ErrCode ErrCode = xcPlugin.verifyProposal(fromPlatform, fromAccount, toAccount, amount, txId);
 
-        if (ErrCode == Data.ErrCode.Success) {
+        if (ErrCode != Data.ErrCode.Success) {
             return ErrCode;
         }
         //get contracts balance
@@ -341,7 +341,7 @@ contract XC is XCInterface {
         return Data.ErrCode.Success;
     }
 
-    function unlockAdmin(bytes32 txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
+    function unlockAdmin(string txId, bytes32 fromPlatform, address fromAccount, address toAccount, uint amount) external payable returns (Data.ErrCode) {
 
         if (admin.account != msg.sender) {
             return Data.ErrCode.NotAdmin;

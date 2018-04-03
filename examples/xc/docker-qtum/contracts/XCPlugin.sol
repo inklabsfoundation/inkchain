@@ -38,7 +38,7 @@ library Data {
         bytes32 name;
         uint weight;
         address[] publicKeys;
-        mapping(bytes32 => Proposal) proposals;
+        mapping(string => Proposal) proposals;
     }
 }
 
@@ -82,11 +82,11 @@ interface XCPluginInterface {
 
     function getWeight(bytes32 name) external constant returns (Data.ErrCode, uint);
 
-    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify);
+    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, string txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify);
 
-    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode);
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, string txId) external constant returns (Data.ErrCode);
 
-    function deleteProposal(bytes32 platformName, bytes32 txId) external returns (Data.ErrCode);
+    function deleteProposal(bytes32 platformName, string txId) external returns (Data.ErrCode);
 }
 
 contract XCPlugin is XCPluginInterface {
@@ -135,7 +135,7 @@ contract XCPlugin is XCPluginInterface {
     }
 
     //verify sign and verify sign amount meet weight
-    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify) {
+    function voter(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, string txId, bytes32 r, bytes32 s, uint8 v) external returns (Data.ErrCode ErrCode, bool verify) {
 
         if (!admin.status) {
             ErrCode = Data.ErrCode.StatusClosed;
@@ -172,7 +172,7 @@ contract XCPlugin is XCPluginInterface {
     }
 
     //verify proposal
-    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, bytes32 txId) external constant returns (Data.ErrCode) {
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint amount, string txId) external constant returns (Data.ErrCode) {
 
         if (!admin.status) {
             return Data.ErrCode.StatusClosed;
@@ -197,7 +197,7 @@ contract XCPlugin is XCPluginInterface {
     }
 
     //remove processed proposal
-    function deleteProposal(bytes32 platformName, bytes32 txId) external returns (Data.ErrCode) {
+    function deleteProposal(bytes32 platformName, string txId) external returns (Data.ErrCode) {
 
         if (!admin.status) {
             return Data.ErrCode.StatusClosed;
@@ -440,7 +440,7 @@ contract XCPlugin is XCPluginInterface {
         return false;
     }
 
-    function verifyWeight(bytes32 name, bytes32 txId) internal returns (bool) {
+    function verifyWeight(bytes32 name, string txId) internal returns (bool) {
 
         if (platforms[name].proposals[txId].voters.length >= platforms[name].weight) {
             return true;
@@ -449,7 +449,7 @@ contract XCPlugin is XCPluginInterface {
         return false;
     }
 
-    function initProposal(bytes32 name, bytes32 txId, address fromAccount, address toAccount, uint amount) internal {
+    function initProposal(bytes32 name, string txId, address fromAccount, address toAccount, uint amount) internal {
         if (platforms[name].proposals[txId].amount == 0) {
             address[] voters;
             platforms[name].proposals[txId] = Data.Proposal({fromAccount : fromAccount, toAccount : toAccount, amount : amount, voters : voters});
@@ -471,15 +471,15 @@ contract XCPlugin is XCPluginInterface {
     }
 
     //build hash message
-    function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, bytes32 txId) internal returns (bytes32) {
-        return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", bytes32ToStr(txId));
+    function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint amount, string txId) internal returns (bytes32) {
+        return keccak256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(amount, 10), ":", txId);
     }
 
     function notExist(bytes32 name) internal constant returns (bool){
         return (platforms[name].name == "");
     }
 
-    function changeVoters(bytes32 platformName, address publicKey, bytes32 txId) internal constant returns (bool change) {
+    function changeVoters(bytes32 platformName, address publicKey, string txId) internal constant returns (bool change) {
 
         address[] storage voters = platforms[platformName].proposals[txId].voters;
 

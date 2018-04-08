@@ -14,7 +14,7 @@ Prerequisites:
 
 - [Docker Compose](https://docs.docker.com/compose/overview/) v1.8 or higher
 
-Download images from `https://hub.docker.com/u/inkchain/`, here we use images version 0.9.1.
+Download images from `https://hub.docker.com/u/inklabsfoundation/`, here we use images version 0.13.0.
 
 ### Start Inkchain network
 

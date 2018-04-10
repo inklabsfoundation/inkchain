@@ -27,8 +27,8 @@
 #   - unit-test-clean - cleans unit test state (particularly from docker)
 
 PROJECT_NAME   = inklabsfoundation/inkchain
-BASE_VERSION = 0.12.0
-PREV_VERSION = 0.11.0
+BASE_VERSION = 0.13.0
+PREV_VERSION = 0.12.0
 IS_RELEASE = true
 
 ifneq ($(IS_RELEASE),true)
@@ -73,7 +73,7 @@ PROJECT_FILES = $(shell git ls-files  | grep -v ^test | grep -v ^unit-test | \
 	grep -v ^.git | grep -v ^examples | grep -v ^devenv | grep -v .png$ | \
 	grep -v ^LICENSE )
 RELEASE_TEMPLATES = $(shell git ls-files | grep "release/templates")
-IMAGES = peer orderer ccenv javaenv buildenv zookeeper kafka couchdb tools
+IMAGES = peer orderer ccenv javaenv buildenv tools zookeeper kafka couchdb
 #IMAGES = peer orderer ccenv javaenv buildenv tools
 RELEASE_PLATFORMS = windows-amd64 darwin-amd64 linux-amd64 linux-ppc64le linux-s390x
 RELEASE_PKGS = configtxgen cryptogen configtxlator peer orderer

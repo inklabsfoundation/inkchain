@@ -1,3 +1,0 @@
-b56e0e32: deleteProposal(bytes32,bytes32)
-5de047d3: existPlatform(bytes32)
-623aba4d: verifyProposal(bytes32,address,address,uint256,bytes32)

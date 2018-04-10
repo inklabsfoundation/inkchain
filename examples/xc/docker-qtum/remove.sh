@@ -10,3 +10,5 @@ rm -rf ./.qtum
 rm solar.development.json
 sleep 5
 docker rm `docker ps -aq`
+
+rm -rvf dapp/node_modules

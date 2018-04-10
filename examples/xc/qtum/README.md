@@ -9,7 +9,7 @@
 ##### 1.2）Pull the Qtum Docker Image
 
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh download_images.sh
 
 ```
@@ -24,22 +24,22 @@ $ go get -u github.com/qtumproject/solar/cli/solar
 
 Starting up
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh start.sh
 ```
 Stopping 
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh stop.sh
 ```
 Remove Containers 
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh remove.sh
 ```
 login
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh login.sh
 ```
 
@@ -47,86 +47,86 @@ $ sh login.sh
 
 ##### 2.1）Help
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh help
 ```
 ##### 2.2）Common commands
 
 Get New Address
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh getnewaddress
 ```
 
 Get the account address
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh getaccountaddress ${account} // lilei
 ```
 
 Get Hex Address
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh gethexaddress ${account_address} // qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i
 ```
 
 fromhexaddress
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh fromhexaddress ${account_hexaddress} // 019680a2de9e2d8753dfb86437ed52865f0a135c
 ```
 
 Check accounts balance
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh listaccounts 
 ```
 
 Send to address
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh sendtoaddress ${toAccount} ${amount} // qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i 1000
 ```
 
 List unspent
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh listunspent 1 9999999 [\"${account_address}\"] // [\"qHhn8KTpfootyYy6Eo51dfR8kXn8s1Wv8i\\"] 
 ```
 
 List contracts
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh listcontracts
 ```
 
 Get Account Info
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh  getaccountinfo ${account_address} // contract address
 ```
 
 Create contract 
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh createcontract ${bytecode} ${gasLimit} ${gasPrice} ${senderaddress} 
 ```
 
 Call contract
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh  callcontract ${contractaddress} ${bytecode}
 ```
 
 Send to contract
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh  sendtocontract ${contractaddress} ${bytecode}
 ```
 
 Estimate fee
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh qtum-cli.sh  estimatefee ${contractaddress} ${bytecode}
 ```
 
@@ -134,12 +134,12 @@ $ sh qtum-cli.sh  estimatefee ${contractaddress} ${bytecode}
 
 ##### 3.1）deploy
 ```
-$ cd docker-qtum/contracts
+$ cd qtum/contracts
 $ sh solar_deploy.sh
 ```
 ##### 3.2）deploy status
 ```
-$ cd docker-qtum
+$ cd qtum
 $ sh solar_deploy_status.sh
 ```
 

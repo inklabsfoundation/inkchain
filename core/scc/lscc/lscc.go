@@ -884,7 +884,7 @@ func (lscc *LifeCycleSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response
 		}
 
 		// 2. check local MSP Admins policy
-		if err = lscc.policyChecker.CheckPolicyNoChannel(mgmt.Admins, sp); err != nil {
+		if err = lscc.policyChecker.CheckPolicyNoChannel(mgmt.Members, sp); err != nil {
 			return shim.Error(fmt.Sprintf("Authorization for GETCHAINCODES on channel %s has been denied with error %s", args[0], err))
 		}
 
@@ -895,7 +895,7 @@ func (lscc *LifeCycleSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response
 		}
 
 		// 2. check local MSP Admins policy
-		if err = lscc.policyChecker.CheckPolicyNoChannel(mgmt.Admins, sp); err != nil {
+		if err = lscc.policyChecker.CheckPolicyNoChannel(mgmt.Members, sp); err != nil {
 			return shim.Error(fmt.Sprintf("Authorization for GETINSTALLEDCHAINCODES on channel %s has been denied with error %s", args[0], err))
 		}
 

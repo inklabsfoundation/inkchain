@@ -1,6 +1,6 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.13;
 
-contract Token {
+contract ERC20 {
 
     uint256 public totalSupply;
 
@@ -51,7 +51,7 @@ contract Token {
     }
 }
 
-contract INK is Token {
+contract Token is ERC20 {
 
     uint8 public constant decimals = 9;
 
@@ -67,7 +67,7 @@ contract INK is Token {
         revert();
     }
 
-    function INK() {
+    function Token() {
 
         balanceOf[msg.sender] = initialSupply;
 

@@ -2,9 +2,11 @@ pragma solidity ^0.4.19;
 
 import "./XCInterface.sol";
 
-import "./INK.sol";
+import "./Token.sol";
 
 import "./XCPlugin.sol";
+
+import "./SafeMath.sol";
 
 contract XC is XCInterface {
 
@@ -27,15 +29,24 @@ contract XC is XCInterface {
 
     uint public lockBalance;
 
-    INK private inkToken;
+    Token private token;
 
     XCPlugin private xcPlugin;
 
-    event lockEvent(bytes32 toPlatform, address toAccount, string value);
+    bytes2 private compareSymbol;
 
-    event unlockEvent(string txid, bytes32 fromPlatform, address fromAccount, string value);
+    event Lock(bytes32 toPlatform, address toAccount, string value);
 
-    function XC(bytes32 name) public payable {
+    event Unlock(string txid, bytes32 fromPlatform, address fromAccount, string value);
+
+    function XC() public payable {
+        //TODO
+        bytes32 name = "ETH";
+        //TODO
+        compareSymbol = "+=";
+
+        //TODO totalSupply = 10 * (10 ** 8) * (10 ** 9);
+        lockBalance = 10 * (10 ** 8) * (10 ** 9);
 
         admin = Admin(0, name, msg.sender);
     }
@@ -52,16 +63,9 @@ contract XC is XCInterface {
         }
     }
 
-    function getStatus() external constant returns (uint8) {
+    function getStatus() external view returns (uint8) {
 
         return admin.status;
-    }
-
-    function kill() external {
-
-        require(admin.account == msg.sender);
-
-        selfdestruct(admin.account);
     }
 
     function setPlatformName(bytes32 platformName) external {
@@ -74,36 +78,41 @@ contract XC is XCInterface {
         }
     }
 
-    function getPlatformName() external constant returns (bytes32) {
+    function getPlatformName() external view returns (bytes32) {
 
         return admin.platformName;
     }
 
     function setAdmin(address account) external {
 
+        require(account != address(0));
+
         require(admin.account == msg.sender);
 
-        admin.account = account;
+        if (admin.account != account) {
+
+            admin.account = account;
+        }
     }
 
-    function getAdmin() external constant returns (address) {
+    function getAdmin() external view returns (address) {
 
         return admin.account;
     }
 
-    function setINK(address account) external {
+    function setToken(address account) external {
 
         require(admin.account == msg.sender);
 
-        if (inkToken != account) {
+        if (token != account) {
 
-            inkToken = INK(account);
+            token = Token(account);
         }
     }
 
-    function getINK() external constant returns (address) {
+    function getToken() external view returns (address) {
 
-        return inkToken;
+        return token;
     }
 
     function setXCPlugin(address account) external {
@@ -116,9 +125,28 @@ contract XC is XCInterface {
         }
     }
 
-    function getXCPlugin() external constant returns (address) {
+    function getXCPlugin() external view returns (address) {
 
         return xcPlugin;
+    }
+
+    function setCompare(bytes2 symbol) external {
+
+        require(admin.account == msg.sender);
+
+        require(symbol == "+=" || symbol == "-=");
+
+        if (compareSymbol != symbol) {
+
+            compareSymbol = symbol;
+        }
+    }
+
+    function getCompare() external view returns (bytes2){
+
+        require(admin.account == msg.sender);
+
+        return compareSymbol;
     }
 
     function lock(bytes32 toPlatform, address toAccount, uint value) external payable {
@@ -129,25 +157,28 @@ contract XC is XCInterface {
 
         require(xcPlugin.existPlatform(toPlatform));
 
+        require(toAccount != address(0));
+
+        // require(token.totalSupply >= value && value > 0);
         require(value > 0);
 
         //get user approve the contract quota
-        uint allowance = inkToken.allowance(msg.sender, this);
+        uint allowance = token.allowance(msg.sender, this);
 
-        require(allowance >= value);
+        require(toCompare(allowance, value));
 
         //do transferFrom
-        bool success = inkToken.transferFrom(msg.sender, this, value);
+        bool success = token.transferFrom(msg.sender, this, value);
 
         require(success);
 
         //record the amount of local platform turn out
-        lockBalance += value;
+        lockBalance = SafeMath.add(lockBalance, value);
+        // require(token.totalSupply >= lockBalance);
 
-        //trigger lockEvent
-        lockEvent(toPlatform, toAccount, uintAppendToString(value));
+        //trigger Lock
+        emit Lock(toPlatform, toAccount, uintAppendToString(value));
     }
-
 
     //turn in
     function unlock(string txid, bytes32 fromPlatform, address fromAccount, address toAccount, uint value) external payable {
@@ -158,93 +189,62 @@ contract XC is XCInterface {
 
         require(xcPlugin.existPlatform(fromPlatform));
 
+        require(toAccount != address(0));
+
+        // require(token.totalSupply >= value && value > 0);
         require(value > 0);
 
         //verify args by function xcPlugin.verify
-        var (complete,verify) = xcPlugin.verifyProposal(fromPlatform, fromAccount, toAccount, value, txid);
+        bool complete;
+
+        bool verify;
+
+        (complete, verify) = xcPlugin.verifyProposal(fromPlatform, fromAccount, toAccount, value, txid);
 
         require(verify && !complete);
 
         //get contracts balance
-        uint balance = inkToken.balanceOf(this);
+        uint balance = token.balanceOf(this);
 
         //validate the balance of contract were less than amount
-        require(balance >= value);
+        require(toCompare(balance, value));
 
-        bool success = inkToken.transfer(toAccount, value);
+        require(token.transfer(toAccount, value));
 
-        require(success);
+        require(xcPlugin.commitProposal(fromPlatform, txid));
 
-        success = xcPlugin.commitProposal(fromPlatform, txid);
+        lockBalance = SafeMath.sub(lockBalance, value);
 
-        require(success);
-
-        lockBalance -= value;
-
-        unlockEvent(txid, fromPlatform, fromAccount, uintAppendToString(value));
+        emit Unlock(txid, fromPlatform, fromAccount, uintAppendToString(value));
     }
 
     function withdraw(address account, uint value) external payable {
 
         require(admin.account == msg.sender);
 
+        require(account != address(0));
+
+        // require(token.totalSupply >= value && value > 0);
         require(value > 0);
 
-        uint balance = inkToken.balanceOf(this);
+        uint balance = token.balanceOf(this);
 
-        require(balance - lockBalance >= value);
+        require(toCompare(SafeMath.sub(balance, lockBalance), value));
 
-        bool success = inkToken.transfer(account, value);
+        bool success = token.transfer(account, value);
 
         require(success);
     }
 
-    function lockAdmin(bytes32 toPlatform, address toAccount, uint value) external payable {
+    function transfer(address account, uint value) external payable {
 
         require(admin.account == msg.sender);
 
-        require(admin.platformName == toPlatform || xcPlugin.existPlatform(toPlatform));
+        require(account != address(0));
 
-        require(value > 0);
+        require(value > 0 && value >= this.balance);
 
-        uint allowance = inkToken.allowance(msg.sender, this);
-
-        require(allowance >= value);
-
-        bool success = inkToken.transferFrom(msg.sender, this, value);
-
-        require(success);
-
-        lockBalance += value;
-
-        if (admin.platformName != toPlatform && xcPlugin.existPlatform(toPlatform)) {
-
-            lockEvent(toPlatform, toAccount, uintAppendToString(value));
-        }
-    }
-
-    function unlockAdmin(string txid, bytes32 fromPlatform, address fromAccount, address toAccount, uint value) external payable {
-
-        require(admin.account == msg.sender);
-
-        require(xcPlugin.existPlatform(fromPlatform) || fromPlatform == admin.platformName);
-
-        require(value > 0);
-
-        uint balance = inkToken.balanceOf(this);
-
-        require(balance >= 0);
-
-        bool success = inkToken.transfer(toAccount, value);
-
-        require(success);
-
-        lockBalance -= value;
-
-        if (fromPlatform != admin.platformName) {
-
-            unlockEvent(txid, fromPlatform, fromAccount, uintAppendToString(value));
-        }
+        this.transfer(account, value);
     }
 
     /**
@@ -252,6 +252,20 @@ contract XC is XCInterface {
      *  #  private function  #
      * ######################
      */
+
+    function toCompare(uint f, uint s) internal view returns (bool) {
+
+        if (compareSymbol == "-=") {
+
+            return f > s;
+        } else if (compareSymbol == "+=") {
+
+            return f >= s;
+        } else {
+
+            return false;
+        }
+    }
 
     function uintAppendToString(uint v) pure internal returns (string){
 

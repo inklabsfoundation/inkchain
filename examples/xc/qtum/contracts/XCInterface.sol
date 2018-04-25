@@ -1,4 +1,4 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
 /**
  * XC Contract Interface.
@@ -15,12 +15,7 @@ interface XCInterface {
      * Get contract service status.
      * @return contract service status.
      */
-    function getStatus() external constant returns (uint8);
-
-    /**
-     * Destruction of the contract.
-     */
-    function kill() external;
+    function getStatus() external view returns (uint8);
 
     /**
      * Set the current contract platform name.
@@ -32,7 +27,7 @@ interface XCInterface {
      * Get the current contract platform name.
      * @return contract platform name.
      */
-    function getPlatformName() external constant returns (bytes32);
+    function getPlatformName() external view returns (bytes32);
 
     /**
      * Set the current contract administrator.
@@ -44,19 +39,19 @@ interface XCInterface {
      * Get the current contract administrator.
      * @return contract administrator.
      */
-    function getAdmin() external constant returns (address);
+    function getAdmin() external view returns (address);
 
     /**
-     * Set the INK contract address.
+     * Set the Token contract address.
      * @param account contract address.
      */
-    function setINK(address account) external;
+    function setToken(address account) external;
 
     /**
-     * Get the INK contract address.
+     * Get the Token contract address.
      * @return contract address.
      */
-    function getINK() external constant returns (address);
+    function getToken() external view returns (address);
 
     /**
      * Set the XCPlugin contract address.
@@ -68,7 +63,19 @@ interface XCInterface {
      * Get the XCPlugin contract address.
      * @return contract address.
      */
-    function getXCPlugin() external constant returns (address);
+    function getXCPlugin() external view returns (address);
+
+    /**
+     * Set the comparison symbol in the contract.
+     * @param symbol comparison symbol ({"-=" : ">" , "+=" : ">=" }).
+     */
+    function setCompare(bytes2 symbol) external;
+
+    /**
+     * Get the comparison symbol in the contract.
+     * @return comparison symbol.
+     */
+    function getCompare() external view returns (bytes2);
 
     /**
      * Transfer out of cross chain.
@@ -96,20 +103,9 @@ interface XCInterface {
     function withdraw(address account, uint value) external payable;
 
     /**
-     * Administrator’s transfer out of cross chain.
-     * @param toPlatform name of to platform.
-     * @param toAccount account of to platform.
+     * Transfer the money(qtum/eth) from the contract account.
+     * @param account the specified account.
      * @param value transfer amount.
      */
-    function lockAdmin(bytes32 toPlatform, address toAccount, uint value) external payable;
-
-    /**
-     * Administrator’s transfer in of cross chain.
-     * @param txid transaction id.
-     * @param fromPlatform name of form platform.
-     * @param fromAccount account of to platform.
-     * @param toAccount account of to platform.
-     * @param value transfer amount.
-     */
-    function unlockAdmin(string txid, bytes32 fromPlatform, address fromAccount, address toAccount, uint value) external payable;
+    function transfer(address account, uint value) external payable;
 }

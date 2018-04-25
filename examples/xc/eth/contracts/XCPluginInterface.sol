@@ -19,12 +19,7 @@ interface XCPluginInterface {
      * Get contract service status.
      * @return contract service status.
      */
-    function getStatus() external constant returns (bool);
-
-    /**
-     * Destruction of the contract.
-     */
-    function kill() external;
+    function getStatus() external view returns (bool);
 
     /**
      * Set the current contract platform name.
@@ -36,7 +31,7 @@ interface XCPluginInterface {
      * Get the current contract platform name.
      * @return contract platform name.
      */
-    function getPlatformName() external constant returns (bytes32);
+    function getPlatformName() external view returns (bytes32);
 
     /**
      * Set the current contract administrator.
@@ -48,7 +43,7 @@ interface XCPluginInterface {
      * Get the current contract administrator.
      * @return contract administrator.
      */
-    function getAdmin() external constant returns (address);
+    function getAdmin() external view returns (address);
 
     /**
      * Add a contract trust caller.
@@ -67,13 +62,13 @@ interface XCPluginInterface {
      * @param caller account of caller.
      * @return whether exists.
      */
-    function existCaller(address caller) public constant returns (bool);
+    function existCaller(address caller) external view returns (bool);
 
     /**
      * Get all contract trusted callers.
      * @return al lcallers.
      */
-    function getCallers() external constant returns (address[]);
+    function getCallers() external view returns (address[]);
 
     /**
      * Add a trusted platform name.
@@ -92,7 +87,7 @@ interface XCPluginInterface {
      * @param name a platform name.
      * @return whether exists.
      */
-    function existPlatform(bytes32 name) public constant returns (bool);
+    function existPlatform(bytes32 name) external view returns (bool);
 
     /**
      * Add the trusted platform public key information.
@@ -113,21 +108,21 @@ interface XCPluginInterface {
      * @param platformName a platform name.
      * @param publicKey a public key.
      */
-    function existPublicKey(bytes32 platformName, address publicKey) public constant returns (bool);
+    function existPublicKey(bytes32 platformName, address publicKey) external view returns (bool);
 
     /**
      * Get the count of public key for the trusted platform.
      * @param platformName a platform name.
      * @return count of public key.
      */
-    function countOfPublicKey(bytes32 platformName) external constant returns (uint);
+    function countOfPublicKey(bytes32 platformName) external view returns (uint);
 
     /**
      * Get the list of public key for the trusted platform.
      * @param platformName a platform name.
      * @return list of public key.
      */
-    function publicKeys(bytes32 platformName) external constant returns (address[]);
+    function publicKeys(bytes32 platformName) external view returns (address[]);
 
     /**
      * Set the weight of a trusted platform.
@@ -141,7 +136,7 @@ interface XCPluginInterface {
      * @param platformName a platform name.
      * @return weight of platform.
      */
-    function getWeight(bytes32 platformName) external constant returns (uint);
+    function getWeight(bytes32 platformName) external view returns (uint);
 
     /**
      * Initiate and vote on the transaction proposal.
@@ -164,7 +159,7 @@ interface XCPluginInterface {
      * @param value transfer amount.
      * @param txid transaction id.
      */
-    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint value, string txid) external constant returns (bool,bool);
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint value, string txid) external view returns (bool, bool);
 
     /**
      * Commit the transaction proposal.
@@ -182,8 +177,9 @@ interface XCPluginInterface {
      * @return toAccount account of to platform.
      * @return value transfer amount.
      * @return voters notarial voters.
+     * @return weight The weight value of the completed time.
      */
-    function getProposal(bytes32 platformName, string txid) external returns (bool status, address fromAccount, address toAccount, uint value, address[] voters);
+    function getProposal(bytes32 platformName, string txid) external view returns (bool status, address fromAccount, address toAccount, uint value, address[] voters, uint weight);
 
     /**
      * Delete the transaction proposal information.
@@ -191,4 +187,11 @@ interface XCPluginInterface {
      * @param txid transaction id.
      */
     function deleteProposal(bytes32 platformName, string txid) external;
+
+    /**
+     * Transfer the money(qtum/eth) from the contract account.
+     * @param account the specified account.
+     * @param value transfer amount.
+     */
+    function transfer(address account, uint value) external payable;
 }

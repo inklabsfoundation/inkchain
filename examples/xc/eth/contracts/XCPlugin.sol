@@ -26,6 +26,7 @@ contract XCPlugin is XCPluginInterface {
      * @field toAccount Account of to platform.
      * @field value Transfer amount.
      * @field voters Proposers.
+     * @field weight The weight value of the completed time.
      */
     struct Proposal {
 
@@ -38,6 +39,8 @@ contract XCPlugin is XCPluginInterface {
         uint value;
 
         address[] voters;
+
+        uint weight;
     }
 
     /**
@@ -64,7 +67,9 @@ contract XCPlugin is XCPluginInterface {
 
     mapping(bytes32 => Platform) private platforms;
 
-    function XCPlugin(bytes32 name) public {
+    function XCPlugin() public {
+        //TODO
+        bytes32 name = "ETH";
 
         admin = Admin(false, name, msg.sender);
     }
@@ -89,16 +94,9 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function getStatus() external constant returns (bool) {
+    function getStatus() external view returns (bool) {
 
         return admin.status;
-    }
-
-    function kill() external {
-
-        require(admin.account == msg.sender);
-
-        selfdestruct(admin.account);
     }
 
     function setPlatformName(bytes32 platformName) external {
@@ -111,12 +109,14 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function getPlatformName() external constant returns (bytes32) {
+    function getPlatformName() external view returns (bytes32) {
 
         return admin.platformName;
     }
 
     function setAdmin(address account) external {
+
+        require(account != address(0));
 
         require(admin.account == msg.sender);
 
@@ -126,7 +126,7 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function getAdmin() external constant returns (address) {
+    function getAdmin() external view returns (address) {
 
         return admin.account;
     }
@@ -135,7 +135,7 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.account == msg.sender);
 
-        if (!existCaller(caller)) {
+        if (!_existCaller(caller)) {
 
             callers.push(caller);
         }
@@ -145,7 +145,7 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.account == msg.sender);
 
-        if (existCaller(caller)) {
+        if (_existCaller(caller)) {
 
             bool exist;
 
@@ -171,7 +171,12 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function existCaller(address caller) public constant returns (bool) {
+    function existCaller(address caller) external view returns (bool) {
+
+        return _existCaller(caller);
+    }
+
+    function _existCaller(address caller) internal view returns (bool) {
 
         for (uint i = 0; i < callers.length; i++) {
 
@@ -184,7 +189,7 @@ contract XCPlugin is XCPluginInterface {
         return false;
     }
 
-    function getCallers() external constant returns (address[]) {
+    function getCallers() external view returns (address[]) {
 
         require(admin.account == msg.sender);
 
@@ -199,7 +204,7 @@ contract XCPlugin is XCPluginInterface {
 
         require(name != admin.platformName);
 
-        if (!existPlatform(name)) {
+        if (!_existPlatform(name)) {
 
             platforms[name].status = true;
 
@@ -216,13 +221,18 @@ contract XCPlugin is XCPluginInterface {
 
         require(name != admin.platformName);
 
-        if (existPlatform(name)) {
+        if (_existPlatform(name)) {
 
             platforms[name].status = false;
         }
     }
 
-    function existPlatform(bytes32 name) public constant returns (bool){
+    function existPlatform(bytes32 name) external view returns (bool){
+
+        return _existPlatform(name);
+    }
+
+    function _existPlatform(bytes32 name) internal view returns (bool){
 
         return platforms[name].status;
     }
@@ -231,7 +241,7 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         require(weight > 0);
 
@@ -241,11 +251,11 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function getWeight(bytes32 platformName) external constant returns (uint) {
+    function getWeight(bytes32 platformName) external view returns (uint) {
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         return platforms[platformName].weight;
     }
@@ -254,9 +264,9 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
-        require(publicKey != address(0x0));
+        require(publicKey != address(0));
 
         address[] storage listOfPublicKey = platforms[platformName].publicKeys;
 
@@ -275,7 +285,7 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         address[] storage listOfPublicKey = platforms[platformName].publicKeys;
 
@@ -300,7 +310,14 @@ contract XCPlugin is XCPluginInterface {
         }
     }
 
-    function existPublicKey(bytes32 platformName, address publicKey) public constant returns (bool) {
+    function existPublicKey(bytes32 platformName, address publicKey) external view returns (bool) {
+
+        require(admin.account == msg.sender);
+
+        return _existPublicKey(platformName, publicKey);
+    }
+
+    function _existPublicKey(bytes32 platformName, address publicKey) internal view returns (bool) {
 
         address[] memory listOfPublicKey = platforms[platformName].publicKeys;
 
@@ -315,20 +332,20 @@ contract XCPlugin is XCPluginInterface {
         return false;
     }
 
-    function countOfPublicKey(bytes32 platformName) external constant returns (uint){
+    function countOfPublicKey(bytes32 platformName) external view returns (uint){
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         return platforms[platformName].publicKeys.length;
     }
 
-    function publicKeys(bytes32 platformName) external constant returns (address[]){
+    function publicKeys(bytes32 platformName) external view returns (address[]){
 
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         return platforms[platformName].publicKeys;
     }
@@ -337,17 +354,15 @@ contract XCPlugin is XCPluginInterface {
 
         require(admin.status);
 
-        require(existPlatform(fromPlatform));
+        require(_existPlatform(fromPlatform));
 
         bytes32 msgHash = hashMsg(fromPlatform, fromAccount, admin.platformName, toAccount, value, txid);
 
         address publicKey = ecrecover(msgHash, v, r, s);
 
-        require(existPublicKey(fromPlatform, publicKey));
+        require(_existPublicKey(fromPlatform, publicKey));
 
         Proposal storage proposal = platforms[fromPlatform].proposals[txid];
-
-        require(!proposal.status);
 
         if (proposal.value == 0) {
 
@@ -364,39 +379,51 @@ contract XCPlugin is XCPluginInterface {
         changeVoters(fromPlatform, publicKey, txid);
     }
 
-    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint value, string txid) external constant returns (bool,bool) {
+    function verifyProposal(bytes32 fromPlatform, address fromAccount, address toAccount, uint value, string txid) external view returns (bool, bool) {
 
         require(admin.status);
 
-        require(existPlatform(fromPlatform));
+        require(_existPlatform(fromPlatform));
 
         Proposal storage proposal = platforms[fromPlatform].proposals[txid];
 
+        if (proposal.status) {
+
+            return (true, (proposal.voters.length >= proposal.weight));
+        }
+
+        if (proposal.value == 0) {
+
+            return (false, false);
+        }
+
         require(proposal.fromAccount == fromAccount && proposal.toAccount == toAccount && proposal.value == value);
 
-        return (proposal.status,(proposal.voters.length >= platforms[fromPlatform].weight));
+        return (false, (proposal.voters.length >= platforms[fromPlatform].weight));
     }
 
     function commitProposal(bytes32 platformName, string txid) external returns (bool) {
 
         require(admin.status);
 
-        require(existCaller(msg.sender));
+        require(_existCaller(msg.sender) || msg.sender == admin.account);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         require(!platforms[platformName].proposals[txid].status);
 
         platforms[platformName].proposals[txid].status = true;
 
+        platforms[platformName].proposals[txid].weight = platforms[platformName].proposals[txid].voters.length;
+
         return true;
     }
 
-    function getProposal(bytes32 platformName, string txid) external returns (bool status, address fromAccount, address toAccount, uint value, address[] voters){
+    function getProposal(bytes32 platformName, string txid) external view returns (bool status, address fromAccount, address toAccount, uint value, address[] voters, uint weight){
 
         require(admin.status);
 
-        require(existPlatform(platformName));
+        require(_existPlatform(platformName));
 
         fromAccount = platforms[platformName].proposals[txid].fromAccount;
 
@@ -408,19 +435,29 @@ contract XCPlugin is XCPluginInterface {
 
         status = platforms[platformName].proposals[txid].status;
 
+        weight = platforms[platformName].proposals[txid].weight;
+
         return;
     }
 
     function deleteProposal(bytes32 platformName, string txid) external {
 
+        require(msg.sender == admin.account);
+
+        require(_existPlatform(platformName));
+
+        delete platforms[platformName].proposals[txid];
+    }
+
+    function transfer(address account, uint value) external payable {
+
         require(admin.account == msg.sender);
 
-        require(existPlatform(platformName));
+        require(account != address(0));
 
-        if (platforms[platformName].proposals[txid].value > 0 ) {
+        require(value > 0 && value >= this.balance);
 
-            delete platforms[platformName].proposals[txid];
-        }
+        this.transfer(account, value);
     }
 
     /**
@@ -429,7 +466,7 @@ contract XCPlugin is XCPluginInterface {
      * ######################
      */
 
-    function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint value, string txid) internal returns (bytes32) {
+    function hashMsg(bytes32 fromPlatform, address fromAccount, bytes32 toPlatform, address toAccount, uint value, string txid) internal pure returns (bytes32) {
 
         return sha256(bytes32ToStr(fromPlatform), ":0x", uintToStr(uint160(fromAccount), 16), ":", bytes32ToStr(toPlatform), ":0x", uintToStr(uint160(toAccount), 16), ":", uintToStr(value, 10), ":", txid);
     }
@@ -456,7 +493,7 @@ contract XCPlugin is XCPluginInterface {
 
     function bytes32ToBytes(bytes32 b) internal pure returns (bytes) {
 
-        var length = b.length;
+        uint length = b.length;
 
         for (uint i = 0; i < b.length; i++) {
 
@@ -479,7 +516,7 @@ contract XCPlugin is XCPluginInterface {
         return bs;
     }
 
-    function bytes32ToStr(bytes32 b) internal constant returns (string) {
+    function bytes32ToStr(bytes32 b) internal pure returns (string) {
 
         bytes memory bs = bytes32ToBytes(b);
 
@@ -505,6 +542,10 @@ contract XCPlugin is XCPluginInterface {
 
                 break;
             }
+        }
+
+        if (base == 16) {
+            length = 40;
         }
 
         bytes memory bs = new bytes(length);

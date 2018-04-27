@@ -18,8 +18,7 @@ message Version {
 
 message CrossTranSet {
     string from = 1;
-    Version from_ver = 2;
-    bytes transet = 3;
-    string token_addr = 4;
-    string token_type = 5;
+    bytes ctranset = 2;
+    string token_addr = 3;
+    string token_type = 4;
 }

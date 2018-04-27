@@ -30,6 +30,9 @@ type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
 var FullNodeIps map[string]string
+var LocalPlatform = "INK"
+var ContractAddr map[string]string
+var PublicPlatformPrivateKey map[string]string
 
 var InkCrossChainServiceAddress string
 

@@ -137,11 +137,42 @@ func signedByAnyOfGivenRole(role msp.MSPRole_MSPRoleType, ids []string) *cb.Sign
 	return p
 }
 
+//wrapper for generating "all of a given role" type policies
+func signedByAllOfGivenRole(role msp.MSPRole_MSPRoleType, ids []string) *cb.SignaturePolicyEnvelope {
+	// we create an array of principals, one principal
+	// per application MSP defined on this chain
+	sort.Strings(ids)
+	principals := make([]*msp.MSPPrincipal, len(ids))
+	sigspolicy := make([]*cb.SignaturePolicy, len(ids))
+	for i, id := range ids {
+		principals[i] = &msp.MSPPrincipal{
+			PrincipalClassification: msp.MSPPrincipal_ROLE,
+			Principal:               utils.MarshalOrPanic(&msp.MSPRole{Role: role, MspIdentifier: id})}
+		sigspolicy[i] = SignedBy(int32(i))
+	}
+
+	// create the policy: it requires exactly 1 signature from any of the principals
+	p := &cb.SignaturePolicyEnvelope{
+		Version:    0,
+		Rule:       NOutOf(int32(len(ids)), sigspolicy),
+		Identities: principals,
+	}
+
+	return p
+}
+
 // SignedByAnyMember returns a policy that requires one valid
 // signature from a member of any of the orgs whose ids are
 // listed in the supplied string array
 func SignedByAnyMember(ids []string) *cb.SignaturePolicyEnvelope {
 	return signedByAnyOfGivenRole(msp.MSPRole_MEMBER, ids)
+}
+
+// SignedByAnyMember returns a policy that requires one valid
+// signature from a member of any of the orgs whose ids are
+// listed in the supplied string array
+func SignedByAllMember(ids []string) *cb.SignaturePolicyEnvelope {
+	return signedByAllOfGivenRole(msp.MSPRole_MEMBER, ids)
 }
 
 // SignedByAnyAdmin returns a policy that requires one valid

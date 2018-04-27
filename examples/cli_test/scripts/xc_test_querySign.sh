@@ -37,19 +37,18 @@ verifyResult () {
     fi
 }
 
-invokeRegisterPlatform () {
-    echo_b "Attempting to Registered A Platform "
+queryTxInfo () {
+    echo_b "Attempting to Query Tx Info "
     sleep 3
-    #peer chaincode invoke -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n xc -c '{"Args":["unlock","QTUM","HelloWorld","10","i3c97f146e8de9807ef723538521fcecd5f64c79a"]}'-i "3" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
-    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n xc -c '{"Args":["registPlatform","QTUM"]}' -i "100000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    peer chaincode query  -C ${CHANNEL_NAME} -n xscc -c '{"Args":["querySign","eafccedd1d57e899d6e17c9fc9e6486ef8ee7bfa61ab55fbe50221ca7ec8c01b"]}' >log.txt
     res=$?
     cat log.txt
-    verifyResult $res "Registered A Platform Failed."
+    verifyResult $res "Query Tx Info Failed."
 }
 
 
-echo_b "=====================1.invoke account====================="
-invokeRegisterPlatform
+echo_b "=====================1.QueryTxInfo====================="
+queryTxInfo
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

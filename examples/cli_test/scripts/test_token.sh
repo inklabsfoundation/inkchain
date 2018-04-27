@@ -98,11 +98,11 @@ queryToken(){
 }
 
 echo_b "=====================6.Issue a token using ascc========================"
-#issueToken  INK
-#issueToken2
+issueToken  INK
+issueToken2
 
 echo_b "=====================7.Transfer 10 amount of INK====================="
-#makeTransfer
+makeTransfer
 
 echo_b "=====================8.Query transfer result of From account====================="
 #checkTransferRes1

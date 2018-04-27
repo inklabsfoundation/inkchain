@@ -45,6 +45,7 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 )
 
 // Logger for the shim package.

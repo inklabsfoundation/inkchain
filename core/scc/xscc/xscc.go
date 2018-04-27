@@ -1,13 +1,21 @@
-package main
+package xscc
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/common/flogging"
+	"github.com/inklabsfoundation/inkchain/core/policy"
+	"github.com/inklabsfoundation/inkchain/core/policyprovider"
 	"math/big"
 	"strings"
+	"github.com/inklabsfoundation/inkchain/core/wallet"
+	"errors"
 )
+
+// Create Logger
+var logger = flogging.MustGetLogger("xscc")
 
 const (
 	Unlock         = "unlock"         //public chain turn into
@@ -15,6 +23,7 @@ const (
 	RegistPlatform = "registPlatform" //register a platform
 	RemovePlatform = "removePlatform" //remove a platform
 	QueryTxInfo    = "queryTxInfo"    //query transaction info
+	QuerySign      = "querySign"      //query transaction signature
 )
 
 //turn out state struct
@@ -36,53 +45,51 @@ type turnInMessage struct {
 	DateTime     string   `json:"dateTime"`
 }
 
-type XcChaincode struct {
+type CrossTrainSysCC struct {
 	owner        string //chain code owner
 	platName     string //platform name
 	inkTokenAddr string //coin account
+	// policyChecker is the interface used to perform
+	// access control
+	policyChecker policy.PolicyChecker
 }
 
 //init chain code
-func (x *XcChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	_, args := stub.GetFunctionAndParameters()
-	if len(args) < 2 {
-		return shim.Error("Params Error")
-	}
-	x.owner = "i4230a12f5b0693dd88bb35c79d7e56a68614b199"
-	if len(x.owner) <= 0 || x.owner == "" {
-		return shim.Error("Please input the right inkToken owner address")
-	}
-	x.platName = args[0]
-	if x.platName == "" || x.platName == "nil" {
-		return shim.Error("Please the right plat name")
-	}
-	x.inkTokenAddr = "i3c97f146e8de9807ef723538521fcecd5f64c79a"
-	if x.inkTokenAddr == "" || len(x.inkTokenAddr) <= 0 {
-		return shim.Error("Please input the right inkToken owner address")
-	}
+func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	logger.Info("xscc init")
+
+	// Init policy checker for access control
+	c.policyChecker = policyprovider.GetPolicyChecker()
+	c.owner = "i4230a12f5b0693dd88bb35c79d7e56a68614b199"
+	c.platName = "INK"
+	c.inkTokenAddr = "i3c97f146e8de9807ef723538521fcecd5f64c79a"
+
 	return shim.Success([]byte("init success"))
 }
 
-func (x *XcChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+func (c *CrossTrainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	funcName, args := stub.GetFunctionAndParameters()
+	logger.Debugf("xscc starts: %d args ", len(args))
 	switch funcName {
 	case RegistPlatform:
-		return x.registPlatform(stub, args)
+		return c.registPlatform(stub, args)
 	case RemovePlatform:
-		return x.removePlatform(stub, args)
+		return c.removePlatform(stub, args)
 	case Unlock:
-		return x.unlock(stub, args)
+		return c.unlock(stub, args)
 	case Lock:
-		return x.lock(stub, args)
+		return c.lock(stub, args)
 	case QueryTxInfo:
-		return x.queryTxInfo(stub, args)
+		return c.queryTxInfo(stub, args)
+	case QuerySign:
+		return c.querySign(stub, args)
 	}
-	return shim.Success([]byte("invoke"))
+	return shim.Success([]byte("Invalid invoke function name. Expecting \"RegistPlatform\" or \"RemovePlatform\" or \"Unlock\" or \"Lock\" or \"QueryTxInfo\" or \"QueryTxInfo\"."))
 }
 
 //register a platform
 //args platform  string supportCross bool
-func (x *XcChaincode) registPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) registPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params Error")
 	}
@@ -91,7 +98,7 @@ func (x *XcChaincode) registPlatform(stub shim.ChaincodeStubInterface, args []st
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	if sender != x.owner {
+	if sender != c.owner {
 		return shim.Error("Sender must be chainCode's owner")
 	}
 
@@ -114,7 +121,7 @@ func (x *XcChaincode) registPlatform(stub shim.ChaincodeStubInterface, args []st
 
 //remove one platform
 //args platform string
-func (x *XcChaincode) removePlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params Error")
 	}
@@ -123,7 +130,7 @@ func (x *XcChaincode) removePlatform(stub shim.ChaincodeStubInterface, args []st
 	sender, err := stub.GetSender()
 	if err != nil {
 		return shim.Error(err.Error())
-	} else if sender != x.owner {
+	} else if sender != c.owner {
 		return shim.Error("Sender must be chainCode's owner")
 	}
 
@@ -145,7 +152,7 @@ func (x *XcChaincode) removePlatform(stub shim.ChaincodeStubInterface, args []st
 }
 
 //public chain turn in
-func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 5 {
 		return shim.Error("Params Error")
 	}
@@ -154,12 +161,13 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	fromAccount := strings.ToLower(args[1])
 	amount := big.NewInt(0)
 	_, ok := amount.SetString(args[2], 10)
-	fmt.Println(args[2])
 	toAccount := strings.ToLower(args[3])
 	pubTxId := strings.ToLower(args[4])
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
+	}else if amount.Cmp(big.NewInt(0))<=0{
+		return shim.Error("Amount must more than zero")
 	}
 	//try to get state from book which key is variable fromPlatform's value
 	platState, err := stub.GetState(fromPlatform)
@@ -167,13 +175,6 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
 		return shim.Error("The platform named " + fromPlatform + " is not registered")
-	}
-
-	validateTxRes, err := x.validateTxId(fromPlatform, pubTxId)
-	if err != nil {
-		return shim.Error(err.Error())
-	} else if !validateTxRes {
-		return shim.Error(fmt.Sprintf("The txId from %s platform's tdId %s validat faild", fromPlatform, pubTxId))
 	}
 
 	//build state key
@@ -200,7 +201,7 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 	}
 	timeStr := fmt.Sprintf("%d", txTimestamp.GetSeconds())
 	//build turn in state and change to json
-	state := x.buildTurnInMessage(stub.GetTxID(), fromAccount, fromPlatform, amount, toAccount, pubTxId, timeStr)
+	state := c.buildTurnInMessage(stub.GetTxID(), fromAccount, fromPlatform, amount, toAccount, pubTxId, timeStr)
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -219,7 +220,8 @@ func (x *XcChaincode) unlock(stub shim.ChaincodeStubInterface, args []string) pb
 }
 
 //union chain turn out
-func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	//return shim.Error("Unlock function had been moved to another chaincode")
 	if len(args) < 3 {
 		return shim.Error("Params Error")
 	}
@@ -230,26 +232,30 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	} else if sender == "" {
 		return shim.Error("Account not exist")
 	}
-	toPlatform := strings.ToLower(args[0])
+	toPlatform := args[0]
+	platformLower := strings.ToLower(toPlatform)
 	toAccount := strings.ToLower(args[1])
 	amount := big.NewInt(0)
 	_, ok := amount.SetString(args[2], 10)
+
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
+	}else if amount.Cmp(big.NewInt(0))<=0{
+		return shim.Error("Amount must more than zero")
 	}
 
 	//try to get state from book which key is variable toPlatform's value
-	platState, err := stub.GetState(toPlatform)
+	platState, err := stub.GetState(platformLower)
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
-		return shim.Error("The platform named " + toPlatform + " is not registered")
+		return shim.Error("The platform named " + platformLower + " is not registered")
 	}
 
 	//set txId to be key
 	key := stub.GetTxID()
 	//do transfer
-	err = stub.Transfer(x.inkTokenAddr, "INK", amount)
+	err = stub.Transfer(c.inkTokenAddr, "INK", amount)
 	if err != nil {
 		return shim.Error("Transfer error " + err.Error())
 	}
@@ -259,30 +265,24 @@ func (x *XcChaincode) lock(stub shim.ChaincodeStubInterface, args []string) pb.R
 	}
 	timeStr := fmt.Sprintf("%d", txTimestamp.GetSeconds())
 	//build turn out state
-	state := x.buildTurnOutMessage(sender, toPlatform, toAccount, amount, timeStr)
+	state := c.buildTurnOutMessage(sender, toPlatform, toAccount, amount, timeStr)
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	//build composite key
 	indexName := "type~address~datetime~platform~key"
-	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, timeStr, x.platName, key})
+	indexKey, err := stub.CreateCompositeKey(indexName, []string{"out", sender, timeStr, c.platName, key})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	value := []byte{0x00}
 	stub.PutState(indexKey, value)
-
-	//sign
-	signJson, err := x.signJson([]byte("abc"), "60320b8a71bc314404ef7d194ad8cac0bee1e331")
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	return shim.Success(signJson)
+	return shim.Success([]byte("Operate Success"))
 }
 
 //query transaction info
-func (x *XcChaincode) queryTxInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params error")
 	}
@@ -299,34 +299,68 @@ func (x *XcChaincode) queryTxInfo(stub shim.ChaincodeStubInterface, args []strin
 	return shim.Success(stateJson)
 }
 
+//query transaction signature
+func (c *CrossTrainSysCC) querySign(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) < 1 {
+		return shim.Error("Params error")
+	}
+	key := strings.ToLower(args[0])
+	if len(key) == 0 {
+		return shim.Error("Please input a right key")
+	}
+	if strings.Contains(key, "|") {
+		return shim.Error("QuerySign do not support turn in transaction")
+	}
+	stateJson, err := stub.GetState(key)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if stateJson == nil {
+		return shim.Error("Can't find state with named " + key)
+	}
+	state := turnOutMessage{}
+	err = json.Unmarshal(stateJson, &state)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	//sign
+	str := fmt.Sprintf("%s:0x%s:%s:0x%s:%d:%s", wallet.LocalPlatform, state.FromAccount[1:], state.ToPlatform, state.ToAccount, state.Value, key)
+	sign, err := c.signJson([]byte(str), strings.ToLower(state.ToPlatform))
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	result := map[string]interface{}{"sign": sign, "state": state}
+	resultJson, err := json.Marshal(result)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(resultJson)
+}
+
 //build turn in state and change to json
-func (x *XcChaincode) buildTurnInMessage(txId string, fromAccount string, fromPlatform string, value *big.Int, toAccount string, pubTxId string, now string) []byte {
+func (c *CrossTrainSysCC) buildTurnInMessage(txId string, fromAccount string, fromPlatform string, value *big.Int, toAccount string, pubTxId string, now string) []byte {
 	state := turnInMessage{txId, value, fromAccount, fromPlatform, toAccount, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }
 
 //build turn out state and change to json
-func (x *XcChaincode) buildTurnOutMessage(fromAccount string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
+func (c *CrossTrainSysCC) buildTurnOutMessage(fromAccount string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
 	state := turnOutMessage{fromAccount, value, toPlatform, toAccount, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }
 
-//validate txId by call full node
-func (x *XcChaincode) validateTxId(platform string, txId string) (bool, error) {
-	result := true
-	return result, nil
-}
-
 //sign
-func (x *XcChaincode) signJson(json []byte, priKey string) ([]byte, error) {
-	return []byte("f4128988cbe7df8315440adde412a8955f7f5ff9a5468a791433727f82717a6753bd71882079522207060b681fbd3f5623ee7ed66e33fc8e581f442acbcf6ab800"), nil
-}
-
-func main() {
-	err := shim.Start(new(XcChaincode))
-	if err != nil {
-		fmt.Printf("Error starting tokenChaincode: %s", err)
+func (c *CrossTrainSysCC) signJson(json []byte, platform string) (string, error) {
+	privateKey := wallet.PublicPlatformPrivateKey[platform]
+	if privateKey == "" {
+		return "", errors.New("platform info not exist...")
+	}
+	result, err := wallet.SignJson(json, privateKey)
+	if result == nil {
+		err = errors.New("signature failed")
+		return "", err
+	} else {
+		return wallet.SignatureBytesToString(result), nil
 	}
 }

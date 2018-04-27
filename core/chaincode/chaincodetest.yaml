@@ -412,6 +412,7 @@ chaincode:
         escc: enable
         vscc: enable
         ascc: enable
+        xscc: enable
 
     # Logging section for the chaincode container
     logging:

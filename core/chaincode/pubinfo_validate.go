@@ -44,12 +44,16 @@ type ethTranRecInfo struct {
 
 //struct for response which from qtum-insight-api
 type qtumTransInfo struct {
-	TxId      string `json:"txid"`
-	BlockHash string `json:"blockhash"`
-	//Vin         map[string]interface{} `json:"vin"`
-	//Vout        map[string]interface{} `json:"vout"`
-	BlockHeight int `json:"blockheight"`
-	Time        int `json:"time"`
+	BlockHash       string    `json:"blockHash"`
+	BlockNumber     int       `json:"blockNumber"`
+	ContractAddress string    `json:"contractAddress"`
+	Log             []qtumLog `json:"log"`
+}
+
+type qtumLog struct {
+	Address string   `json:"address"`
+	Topics  []string `json:"topics"`
+	Data    string   `json:"data"`
 }
 
 type qtumBlockInfo struct {
@@ -57,7 +61,6 @@ type qtumBlockInfo struct {
 	Height  int    `json:"height"`
 	Size    int    `json:"size"`
 	Version int    `json:"version"`
-	//Tx      map[string]string `json:"tx"`
 }
 
 //validate pubTxId from eth
@@ -89,15 +92,52 @@ func (handler *Handler) validateEthTrans(pubTxId string, amount *big.Int) (resul
 }
 
 //validate pubTxId from qtum
-func (handler *Handler) validateQtumPubTxId(pubTxId string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
 	url := wallet.FullNodeIps["qtum"]
-	if url == "" {
+	localPlatform := wallet.LocalPlatform
+	contractAddr := wallet.ContractAddr["qtum"]
+	if url == "" || contractAddr == "" {
 		err = errors.New("not support this public chain")
 		return
 	}
 	//get transaction detail
 	transInfo, err := getQtumTransInfo(url, pubTxId)
 	if err != nil {
+		return
+	}
+	if len(transInfo.Log) < 2 {
+		err = errors.New("transaction not belong to our contract")
+		return
+	}
+	valueData := strings.Trim(transInfo.Log[0].Data, "0")
+	value, err := strconv.ParseInt(valueData, 16, 64)
+	if err != nil {
+		return
+	}
+	valueInt := big.NewInt(value)
+	if amount.Cmp(valueInt) < 0 {
+		err = errors.New("transaction amount error")
+		return
+	}
+	platformData := strings.TrimRight(transInfo.Log[1].Data[:64], "0")
+	if len(platformData)%2 != 0 {
+		platformData = platformData + "0"
+	}
+	platform, err := asciiToString(platformData)
+	if err != nil {
+		return
+	}
+	if platform != localPlatform {
+		err = errors.New("transaction platform error")
+		return
+	}
+	toUserData := transInfo.Log[1].Data[64:128]
+	if !strings.Contains(toUserData, toUser[1:]) {
+		err = errors.New("transaction turn out account error")
+		return
+	}
+	if transInfo.ContractAddress != contractAddr {
+		err = errors.New("transaction not belong our contract")
 		return
 	}
 	//get block detail by block hash
@@ -133,8 +173,7 @@ func getEthTransInfo(url string, pubTxId string) (*ethTranRecInfo, error) {
 		return nil, err
 	}
 	if data.Result == nil {
-		err = errors.New("txId not found")
-		return nil, err
+		return nil, errors.New("txId not found")
 	}
 	return data.Result, nil
 }
@@ -161,19 +200,22 @@ func getEthBlockInfo(url string, number int64) (*ethBlockInfo, error) {
 
 //get transaction from qtum
 func getQtumTransInfo(url string, pubTxId string) (*qtumTransInfo, error) {
-	url = url + "/qtum-insight-api/tx/" + pubTxId
+	url = url + "/qtum-insight-api/txs/" + pubTxId + "/receipt"
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	data := qtumTransInfo{}
-	err = json.Unmarshal(res, &data)
+	var datas []qtumTransInfo
+	err = json.Unmarshal(res, &datas)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("transaction not exists")
 	}
+	if datas == nil {
+		return nil, errors.New("transaction not exists")
+	}
+	data := datas[0]
 	if data.BlockHash == "" {
-		err = errors.New("transaction not confirmed")
-		return nil, err
+		return nil, errors.New("transaction not confirmed")
 	}
 	return &data, nil
 }
@@ -188,7 +230,7 @@ func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
 	data := qtumBlockInfo{}
 	err = json.Unmarshal(res, &data)
 	if err != nil {
-		return nil, err
+		return nil,errors.New("block not existed")
 	}
 	return &data, nil
 }
@@ -203,13 +245,14 @@ func getQtumBlockHashByHeight(url string, height int) (map[string]interface{}, e
 	data := map[string]interface{}{}
 	err = json.Unmarshal(res, &data)
 	if err != nil {
-		return nil, err
+		return nil,errors.New("confirm block not existed")
 	}
 	return data, nil
 }
 
 //do request
 func quest(method string, url string, params map[string]interface{}) ([]byte, error) {
+
 	if !strings.Contains(url, "http://") && !strings.Contains(url, "https://") {
 		url = "http://" + url
 	}
@@ -224,6 +267,7 @@ func quest(method string, url string, params map[string]interface{}) ([]byte, er
 		paramData := bytes.NewReader(reqJson)
 		req, err = http.NewRequest(method, url, paramData)
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -239,4 +283,27 @@ func quest(method string, url string, params map[string]interface{}) ([]byte, er
 		return body, nil
 	}
 	return nil, err
+}
+
+func asciiToString(str string) (s string, err error) {
+	if len(str)%2 != 0 {
+		err = errors.New("str validate error")
+		return
+	}
+	for i := 0; i <= len(str)-2; i = i + 2 {
+		tmp := ""
+		if i == len(str)-2 {
+			tmp = str[i:]
+		} else {
+			tmp = str[i:i+2]
+		}
+		tmpInt, err := strconv.ParseInt(tmp, 16, 64)
+		if err != nil {
+			s = ""
+			break
+		}
+		str := string(rune(tmpInt))
+		s = s + str
+	}
+	return
 }

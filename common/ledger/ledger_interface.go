@@ -27,6 +27,8 @@ type Ledger interface {
 	// GetBlockByNumber returns block at a given height
 	// blockNumber of  math.MaxUint64 will return last block
 	GetBlockByNumber(blockNumber uint64) (*common.Block, error)
+	// GetBlockWithHashByNumber returns block and hash at a given height
+	GetBlockWithHashByNumber(blockNumber uint64) (*common.ProcessedBlock, error)
 	// GetBlocksIterator returns an iterator that starts from `startBlockNumber`(inclusive).
 	// The iterator is a blocking iterator i.e., it blocks till the next block gets available in the ledger
 	// ResultsIterator contains type BlockHolder

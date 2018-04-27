@@ -1338,6 +1338,11 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			}
 			var kvTrans []*kvcrosstranset.KVCrossTrans
 			amount := big.NewInt(0)
+			platform := string(crossTransferInfo.FromPlatForm)
+			pubTxId := string(crossTransferInfo.PubTxId)
+			balanceType := string(crossTransferInfo.BalanceType[:])
+			fmt.Println("start to request node validate pubTxId.....")
+			platformStr := strings.ToLower(platform)
 			for _, tran := range crossTransferInfo.TranSet {
 				kvTran := kvcrosstranset.KVCrossTrans{}
 				kvTran.To = string(tran.To[:])
@@ -1346,31 +1351,27 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 				tmp := big.NewInt(0)
 				tmp.SetBytes(tran.Amount)
 				amount.Add(amount, tmp)
-			}
-			platform := string(crossTransferInfo.FromPlatForm)
-			pubTxId := string(crossTransferInfo.PubTxId)
-			balanceType := string(crossTransferInfo.BalanceType[:])
-			tranSet := &kvcrosstranset.KVCrossTranSet{Trans: kvTrans, FromPlatForm: platform, PubTxId: pubTxId, BalanceType: balanceType}
-			platform = strings.ToLower(platform)
-			fmt.Println("start to request node validate pubTxId.....")
-			res := false
-			if platform == "qtum" {
-				res, err = handler.validateQtumPubTxId(pubTxId, amount)
-			} else if platform == "eth" {
-				res, err = handler.validateEthTrans(pubTxId, amount)
-			} else {
-				errHandler([]byte("public chain "+platform+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
-				return
-			}
-			if err != nil {
-				errHandler([]byte(err.Error()), "[%s]pubTxId validate error ", pubTxId)
-				return
-			}
-			if !res {
-				errHandler([]byte(""), "[%s]pubTxId validate error ", pubTxId)
-				return
-			}
 
+				res := false
+				if platformStr == "qtum" {
+					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
+				} else if platformStr == "eth" {
+					res, err = handler.validateEthTrans(pubTxId, amount)
+				} else {
+					errHandler([]byte("public chain "+platformStr+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+				if err != nil {
+					errHandler([]byte(err.Error()), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+				if !res {
+					errHandler([]byte(""), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+			}
+			fmt.Println("request node validate pubTxId end.....")
+			tranSet := &kvcrosstranset.KVCrossTranSet{Trans: kvTrans, FromPlatForm: platform, PubTxId: pubTxId, BalanceType: balanceType}
 			txContext.txsimulator.CrossTransfer(tranSet)
 		} else if msg.Type.String() == pb.ChaincodeMessage_DEL_STATE.String() {
 			// Invoke ledger to delete state

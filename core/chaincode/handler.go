@@ -1339,7 +1339,7 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			chaincodeID := handler.getCCRootName()
 			// verify xscc
 			if chaincodeID != "xscc" {
-				errHandler([]byte("issue token error"), "[%s]Issue token can only be used by xscc. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+				errHandler([]byte("cross transfer error"), "[%s]CrossTransfer can only be used by xscc. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
 				return
 			}
 			var kvTrans []*kvcrosstranset.KVCrossTrans

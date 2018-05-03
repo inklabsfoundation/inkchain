@@ -39,6 +39,8 @@ It has these top-level messages:
 	QueryStateClose
 	QueryResultBytes
 	QueryResponse
+	CrossTransfer
+	CrossTransferInfo
 	Transfer
 	TransferInfo
 	IssueTokenInfo

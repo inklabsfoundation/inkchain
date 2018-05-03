@@ -22,12 +22,19 @@ const (
 	ADDRESS_PREFIX      = "i"
 	WALLET_NAMESPACE    = "ink"
 	MAIN_BALANCE_NAME   = "INK"
+	TOKEN_NAMESPACE     = "ascc"
 )
 
 type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
+var FullNodeIps map[string]string
+var LocalPlatform = "INK"
+var ContractAddr map[string]string
+var PublicPlatformPrivateKey map[string]string
+
+var InkCrossChainServiceAddress string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`
@@ -39,6 +46,20 @@ type TxData struct {
 	Recipient   *Address `json:"to"`
 	BalanceType string   `json:"balanceType"`
 	Amount      *big.Int `json:"amount"`
+}
+
+// type GenAccount
+type Token struct {
+	// token name
+	Name string `json:"tokenName"`
+	// total supply of the token
+	totalSupply *big.Int `json:"totalSupply"`
+	// initial address to issue
+	Address string `json:"address"`
+	// token status : Created, Delivered, Invalidate
+	Status string `json:"status"`
+	// token decimals
+	Decimals int `json:"decimals"`
 }
 
 func (a *Address) SetBytes(b []byte) {

@@ -42,8 +42,10 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
-	logging "github.com/op/go-logging"
+	"github.com/op/go-logging"
 	"golang.org/x/net/context"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
+	"strings"
 )
 
 const (
@@ -433,6 +435,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			{Name: pb.ChaincodeMessage_INIT.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_TRANSACTION.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_TRANSFER.String(), Src: []string{readystate}, Dst: readystate},
+			{Name: pb.ChaincodeMessage_CROSS_TRANSFER.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_ISSUE_TOKEN.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_ACCOUNT.String(), Src: []string{readystate}, Dst: readystate},
 		},
@@ -449,9 +452,10 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
-			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String(): func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_TRANSFER.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():    func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_TRANSFER.String():       func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_CROSS_TRANSFER.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
 			"enter_" + establishedstate: func(e *fsm.Event) { v.enterEstablishedState(e, v.FSM.Current()) },
 			"enter_" + readystate:       func(e *fsm.Event) { v.enterReadyState(e, v.FSM.Current()) },
@@ -1326,6 +1330,55 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			txContext.txsimulator.Transfer(tranSet)
 			//*************************************
 
+		} else if msg.Type.String() == pb.ChaincodeMessage_CROSS_TRANSFER.String() {
+			crossTransferInfo := &pb.CrossTransferInfo{}
+			unmarshalErr := proto.Unmarshal(msg.Payload, crossTransferInfo)
+			if unmarshalErr != nil {
+				errHandler([]byte(unmarshalErr.Error()), "[%s]Unable to decipher payload. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+			}
+			chaincodeID := handler.getCCRootName()
+			// verify xscc
+			if chaincodeID != "xscc" {
+				errHandler([]byte("issue token error"), "[%s]Issue token can only be used by xscc. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+				return
+			}
+			var kvTrans []*kvcrosstranset.KVCrossTrans
+			amount := big.NewInt(0)
+			platform := string(crossTransferInfo.FromPlatForm)
+			pubTxId := string(crossTransferInfo.PubTxId)
+			balanceType := string(crossTransferInfo.BalanceType[:])
+			fmt.Println("start to request node validate pubTxId.....")
+			platformStr := strings.ToLower(platform)
+			for _, tran := range crossTransferInfo.TranSet {
+				kvTran := kvcrosstranset.KVCrossTrans{}
+				kvTran.To = string(tran.To[:])
+				kvTran.Amount = tran.Amount
+				kvTrans = append(kvTrans, &kvTran)
+				tmp := big.NewInt(0)
+				tmp.SetBytes(tran.Amount)
+				amount.Add(amount, tmp)
+
+				res := false
+				if platformStr == "qtum" {
+					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
+				} else if platformStr == "eth" {
+					res, err = handler.validateEthTrans(pubTxId, string(tran.To[:]), amount)
+				} else {
+					errHandler([]byte("public chain "+platformStr+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+				if err != nil {
+					errHandler([]byte(err.Error()), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+				if !res {
+					errHandler([]byte(""), "[%s]pubTxId validate error ", pubTxId)
+					return
+				}
+			}
+			fmt.Println("request node validate pubTxId end.....")
+			tranSet := &kvcrosstranset.KVCrossTranSet{Trans: kvTrans, FromPlatForm: platform, PubTxId: pubTxId, BalanceType: balanceType}
+			txContext.txsimulator.CrossTransfer(tranSet)
 		} else if msg.Type.String() == pb.ChaincodeMessage_DEL_STATE.String() {
 			// Invoke ledger to delete state
 			key := string(msg.Payload)

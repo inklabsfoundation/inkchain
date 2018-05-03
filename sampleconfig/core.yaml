@@ -273,6 +273,11 @@ peer:
         contract: d6e4373055981a2acdf5e483091c701ed26b9aab
         privateKey: bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe
 
+    # Setting for xscc
+    tokenAddress: i3c97f146e8de9807ef723538521fcecd5f64c79a
+    crossChainManager: i4230a12f5b0693dd88bb35c79d7e56a68614b199
+    chainName: INK
+
 ###############################################################################
 #
 #    VM section

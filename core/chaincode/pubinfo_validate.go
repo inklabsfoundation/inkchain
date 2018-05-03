@@ -34,12 +34,19 @@ type ethBlockInfo struct {
 }
 
 type ethTranRecInfo struct {
-	TransactionHash  string                 `json:"transactionHash"`
-	TransactionIndex string                 `json:"transactionIndex"`
-	BlockNumber      string                 `json:"blockNumber"`
-	BlockHash        string                 `json:"blockHash"`
-	GasUsed          string                 `json:"gasUsed"`
-	Logs             map[string]interface{} `json:"logs"`
+	TransactionHash  string       `json:"transactionHash"`
+	TransactionIndex string       `json:"transactionIndex"`
+	ContractAddress  string       `json:"contractAddress"`
+	BlockNumber      string       `json:"blockNumber"`
+	ToContract       string       `json:"to"`
+	BlockHash        string       `json:"blockHash"`
+	Logs             []ethTranLog `json:"logs"`
+}
+
+type ethTranLog struct {
+	Address string   `json:"address"`
+	Topics  []string `json:"topics"`
+	Data    string   `json:"data"`
 }
 
 //struct for response which from qtum-insight-api
@@ -64,8 +71,10 @@ type qtumBlockInfo struct {
 }
 
 //validate pubTxId from eth
-func (handler *Handler) validateEthTrans(pubTxId string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
 	url := wallet.FullNodeIps["eth"]
+	localPlatform := wallet.LocalPlatform
+	contractAddress := wallet.ContractAddr["eth"]
 	if url == "" {
 		err = errors.New("not support this public chain")
 		return
@@ -75,13 +84,57 @@ func (handler *Handler) validateEthTrans(pubTxId string, amount *big.Int) (resul
 	if err != nil {
 		return
 	}
+	if len(transInfo.Logs) < 2 || len(transInfo.Logs[0].Topics) < 3 {
+		err = errors.New("transaction verified failed")
+		return
+	}
+	if transInfo.BlockNumber == "" {
+		err = errors.New("transaction not confirmed")
+	}
+	valueData := strings.TrimLeft(transInfo.Logs[0].Data, "0x")
+	value, err := strconv.ParseInt(valueData, 16, 64)
+	if err != nil {
+		return
+	}
+	valueInt := big.NewInt(value)
+	if amount.Cmp(valueInt) < 0 {
+		err = errors.New("transaction amount error")
+		return
+	}
+	if transInfo.ToContract != contractAddress {
+		err = errors.New("transaction data verified failed")
+		return
+	}
+
+	platformData := strings.TrimRight(transInfo.Logs[1].Data[:66], "0")
+	if len(platformData)%2 != 0 {
+		platformData = platformData + "0"
+	}
+
+	platform, err := asciiToString(platformData[2:])
+	if err != nil {
+		return
+	}
+	if platform != localPlatform {
+		err = errors.New("transaction platform error")
+		return
+	}
+	toUserData := transInfo.Logs[1].Data[66:130]
+	if !strings.Contains(toUserData, toUser[1:]) {
+		err = errors.New("transaction turn out account error")
+		return
+	}
 	//calculate block index
-	blockNum, err := strconv.ParseInt(transInfo.BlockNumber, 16, 64)
+	blockNum, err := strconv.ParseInt(transInfo.BlockNumber[2:], 16, 64)
+	if err != nil {
+		return
+	}
+
 	blockNum = 6 + blockNum
 	if err != nil {
 		return
 	}
-	//get block info to validate transaction confirmed
+	// get block info to validate transaction confirmed
 	_, err = getEthBlockInfo(url, blockNum)
 	if err != nil {
 		return
@@ -230,7 +283,7 @@ func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
 	data := qtumBlockInfo{}
 	err = json.Unmarshal(res, &data)
 	if err != nil {
-		return nil,errors.New("block not existed")
+		return nil, errors.New("block not existed")
 	}
 	return &data, nil
 }
@@ -245,7 +298,7 @@ func getQtumBlockHashByHeight(url string, height int) (map[string]interface{}, e
 	data := map[string]interface{}{}
 	err = json.Unmarshal(res, &data)
 	if err != nil {
-		return nil,errors.New("confirm block not existed")
+		return nil, errors.New("confirm block not existed")
 	}
 	return data, nil
 }

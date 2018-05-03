@@ -188,7 +188,6 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	//do transfer  `wait to change`
-	//@todo function change to the other function that used to transfer from token address to toAccount
 	err = stub.CrossTransfer(toAccount, "INK", amount, pubTxId, fromPlatform)
 	//err = stub.Transfer(toAccount, "INK", amount)
 	if err != nil {

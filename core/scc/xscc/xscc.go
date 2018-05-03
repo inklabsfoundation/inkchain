@@ -60,9 +60,9 @@ func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 
 	// Init policy checker for access control
 	c.policyChecker = policyprovider.GetPolicyChecker()
-	c.owner = "i4230a12f5b0693dd88bb35c79d7e56a68614b199"
-	c.platName = "INK"
-	c.inkTokenAddr = "i3c97f146e8de9807ef723538521fcecd5f64c79a"
+	c.owner = wallet.CrossChainManager
+	c.platName = wallet.LocalPlatform
+	c.inkTokenAddr = wallet.TokenAddress
 
 	return shim.Success([]byte("init success"))
 }
@@ -188,7 +188,6 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	//do transfer  `wait to change`
-	//@todo function change to the other function that used to transfer from token address to toAccount
 	err = stub.CrossTransfer(toAccount, "INK", amount, pubTxId, fromPlatform)
 	//err = stub.Transfer(toAccount, "INK", amount)
 	if err != nil {

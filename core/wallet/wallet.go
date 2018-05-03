@@ -33,6 +33,8 @@ var FullNodeIps map[string]string
 var LocalPlatform = "INK"
 var ContractAddr map[string]string
 var PublicPlatformPrivateKey map[string]string
+var TokenAddress = ""
+var CrossChainManager = ""
 
 var InkCrossChainServiceAddress string
 

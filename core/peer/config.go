@@ -108,6 +108,11 @@ func CacheConfiguration() (err error) {
 	wallet.ContractAddr["qtum"] = viper.GetString("peer.qtum.contract")
 	wallet.PublicPlatformPrivateKey["eth"] = viper.GetString("peer.eth.privateKey")
 	wallet.PublicPlatformPrivateKey["qtum"] = viper.GetString("peer.qtum.privateKey")
+	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
+	wallet.TokenAddress = viper.GetString("peer.tokenAddress")
+	if viper.GetString("chainName") != "" {
+		wallet.LocalPlatform = viper.GetString("chainName")
+	}
 
 	configurationCached = true
 

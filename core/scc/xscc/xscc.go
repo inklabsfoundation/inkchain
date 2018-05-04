@@ -63,6 +63,9 @@ func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	c.owner = wallet.CrossChainManager
 	c.platName = wallet.LocalPlatform
 	c.inkTokenAddr = wallet.TokenAddress
+	if c.owner == "" || c.platName == "" || c.inkTokenAddr == "" {
+		return shim.Error("init arg error")
+	}
 
 	return shim.Success([]byte("init success"))
 }
@@ -166,7 +169,7 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
-	}else if amount.Cmp(big.NewInt(0))<=0{
+	} else if amount.Cmp(big.NewInt(0)) <= 0 {
 		return shim.Error("Amount must more than zero")
 	}
 	//try to get state from book which key is variable fromPlatform's value
@@ -239,7 +242,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
-	}else if amount.Cmp(big.NewInt(0))<=0{
+	} else if amount.Cmp(big.NewInt(0)) <= 0 {
 		return shim.Error("Amount must more than zero")
 	}
 

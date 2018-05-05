@@ -106,8 +106,16 @@ func CacheConfiguration() (err error) {
 	wallet.FullNodeIps["qtum"] = viper.GetString("peer.qtum.address")
 	wallet.ContractAddr["eth"] = viper.GetString("peer.eth.contract")
 	wallet.ContractAddr["qtum"] = viper.GetString("peer.qtum.contract")
-	wallet.PublicPlatformPrivateKey["eth"] = viper.GetString("peer.eth.privateKey")
-	wallet.PublicPlatformPrivateKey["qtum"] = viper.GetString("peer.qtum.privateKey")
+	ethPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.eth.privateKey.file"))
+	if err != nil {
+		return fmt.Errorf("Error loading eth privateKe (%s)", err)
+	}
+	qtumPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.qtum.privateKey.file"))
+	if err != nil {
+		return fmt.Errorf("Error loading qtum privateKe (%s)", err)
+	}
+	wallet.PublicPlatformPrivateKey["eth"] = string(ethPrivateKey)
+	wallet.PublicPlatformPrivateKey["qtum"] = string(qtumPrivateKey)
 	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
 	wallet.TokenAddress = viper.GetString("peer.tokenAddress")
 	if viper.GetString("chainName") != "" {

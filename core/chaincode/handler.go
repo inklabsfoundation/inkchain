@@ -1360,9 +1360,9 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 
 				res := false
 				if platformStr == "qtum" {
-					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
+					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount, balanceType)
 				} else if platformStr == "eth" {
-					res, err = handler.validateEthTrans(pubTxId, string(tran.To[:]), amount)
+					res, err = handler.validateEthTrans(pubTxId, string(tran.To[:]), amount, balanceType)
 				} else {
 					errHandler([]byte("public chain "+platformStr+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
 					return

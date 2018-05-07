@@ -13,7 +13,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 )
 
-//struct for response which from eth JSON_RPC
+//struct for response from eth JSON_RPC
 type ethBlockRes struct {
 	Id      int           `json:"id"`
 	JsonRpc string        `json:"jsonrpc"`
@@ -49,7 +49,7 @@ type ethTranLog struct {
 	Data    string   `json:"data"`
 }
 
-//struct for response which from qtum-insight-api
+//struct for response from qtum-insight-api
 type qtumTransInfo struct {
 	BlockHash       string    `json:"blockHash"`
 	BlockNumber     int       `json:"blockNumber"`
@@ -71,12 +71,12 @@ type qtumBlockInfo struct {
 }
 
 //validate pubTxId from eth
-func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *big.Int,balanceType string) (result bool, err error) {
 	url := wallet.FullNodeIps["eth"]
 	localPlatform := wallet.LocalPlatform
-	contractAddress := wallet.ContractAddr["eth"]
+	contractAddress := wallet.ContractList["eth"][balanceType]
 	if url == "" {
-		err = errors.New("not support this public chain")
+		err = errors.New("not support this coin or public chain")
 		return
 	}
 	//get eth transaction detail
@@ -102,7 +102,7 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 		return
 	}
 	if transInfo.ToContract != contractAddress {
-		err = errors.New("transaction data verified failed")
+		err = errors.New("transaction data verified failed contract address is :"+contractAddress+" balanceType is "+balanceType)
 		return
 	}
 
@@ -145,12 +145,12 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 }
 
 //validate pubTxId from qtum
-func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int,balanceType string) (result bool, err error) {
 	url := wallet.FullNodeIps["qtum"]
 	localPlatform := wallet.LocalPlatform
-	contractAddr := wallet.ContractAddr["qtum"]
+	contractAddr := wallet.ContractList["qtum"][balanceType]
 	if url == "" || contractAddr == "" {
-		err = errors.New("not support this public chain")
+		err = errors.New("not support this coin or public chain")
 		return
 	}
 	//get transaction detail

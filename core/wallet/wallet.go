@@ -31,12 +31,10 @@ type Address [AddressLength]byte
 var InkMinimumFee *big.Int
 var FullNodeIps map[string]string
 var LocalPlatform = "INK"
-var ContractAddr map[string]string
 var PublicPlatformPrivateKey map[string]string
 var TokenAddress = ""
 var CrossChainManager = ""
-
-var InkCrossChainServiceAddress string
+var ContractList map[string]map[string]string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`

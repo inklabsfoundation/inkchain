@@ -24,6 +24,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 )
 
 // LockBasedTxSimulator is a transaction simulator used in `LockBasedTxMgr`
@@ -84,6 +85,19 @@ func (s *lockBasedTxSimulator) SetSender(sender string) error {
 		ver = &transet.Version{0, 0}
 	}
 	s.ledgerBuilder.TranSetBuilder.SetSender(sender, ver)
+	return nil
+}
+
+// Implementation for inkchain TxSimulator interface
+func (s *lockBasedTxSimulator) CrossTransfer(transet *kvcrosstranset.KVCrossTranSet) error {
+	s.helper.checkDone()
+	for _, tran := range transet.Trans {
+		if err := s.helper.txmgr.db.ValidateKey(tran.To); err != nil {
+			return err
+		}
+		s.ledgerBuilder.CrossTranSetBuilder.AddToTranSet(tran.To, tran.Amount)
+	}
+	s.ledgerBuilder.CrossTranSetBuilder.SetTokenType(transet.BalanceType)
 	return nil
 }
 

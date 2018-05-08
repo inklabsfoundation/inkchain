@@ -37,7 +37,7 @@ type mocksccProviderImpl struct {
 }
 
 func (c *mocksccProviderImpl) IsSysCC(name string) bool {
-	return (name == "lscc") || (name == "escc") || (name == "vscc") || (name == "notext") || (name == "ascc")
+	return (name == "lscc") || (name == "escc") || (name == "vscc") || (name == "notext") || (name == "ascc") || (name == "xscc")
 }
 
 func (c *mocksccProviderImpl) IsSysCCAndNotInvokableCC2CC(name string) bool {

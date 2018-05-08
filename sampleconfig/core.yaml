@@ -262,6 +262,26 @@ peer:
         enabled:     false
         listenAddress: 0.0.0.0:6060
 
+    # Setting for restful api provided from full node
+    qtum:
+        address: 127.0.0.1
+        privateKey:
+          file: /etc/inkchain/privateKey/qtum.txt
+        contracts:
+          INK: d6e4373055981a2acdf5e483091c701ed26b9aab
+
+    eth:
+        address: 127.0.0.1
+        privateKey:
+          file: /etc/inkchain/privateKey/ethKey.txt
+        contracts:
+          INK: 0x20823d15265e20a256719a233727fc3df0e071f2
+
+    # Setting for xscc
+    tokenAddress: i3c97f146e8de9807ef723538521fcecd5f64c79a
+    crossChainManager: i4230a12f5b0693dd88bb35c79d7e56a68614b199
+    chainName: INK
+
 ###############################################################################
 #
 #    VM section
@@ -387,6 +407,7 @@ chaincode:
         qscc: enable
         ascc: enable
         samplesyscc: enable
+        xscc: enable
 
     # Logging section for the chaincode container
     logging:

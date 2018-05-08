@@ -32,6 +32,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 )
 
 // PeerChaincodeStream interface for stream between Peer and chaincode instance.
@@ -757,6 +758,53 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
 		// Success response
 		chaincodeLogger.Debugf("[%s]Received %s. Successfully transfered", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		return nil
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]Received %s. Payload: %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR, responseMsg.Payload)
+		return errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet, txId string) error {
+	// Check if this is a transaction
+	chaincodeLogger.Debugf("[%s]Inside cross transfer", shorttxid(txId))
+	//we constructed a valid object. No need to check for error
+	var tranSet []*pb.CrossTransfer
+	for _, tran := range trans.Trans {
+		protoTran := pb.CrossTransfer{To: []byte(strings.ToLower(tran.To)), Amount: tran.Amount}
+		tranSet = append(tranSet, &protoTran)
+	}
+	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm),BalanceType:[]byte(trans.BalanceType)}
+	payloadBytes, err := proto.Marshal(crossTransferInfo)
+	// Create the channel on which to communicate the response from validating peer
+	if err != nil {
+		return err
+	}
+	var respChan chan pb.ChaincodeMessage
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	// Send Transfer message to validator chaincode support
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_CROSS_TRANSFER, Payload: payloadBytes, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_CROSS_TRANSFER)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return errors.New(fmt.Sprintf("[%s]error sending CROSS_TRANSFER %s", msg.Txid, err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]Received %s. Successfully cross transferred", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
 		return nil
 	}
 

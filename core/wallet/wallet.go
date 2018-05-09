@@ -32,7 +32,7 @@ var InkMinimumFee *big.Int
 var FullNodeIps map[string]string
 var LocalPlatform = "INK"
 var PublicPlatformPrivateKey map[string]string
-var TokenAddress = ""
+var TokenAddress map[string]string
 var CrossChainManager = ""
 var ContractList map[string]map[string]string
 

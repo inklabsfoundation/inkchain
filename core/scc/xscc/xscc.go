@@ -29,6 +29,7 @@ const (
 //turn out state struct
 type turnOutMessage struct {
 	FromAccount string   `json:"fromAccount"`
+	BalanceType string   `json:"balanceType"`
 	Value       *big.Int `json:"value"`
 	ToPlatform  string   `json:"toPlatform"`
 	ToAccount   string   `json:"toAccount"`
@@ -46,9 +47,9 @@ type turnInMessage struct {
 }
 
 type CrossTrainSysCC struct {
-	owner        string //chain code owner
-	platName     string //platform name
-	inkTokenAddr string //coin account
+	owner        string            //chain code owner
+	platName     string            //platform name
+	tokenAddress map[string]string //coin account
 	// policyChecker is the interface used to perform
 	// access control
 	policyChecker policy.PolicyChecker
@@ -57,16 +58,14 @@ type CrossTrainSysCC struct {
 //init chain code
 func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("xscc init")
-
 	// Init policy checker for access control
 	c.policyChecker = policyprovider.GetPolicyChecker()
 	c.owner = wallet.CrossChainManager
 	c.platName = wallet.LocalPlatform
-	c.inkTokenAddr = wallet.TokenAddress
-	if c.owner == "" || c.platName == "" || c.inkTokenAddr == "" {
+	c.tokenAddress = wallet.TokenAddress
+	if c.owner == "" || c.platName == "" || len(c.tokenAddress) <= 0 {
 		return shim.Error("init arg error")
 	}
-
 	return shim.Success([]byte("init success"))
 }
 
@@ -191,8 +190,7 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	//do transfer  `wait to change`
-	err = stub.CrossTransfer(toAccount, "INK", amount, pubTxId, fromPlatform)
-	//err = stub.Transfer(toAccount, "INK", amount)
+	err = stub.CrossTransfer(toAccount, amount, pubTxId, fromPlatform)
 	if err != nil {
 		return shim.Error("transfer error " + err.Error())
 	}
@@ -239,6 +237,11 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	toAccount := strings.ToLower(args[1])
 	amount := big.NewInt(0)
 	_, ok := amount.SetString(args[2], 10)
+	balanceType := "INK"
+	tokenAddr := c.tokenAddress[balanceType]
+	if tokenAddr == "" {
+		return shim.Error("Token address not found")
+	}
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
@@ -257,7 +260,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	//set txId to be key
 	key := stub.GetTxID()
 	//do transfer
-	err = stub.Transfer(c.inkTokenAddr, "INK", amount)
+	err = stub.Transfer(tokenAddr, "INK", amount)
 	if err != nil {
 		return shim.Error("Transfer error " + err.Error())
 	}
@@ -267,7 +270,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	}
 	timeStr := fmt.Sprintf("%d", txTimestamp.GetSeconds())
 	//build turn out state
-	state := c.buildTurnOutMessage(sender, toPlatform, toAccount, amount, timeStr)
+	state := c.buildTurnOutMessage(sender, balanceType, toPlatform, toAccount, amount, timeStr)
 	err = stub.PutState(key, state)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -325,7 +328,7 @@ func (c *CrossTrainSysCC) querySign(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error(err.Error())
 	}
 	//sign
-	str := fmt.Sprintf("%s:0x%s:%s:0x%s:%d:%s", wallet.LocalPlatform, state.FromAccount[1:], state.ToPlatform, state.ToAccount, state.Value, key)
+	str := fmt.Sprintf("%s:0x%s:%s:0x%s:%d:%s:%s", wallet.LocalPlatform, state.FromAccount[1:], state.ToPlatform, state.ToAccount, state.Value, state.BalanceType, key)
 	sign, err := c.signJson([]byte(str), strings.ToLower(state.ToPlatform))
 	if err != nil {
 		return shim.Error(err.Error())
@@ -346,8 +349,8 @@ func (c *CrossTrainSysCC) buildTurnInMessage(txId string, fromAccount string, fr
 }
 
 //build turn out state and change to json
-func (c *CrossTrainSysCC) buildTurnOutMessage(fromAccount string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
-	state := turnOutMessage{fromAccount, value, toPlatform, toAccount, now}
+func (c *CrossTrainSysCC) buildTurnOutMessage(fromAccount string, balanceType string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
+	state := turnOutMessage{fromAccount, balanceType, value, toPlatform, toAccount, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }

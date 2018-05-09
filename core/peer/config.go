@@ -116,8 +116,9 @@ func CacheConfiguration() (err error) {
 	}
 	wallet.PublicPlatformPrivateKey["eth"] = string(ethPrivateKey)
 	wallet.PublicPlatformPrivateKey["qtum"] = string(qtumPrivateKey)
+	wallet.TokenAddress = map[string]string{}
 	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
-	wallet.TokenAddress = viper.GetString("peer.tokenAddress")
+	wallet.TokenAddress = viper.GetStringMapString("peer.tokenAddress")
 	if viper.GetString("chainName") != "" {
 		wallet.LocalPlatform = viper.GetString("chainName")
 	}

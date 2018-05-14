@@ -16,6 +16,7 @@ services:
       - INKCHAIN_CA_SERVER_TLS_ENABLED=true
       - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/inkchain/inkchain-ca-server-config/ca.org1.example.com-cert.pem
       - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/inkchain/inkchain-ca-server-config/0e729224e8b3f31784c8a93c5b8ef6f4c1c91d9e6e577c45c33163609fe40011_sk
+      - GODEBUG=netdns=go
     ports:
       - "7054:7054"
     command: sh -c 'inkchain-ca-server start -b admin:inkchainpassword -d'
@@ -38,6 +39,7 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/inkchain/crypto/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/inkchain/crypto/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/inkchain/crypto/orderer/tls/ca.crt, /etc/inkchain/crypto/peerOrg1/tls/ca.crt, /etc/inkchain/crypto/peerOrg2/tls/ca.crt]
+      - GODEBUG=netdns=go
     working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/orderers
     command: orderer
     ports:
@@ -57,6 +59,7 @@ services:
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - GODEBUG=netdns=go
     ports:
       - 7051:7051
       - 7053:7053
@@ -74,6 +77,7 @@ services:
       - CORE_PEER_ID=peer1.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+      - GODEBUG=netdns=go
     ports:
       - 7056:7051
       - 7058:7053
@@ -91,6 +95,7 @@ services:
       - CORE_PEER_ID=peer0.org2.example.com
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+      - GODEBUG=netdns=go
     ports:
       - 8051:7051
       - 8053:7053
@@ -108,6 +113,7 @@ services:
       - CORE_PEER_ID=peer1.org2.example.com
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+      - GODEBUG=netdns=go
     ports:
       - 8056:7051
       - 8058:7053
@@ -132,6 +138,7 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - GODEBUG=netdns=go
     working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/peer
     command: bash -c 'while true; do sleep 20171104; done'
     volumes:

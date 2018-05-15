@@ -13,7 +13,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 )
 
-//struct for response which from eth JSON_RPC
+//struct for response from eth JSON_RPC
 type ethBlockRes struct {
 	Id      int           `json:"id"`
 	JsonRpc string        `json:"jsonrpc"`
@@ -49,7 +49,7 @@ type ethTranLog struct {
 	Data    string   `json:"data"`
 }
 
-//struct for response which from qtum-insight-api
+//struct for response from qtum-insight-api
 type qtumTransInfo struct {
 	BlockHash       string    `json:"blockHash"`
 	BlockNumber     int       `json:"blockNumber"`
@@ -71,12 +71,12 @@ type qtumBlockInfo struct {
 }
 
 //validate pubTxId from eth
-func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
 	url := wallet.FullNodeIps["eth"]
 	localPlatform := wallet.LocalPlatform
-	contractAddress := wallet.ContractAddr["eth"]
+	contractList := wallet.ContractList["eth"]
 	if url == "" {
-		err = errors.New("not support this public chain")
+		err = errors.New("not support this coin or public chain")
 		return
 	}
 	//get eth transaction detail
@@ -91,7 +91,7 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 	if transInfo.BlockNumber == "" {
 		err = errors.New("transaction not confirmed")
 	}
-	valueData := strings.TrimLeft(transInfo.Logs[0].Data, "0x")
+	valueData := strings.TrimLeft(transInfo.Logs[1].Data[130:194], "0")
 	value, err := strconv.ParseInt(valueData, 16, 64)
 	if err != nil {
 		return
@@ -101,7 +101,14 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 		err = errors.New("transaction amount error")
 		return
 	}
-	if transInfo.ToContract != contractAddress {
+	balanceType = ""
+	for coinType, contractAddress := range contractList {
+		if transInfo.ToContract == contractAddress {
+			balanceType = coinType
+			break
+		}
+	}
+	if balanceType == "" {
 		err = errors.New("transaction data verified failed")
 		return
 	}
@@ -122,6 +129,18 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 	toUserData := transInfo.Logs[1].Data[66:130]
 	if !strings.Contains(toUserData, toUser[1:]) {
 		err = errors.New("transaction turn out account error")
+		return
+	}
+	coinNameAsc := strings.TrimRight(transInfo.Logs[1].Data[194:], "0")
+	if len(coinNameAsc)%2 != 0 {
+		coinNameAsc = coinNameAsc + "0"
+	}
+	coinName, err := asciiToString(coinNameAsc)
+	if err != nil {
+		return
+	}
+	if coinName != balanceType {
+		err = errors.New("transaction coin type validate failed")
 		return
 	}
 	//calculate block index
@@ -145,12 +164,12 @@ func (handler *Handler) validateEthTrans(pubTxId string, toUser string, amount *
 }
 
 //validate pubTxId from qtum
-func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, err error) {
+func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
 	url := wallet.FullNodeIps["qtum"]
 	localPlatform := wallet.LocalPlatform
-	contractAddr := wallet.ContractAddr["qtum"]
-	if url == "" || contractAddr == "" {
-		err = errors.New("not support this public chain")
+	contractList := wallet.ContractList["qtum"]
+	if url == "" {
+		err = errors.New("not support this coin or public chain")
 		return
 	}
 	//get transaction detail
@@ -162,7 +181,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction not belong to our contract")
 		return
 	}
-	valueData := strings.Trim(transInfo.Log[0].Data, "0")
+	valueData := strings.TrimLeft(transInfo.Log[1].Data[128:192], "0")
 	value, err := strconv.ParseInt(valueData, 16, 64)
 	if err != nil {
 		return
@@ -189,8 +208,27 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction turn out account error")
 		return
 	}
-	if transInfo.ContractAddress != contractAddr {
-		err = errors.New("transaction not belong our contract")
+	balanceType = ""
+	for coinType, contractAddress := range contractList {
+		if transInfo.ContractAddress == contractAddress {
+			balanceType = coinType
+			break
+		}
+	}
+	if balanceType == "" {
+		err = errors.New("transaction data verified failed")
+		return
+	}
+	coinNameAsc := strings.TrimRight(transInfo.Log[1].Data[192:], "0")
+	if len(coinNameAsc)%2 != 0 {
+		coinNameAsc = coinNameAsc + "0"
+	}
+	coinName, err := asciiToString(coinNameAsc)
+	if err != nil {
+		return
+	}
+	if coinName != balanceType {
+		err = errors.New("transaction coin type validate failed")
 		return
 	}
 	//get block detail by block hash

@@ -456,7 +456,7 @@ type HistoryQueryIterator struct {
 type resultType uint8
 
 const (
-	STATE_QUERY_RESULT resultType = iota + 1
+	STATE_QUERY_RESULT   resultType = iota + 1
 	HISTORY_QUERY_RESULT
 )
 
@@ -774,7 +774,7 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
 
-func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {
+func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string) error {
 	if pubTxId == "" {
 		return fmt.Errorf(".public chain txId should be valid code.")
 	}
@@ -790,7 +790,7 @@ func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *
 	tran.Amount = amount.Bytes()
 	var tranSet []*kvcrosstranset.KVCrossTrans
 	tranSet = append(tranSet, tran)
-	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform,BalanceType:balanceType}
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: ""}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {

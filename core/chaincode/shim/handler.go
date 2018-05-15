@@ -779,7 +779,7 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 		protoTran := pb.CrossTransfer{To: []byte(strings.ToLower(tran.To)), Amount: tran.Amount}
 		tranSet = append(tranSet, &protoTran)
 	}
-	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm),BalanceType:[]byte(trans.BalanceType)}
+	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm)}
 	payloadBytes, err := proto.Marshal(crossTransferInfo)
 	// Create the channel on which to communicate the response from validating peer
 	if err != nil {

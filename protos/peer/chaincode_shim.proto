@@ -108,7 +108,6 @@ message CrossTransferInfo {
     repeated CrossTransfer tranSet = 1;
     bytes pubTxId = 2;
     bytes fromPlatForm = 3;
-    bytes balanceType =4;
 }
 
 message Transfer {

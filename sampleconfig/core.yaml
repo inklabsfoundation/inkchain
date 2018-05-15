@@ -265,18 +265,21 @@ peer:
     # Setting for restful api provided from full node
     qtum:
         address: 127.0.0.1
-        contract: d6e4373055981a2acdf5e483091c701ed26b9aab
         privateKey:
-          file: /etc/inkchain/privateKey/qtum.txt
+            file: /etc/inkchain/privateKey/qtum.txt
+        contracts:
+            INK: 293bbd282b7f950c7f80d36d2087a7c465a247a1
 
     eth:
         address: 127.0.0.1
-        contract: d6e4373055981a2acdf5e483091c701ed26b9aab
         privateKey:
-          file: /etc/inkchain/privateKey/ethKey.txt
+            file: /etc/inkchain/privateKey/ethKey.txt
+        contracts:
+            INK: 0x2fda776c716588724765f60267f1a6614c4da89d
 
     # Setting for xscc
-    tokenAddress: i3c97f146e8de9807ef723538521fcecd5f64c79a
+    tokenAddress:
+        INK: i3c97f146e8de9807ef723538521fcecd5f64c79a
     crossChainManager: i4230a12f5b0693dd88bb35c79d7e56a68614b199
     chainName: INK
 

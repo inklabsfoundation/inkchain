@@ -1339,14 +1339,14 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			chaincodeID := handler.getCCRootName()
 			// verify xscc
 			if chaincodeID != "xscc" {
-				errHandler([]byte("issue token error"), "[%s]Issue token can only be used by xscc. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+				errHandler([]byte("cross transfer error"), "[%s]CrossTransfer can only be used by xscc. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
 				return
 			}
 			var kvTrans []*kvcrosstranset.KVCrossTrans
 			amount := big.NewInt(0)
 			platform := string(crossTransferInfo.FromPlatForm)
 			pubTxId := string(crossTransferInfo.PubTxId)
-			balanceType := string(crossTransferInfo.BalanceType[:])
+			balanceType := ""
 			fmt.Println("start to request node validate pubTxId.....")
 			platformStr := strings.ToLower(platform)
 			for _, tran := range crossTransferInfo.TranSet {
@@ -1360,9 +1360,9 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 
 				res := false
 				if platformStr == "qtum" {
-					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
+					res, balanceType, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
 				} else if platformStr == "eth" {
-					res, err = handler.validateEthTrans(pubTxId, string(tran.To[:]), amount)
+					res, balanceType, err = handler.validateEthPubTxId(pubTxId, string(tran.To[:]), amount)
 				} else {
 					errHandler([]byte("public chain "+platformStr+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
 					return
@@ -1371,8 +1371,8 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 					errHandler([]byte(err.Error()), "[%s]pubTxId validate error ", pubTxId)
 					return
 				}
-				if !res {
-					errHandler([]byte(""), "[%s]pubTxId validate error ", pubTxId)
+				if !res || balanceType == "" {
+					errHandler([]byte("public chain "+platformStr+" validate transaction error"), "[%s]pubTxId validate error ", pubTxId)
 					return
 				}
 			}

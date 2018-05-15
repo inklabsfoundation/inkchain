@@ -23,7 +23,7 @@ const (
 	RegistPlatform = "registPlatform" //register a platform
 	RemovePlatform = "removePlatform" //remove a platform
 	QueryTxInfo    = "queryTxInfo"    //query transaction info
-	QuerySign      = "querySign"      //query transaction signature
+	QuerySignature = "querySignature" //query transaction signature
 )
 
 //turn out state struct
@@ -83,8 +83,8 @@ func (c *CrossTrainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return c.lock(stub, args)
 	case QueryTxInfo:
 		return c.queryTxInfo(stub, args)
-	case QuerySign:
-		return c.querySign(stub, args)
+	case QuerySignature:
+		return c.querySignature(stub, args)
 	}
 	return shim.Success([]byte("Invalid invoke function name. Expecting \"RegistPlatform\" or \"RemovePlatform\" or \"Unlock\" or \"Lock\" or \"QueryTxInfo\" or \"QueryTxInfo\"."))
 }
@@ -110,7 +110,7 @@ func (c *CrossTrainSysCC) registPlatform(stub shim.ChaincodeStubInterface, args 
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState != nil {
-		return shim.Error("This platform existed")
+		return shim.Error("This platform exists")
 	}
 	//make json data and write to book
 	state, _ := json.Marshal(map[string]bool{platform: true})
@@ -118,7 +118,7 @@ func (c *CrossTrainSysCC) registPlatform(stub shim.ChaincodeStubInterface, args 
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	return shim.Success([]byte("Operate Success"))
+	return shim.Success([]byte("Operation Success"))
 }
 
 //remove one platform
@@ -150,7 +150,7 @@ func (c *CrossTrainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args 
 		return shim.Error("Failed to delete platform:" + err.Error())
 	}
 
-	return shim.Success([]byte("Operate Success"))
+	return shim.Success([]byte("Operation Success"))
 }
 
 //public chain turn in
@@ -169,7 +169,7 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
 	} else if amount.Cmp(big.NewInt(0)) <= 0 {
-		return shim.Error("Amount must more than zero")
+		return shim.Error("Amount must be more than zero")
 	}
 	//try to get state from book which key is variable fromPlatform's value
 	platState, err := stub.GetState(fromPlatform)
@@ -216,13 +216,13 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	value := []byte{0x00}
 	stub.PutState(indexKey, value)
 
-	return shim.Success([]byte("unlockSuccess"))
+	return shim.Success([]byte("Unlock Success"))
 }
 
 //union chain turn out
 func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//return shim.Error("Unlock function had been moved to another chaincode")
-	if len(args) < 3 {
+	if len(args) < 4 {
 		return shim.Error("Params Error")
 	}
 	//get operator
@@ -237,7 +237,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	toAccount := strings.ToLower(args[1])
 	amount := big.NewInt(0)
 	_, ok := amount.SetString(args[2], 10)
-	balanceType := "INK"
+	balanceType := args[3]
 	tokenAddr := c.tokenAddress[balanceType]
 	if tokenAddr == "" {
 		return shim.Error("Token address not found")
@@ -260,7 +260,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	//set txId to be key
 	key := stub.GetTxID()
 	//do transfer
-	err = stub.Transfer(tokenAddr, "INK", amount)
+	err = stub.Transfer(tokenAddr, balanceType, amount)
 	if err != nil {
 		return shim.Error("Transfer error " + err.Error())
 	}
@@ -305,7 +305,7 @@ func (c *CrossTrainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []s
 }
 
 //query transaction signature
-func (c *CrossTrainSysCC) querySign(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossTrainSysCC) querySignature(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params error")
 	}

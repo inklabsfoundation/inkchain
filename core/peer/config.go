@@ -42,6 +42,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/comm"
 	"github.com/inklabsfoundation/inkchain/core/config"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"strings"
 )
 
 // Is the configuration cached?
@@ -114,8 +115,8 @@ func CacheConfiguration() (err error) {
 	if err != nil {
 		return fmt.Errorf("Error loading qtum privateKe (%s)", err)
 	}
-	wallet.PublicPlatformPrivateKey["eth"] = string(ethPrivateKey)
-	wallet.PublicPlatformPrivateKey["qtum"] = string(qtumPrivateKey)
+	wallet.PublicPlatformPrivateKey["eth"] = strings.Join(strings.Fields(string([]rune(string(ethPrivateKey)))),"")
+	wallet.PublicPlatformPrivateKey["qtum"] = strings.Join(strings.Fields(string([]rune(string(qtumPrivateKey)))),"")
 	wallet.TokenAddress = map[string]string{}
 	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
 	wallet.TokenAddress = viper.GetStringMapString("peer.tokenAddress")

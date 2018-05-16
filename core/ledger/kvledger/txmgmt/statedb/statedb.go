@@ -241,7 +241,6 @@ type TransferAmount struct {
 type transferUpdates struct {
 	balanceUpdate map[string]*big.Int
 	version       *version.Height
-	counter       uint64
 	ink           *big.Int
 	m             map[string]*VersionedValue
 }
@@ -297,26 +296,18 @@ func (batch *TransferBatch) getOrCreateTransferUpdates(from string) *transferUpd
 	return transferUpdates
 }
 
-func (batch *TransferBatch) UpdateSender(from string, counter uint64, ink *big.Int, version *version.Height) {
+func (batch *TransferBatch) UpdateSender(from string, ink *big.Int, version *version.Height) {
 	transferUpdates, ok := batch.Updates[from]
 	if !ok {
 		transferUpdates = newTransferUpdates()
 		batch.Updates[from] = transferUpdates
 	}
 	transferUpdates.version = version
-	transferUpdates.counter = counter + 1
 	if transferUpdates.ink == nil {
 		transferUpdates.ink = ink
 	} else {
 		transferUpdates.ink = ink.Add(transferUpdates.ink, ink)
 	}
-}
-func (batch *TransferBatch) GetSenderCounter(from string) (uint64, bool) {
-	transferUpdates, ok := batch.Updates[from]
-	if !ok {
-		return 0, ok
-	}
-	return transferUpdates.counter, ok
 }
 
 func (batch *TransferBatch) GetSenderInk(from string) (*big.Int, bool) {

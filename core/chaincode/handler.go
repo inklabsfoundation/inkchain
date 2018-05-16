@@ -39,12 +39,12 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/policy"
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 	"github.com/inklabsfoundation/inkchain/msp/mgmt"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
 	"github.com/op/go-logging"
 	"golang.org/x/net/context"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"strings"
 )
 
@@ -1302,7 +1302,6 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			}
 			if account.Balance == nil {
 				account.Balance = make(map[string]*big.Int)
-				account.Counter = 0
 			}
 			account.Balance[string(issueTokenInfo.BalanceType[:])] = new(big.Int).SetBytes(issueTokenInfo.Amount)
 			jsonAccount, jsonErr := json.Marshal(account)

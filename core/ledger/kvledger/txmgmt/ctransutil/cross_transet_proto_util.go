@@ -16,9 +16,8 @@ type CrossTranSet struct {
 }
 
 type SenderCounter struct {
-	Sender  string
-	Counter uint64
-	Ink     *big.Int
+	Sender string
+	Ink    *big.Int
 }
 
 // NsRwSet encapsulates 'kvrwset.KVRWSet' proto message for a specific name space (chaincode)

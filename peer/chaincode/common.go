@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"strconv"
-	
+
 	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
 	"github.com/inklabsfoundation/inkchain/core/chaincode"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
@@ -109,38 +109,7 @@ func getSenderSpec(cmd *cobra.Command, cf *ChaincodeCmdFactory) (*pb.SenderSpec,
 		return nil, err
 	}
 	address = wallet.ADDRESS_PREFIX + address
-	input := &pb.ChaincodeInput{}
-	queryJson := "{\"Args\":[\"counter\",\"" + address + "\"]}"
-	if err := json.Unmarshal([]byte(queryJson), &input); err != nil {
-		return nil, fmt.Errorf("Chaincode argument error: %s", err)
-	}
-	chaincodeSpec := &pb.ChaincodeSpec{
-		Type:        pb.ChaincodeSpec_Type(pb.ChaincodeSpec_Type_value[chaincodeLang]),
-		ChaincodeId: &pb.ChaincodeID{Path: "", Name: "token", Version: ""},
-		Input:       input,
-	}
-	counterResp, err := ChaincodeInvokeOrQuery(
-		chaincodeSpec,
-		nil,
-		nil,
-		chainID,
-		false,
-		cf.Signer,
-		cf.EndorserClient,
-		cf.BroadcastClient)
-	if err != nil {
-		return nil, err
-	}
-	if counterResp.Response.Status != shim.OK {
-		return nil, errors.New(counterResp.Response.Message)
-	}
-	counter, err := strconv.ParseUint(string(counterResp.Response.Payload[:]), 10, 64)
-	if err != nil {
-		return nil, errors.New("invalid sender spec")
-	}
-
 	senderSpec.Sender = []byte(address)
-	senderSpec.Counter = counter
 	if inkLimit == "" {
 		return nil, errors.New("0 ink limit")
 	}

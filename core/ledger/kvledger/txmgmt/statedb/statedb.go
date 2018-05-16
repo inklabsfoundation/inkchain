@@ -249,7 +249,7 @@ type TransferBatch struct {
 }
 
 func newTransferUpdates() *transferUpdates {
-	return &transferUpdates{make(map[string]*big.Int), nil, 0, nil, make(map[string]*VersionedValue)}
+	return &transferUpdates{make(map[string]*big.Int), nil, nil, make(map[string]*VersionedValue)}
 }
 
 func NewTransferBatch() *TransferBatch {

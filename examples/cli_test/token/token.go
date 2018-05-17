@@ -9,12 +9,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"math/big"
-	"strconv"
-	"strings"
-
 	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"math/big"
+	"strings"
 )
 
 const (

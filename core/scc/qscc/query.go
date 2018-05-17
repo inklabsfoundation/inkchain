@@ -50,6 +50,7 @@ const (
 	GetBlockByHash     string = "GetBlockByHash"
 	GetTransactionByID string = "GetTransactionByID"
 	GetBlockByTxID     string = "GetBlockByTxID"
+	GetBlockWithHashByNumber   string = "GetBlockWithHashByNumber"
 )
 
 // Init is called once per chain when the chain is created.
@@ -118,6 +119,8 @@ func (e *LedgerQuerier) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return getChainInfo(targetLedger)
 	case GetBlockByTxID:
 		return getBlockByTxID(targetLedger, args[2])
+	case GetBlockWithHashByNumber:
+		return getBlockWithHashByNumber(targetLedger, args[2])
 	}
 
 	return shim.Error(fmt.Sprintf("Requested function %s not found.", fname))
@@ -180,6 +183,26 @@ func getBlockByHash(vledger ledger.PeerLedger, hash []byte) pb.Response {
 	//  and client can do GetTransactionByID() if they want the full transaction details
 
 	bytes, err := utils.Marshal(block)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(bytes)
+}
+
+func getBlockWithHashByNumber(vledger ledger.PeerLedger, number []byte) pb.Response {
+	if number == nil {
+		return shim.Error("Block number must not be nil.")
+	}
+	bnum, err := strconv.ParseUint(string(number), 10, 64)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to parse block number with error %s", err))
+	}
+	processedBlock, err := vledger.GetBlockWithHashByNumber(bnum)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to get block number %d, error %s", bnum, err))
+	}
+	bytes, err := utils.Marshal(processedBlock)
 	if err != nil {
 		return shim.Error(err.Error())
 	}

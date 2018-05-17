@@ -174,7 +174,17 @@ func (l *kvLedger) GetBlockchainInfo() (*common.BlockchainInfo, error) {
 // blockNumber of  math.MaxUint64 will return last block
 func (l *kvLedger) GetBlockByNumber(blockNumber uint64) (*common.Block, error) {
 	return l.blockStore.RetrieveBlockByNumber(blockNumber)
+}
 
+// GetBlockWithHashByNumber retrieves a block with hash by block number
+func (l *kvLedger) GetBlockWithHashByNumber(blockNumber uint64) (*common.ProcessedBlock, error) {
+	block, err :=  l.blockStore.RetrieveBlockByNumber(blockNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	processedBlock := &common.ProcessedBlock{Block: block, Hash: block.Header.Hash()}
+	return processedBlock, nil
 }
 
 // GetBlocksIterator returns an iterator that starts from `startBlockNumber`(inclusive).

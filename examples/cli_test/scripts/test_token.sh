@@ -113,7 +113,7 @@ echo_b "=====================9.Query transfer result of To account==============
 chaincodeQueryB
 
 echo_b "=====================10.Query token====================="
-queryToken
+#queryToken
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

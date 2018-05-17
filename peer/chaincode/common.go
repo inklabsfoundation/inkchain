@@ -20,11 +20,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
-	"strings"
-
-	"strconv"
-
 	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
 	"github.com/inklabsfoundation/inkchain/core/chaincode"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
@@ -38,6 +33,8 @@ import (
 	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
+	"os"
+	"strings"
 )
 
 // checkSpec to see if chaincode resides within current package capture for language.

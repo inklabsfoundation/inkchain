@@ -22,7 +22,6 @@ const (
 	GetBalance string = "getBalance"
 	GetAccount string = "getAccount"
 	Transfer   string = "transfer"
-	Counter    string = "counter"
 	Sender     string = "sender"
 )
 
@@ -61,12 +60,6 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		}
 		return t.transfer(stub, args)
 
-	case Counter:
-		if len(args) != 1 {
-			return shim.Error("Incorrect number of arguments. Expecting 1")
-		}
-		return t.getCounter(stub, args)
-
 	case Sender:
 		sender, err := stub.GetSender()
 		if err != nil {
@@ -82,7 +75,7 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 // getBalance
 // Get the balance of a specific token type in an account
 func (t *tokenChaincode) getBalance(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Address
+	var A string           // Address
 	var BalanceType string // Token type
 	var err error
 
@@ -133,7 +126,7 @@ func (t *tokenChaincode) getAccount(stub shim.ChaincodeStubInterface, args []str
 // transfer
 // Send tokens to the specified address
 func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var B string // To address
+	var B string           // To address
 	var BalanceType string // Token type
 	var err error
 
@@ -151,29 +144,6 @@ func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("transfer error" + err.Error())
 	}
 	return shim.Success(nil)
-}
-
-// counter
-// Get current tx counter of an account
-func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Address
-	var err error
-
-	A = strings.ToLower(args[0])
-	account, err := stub.GetAccount(A)
-	if err != nil {
-		jsonResp := "{\"Error\":\"account not exists\"}"
-		return shim.Error(jsonResp)
-	}
-
-	if account == nil {
-		jsonResp := "{\"Error\":\"account not exists for " + A + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	jsonResp := "{\"Name\":\"" + A + "\",\"counter\":\"" + string(account.Counter) + "\"}"
-	fmt.Printf("Query Response:%s\n", jsonResp)
-	return shim.Success([]byte(strconv.FormatUint(account.Counter, 10)))
 }
 
 func main() {

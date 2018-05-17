@@ -73,8 +73,8 @@ PROJECT_FILES = $(shell git ls-files  | grep -v ^test | grep -v ^unit-test | \
 	grep -v ^.git | grep -v ^examples | grep -v ^devenv | grep -v .png$ | \
 	grep -v ^LICENSE )
 RELEASE_TEMPLATES = $(shell git ls-files | grep "release/templates")
-IMAGES = peer orderer ccenv javaenv buildenv tools zookeeper kafka couchdb
-#IMAGES = peer orderer ccenv javaenv buildenv tools
+#IMAGES = peer orderer ccenv javaenv buildenv tools zookeeper kafka couchdb
+IMAGES = peer orderer ccenv javaenv buildenv tools
 RELEASE_PLATFORMS = windows-amd64 darwin-amd64 linux-amd64 linux-ppc64le linux-s390x
 RELEASE_PKGS = configtxgen cryptogen configtxlator peer orderer
 
@@ -354,17 +354,17 @@ release/%/bin/peer: $(PROJECT_FILES)
 
 release/%/install: $(PROJECT_FILES)
 	mkdir -p $(@D)/bin
-	@cat $(@D)/../templates/get-docker-images.in \
-		| sed -e 's/_NS_/$(DOCKER_NS)/g' \
-		| sed -e 's/_ARCH_/$(DOCKER_ARCH)/g' \
-		| sed -e 's/_VERSION_/$(PROJECT_VERSION)/g' \
-		| sed -e 's/_BASE_DOCKER_TAG_/$(BASE_DOCKER_TAG)/g' \
-		> $(@D)/bin/get-docker-images.sh
-		@chmod +x $(@D)/bin/get-docker-images.sh
-	@cat $(@D)/../templates/get-byfn.in \
-		| sed -e 's/_VERSION_/$(PROJECT_VERSION)/g' \
-		> $(@D)/bin/get-byfn.sh
-		@chmod +x $(@D)/bin/get-byfn.sh
+#	@cat $(@D)/../templates/get-docker-images.in \
+#		| sed -e 's/_NS_/$(DOCKER_NS)/g' \
+#		| sed -e 's/_ARCH_/$(DOCKER_ARCH)/g' \
+#		| sed -e 's/_VERSION_/$(PROJECT_VERSION)/g' \
+#		| sed -e 's/_BASE_DOCKER_TAG_/$(BASE_DOCKER_TAG)/g' \
+#		> $(@D)/bin/get-docker-images.sh
+#		@chmod +x $(@D)/bin/get-docker-images.sh
+#	@cat $(@D)/../templates/get-byfn.in \
+#		| sed -e 's/_VERSION_/$(PROJECT_VERSION)/g' \
+#		> $(@D)/bin/get-byfn.sh
+#		@chmod +x $(@D)/bin/get-byfn.sh
 
 .PHONY: dist
 dist: dist-clean release

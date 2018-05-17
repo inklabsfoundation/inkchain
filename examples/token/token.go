@@ -22,7 +22,6 @@ const (
 	GetBalance string = "getBalance"
 	GetAccount string = "getAccount"
 	Transfer   string = "transfer"
-	Counter    string = "counter"
 	Sender     string = "sender"
 )
 
@@ -60,12 +59,6 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error("Incorrect number of arguments. Expecting 3")
 		}
 		return t.transfer(stub, args)
-
-	case Counter:
-		if len(args) != 1 {
-			return shim.Error("Incorrect number of arguments. Expecting 1")
-		}
-		return t.getCounter(stub, args)
 
 	case Sender:
 		sender, err := stub.GetSender()
@@ -154,24 +147,6 @@ func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("transfer error" + err.Error())
 	}
 	return shim.Success(nil)
-}
-
-// counter
-// Get current tx counter of an account
-func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Address
-	var err error
-
-	A = strings.ToLower(args[0])
-	account, err := stub.GetAccount(A)
-	if err != nil {
-		return shim.Error("account not exists")
-	}
-
-	if account == nil {
-		return shim.Error("account not exists for " + A)
-	}
-	return shim.Success([]byte(strconv.FormatUint(account.Counter, 10)))
 }
 
 func main() {

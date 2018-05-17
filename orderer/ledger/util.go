@@ -21,7 +21,6 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet"
 	cb "github.com/inklabsfoundation/inkchain/protos/common"
 	ab "github.com/inklabsfoundation/inkchain/protos/orderer"
-	putils "github.com/inklabsfoundation/inkchain/protos/utils"
 )
 
 var closedChan chan struct{}
@@ -68,7 +67,7 @@ func CreateNextBlock(rl Reader, messages []*cb.Envelope, feeAddress string, bloc
 		previousBlockHash = block.Header.Hash()
 	}
 	data := &cb.BlockData{
-		Data: make([][]byte, tx_number),
+		Data: make([][]byte, len(messages)),
 	}
 	var err error
 	for i, msg := range messages {

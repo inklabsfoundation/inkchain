@@ -38,7 +38,6 @@ var ContractList map[string]map[string]string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`
-	Counter uint64              `json:"counter"`
 }
 
 type TxData struct {

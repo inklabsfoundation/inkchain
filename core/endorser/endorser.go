@@ -104,12 +104,9 @@ func (*Endorser) checkInvokeSigAndSetSender(cis *pb.ChaincodeInvocationSpec, txs
 	return nil
 }
 
-func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int, account *wallet.Account) error {
+func (e *Endorser) checkInk(cis *pb.ChaincodeInvocationSpec, txsim ledger.TxSimulator, byteCount int, account *wallet.Account) error {
 	if cis.Sig == nil || cis.SenderSpec == nil {
 		return nil
-	}
-	if cis.SenderSpec.Counter < account.Counter {
-		return fmt.Errorf("endorser: invalid counter")
 	}
 	inkFee, err := e.inkCalculator.CalcInk(byteCount)
 	fee := big.NewInt(inkFee)
@@ -333,12 +330,12 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 		}
 	}
 
-	//---4. check counter and ink
+	//---4. check ink
 	txLength := len(simResult)
 	if cis.SenderSpec != nil {
 		txLength += len(cis.SenderSpec.String())
 	}
-	err = e.checkCounterAndInk(cis, txsim, txLength, account)
+	err = e.checkInk(cis, txsim, txLength, account)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

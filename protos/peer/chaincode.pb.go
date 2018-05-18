@@ -194,7 +194,6 @@ func (m *ChaincodeSpec) GetTimeout() int32 {
 
 type SenderSpec struct {
 	Sender   []byte `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	Counter  uint64 `protobuf:"varint,2,opt,name=counter" json:"counter,omitempty"`
 	InkLimit []byte `protobuf:"bytes,3,opt,name=ink_limit,json=inkLimit,proto3" json:"ink_limit,omitempty"`
 	Msg      []byte `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
 }
@@ -209,13 +208,6 @@ func (m *SenderSpec) GetSender() []byte {
 		return m.Sender
 	}
 	return nil
-}
-
-func (m *SenderSpec) GetCounter() uint64 {
-	if m != nil {
-		return m.Counter
-	}
-	return 0
 }
 
 func (m *SenderSpec) GetInkLimit() []byte {

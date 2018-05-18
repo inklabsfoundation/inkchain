@@ -57,17 +57,7 @@ func NewValidator(db statedb.VersionedDB) *Validator {
 	return &Validator{db, impl.NewSimpleInkAlg()}
 }
 
-func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvocationSpec, batch *statedb.TransferBatch, ledgerByteCount int) (int64, error) {
-	//validate counter
-	counterValidated := false
-	senderCounter, ok := batch.GetSenderCounter(sender)
-	if ok && senderCounter != 0 {
-		if cis.SenderSpec.Counter != senderCounter {
-			return 0, fmt.Errorf("invalid counter")
-		}
-		counterValidated = true
-	}
-
+func (v *Validator) validateInk(sender string, cis *peer.ChaincodeInvocationSpec, batch *statedb.TransferBatch, ledgerByteCount int) (int64, error) {
 	versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, sender)
 	if err != nil {
 		return 0, err
@@ -77,9 +67,6 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 		jsonErr := json.Unmarshal(versionedValue.Value, account)
 		if jsonErr != nil {
 			return 0, jsonErr
-		}
-		if !counterValidated && cis.SenderSpec.Counter != account.Counter {
-			return 0, fmt.Errorf("invalide counter (database)")
 		}
 		inkFee, err := v.inkCalculator.CalcInk(ledgerByteCount)
 		if inkFee > 0 {
@@ -151,13 +138,12 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		if cis.SenderSpec != nil {
 			contentLength += len(cis.SenderSpec.String())
 		}
-		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
+		inkFee, err := v.validateInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
 			fmt.Println(err)
 			return nil, nil, nil, nil, peer.TxValidationCode_BAD_COUNTER, nil
 		}
 		senderCounter.Sender = sender.ToString()
-		senderCounter.Counter = cis.SenderSpec.Counter
 		senderCounter.Ink = big.NewInt(inkFee)
 	}
 
@@ -260,7 +246,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 
 		//Set transfer sender's fee trans
 		if senderCounter != nil && (txResult == peer.TxValidationCode_VALID || txResult == peer.TxValidationCode_EXCEED_BALANCE) {
-			transferUpdates.UpdateSender(senderCounter.Sender, senderCounter.Counter, senderCounter.Ink, committingTxHeight)
+			transferUpdates.UpdateSender(senderCounter.Sender, senderCounter.Ink, committingTxHeight)
 		}
 
 		if txResult == peer.TxValidationCode_VALID {
@@ -494,7 +480,6 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		} else {
 			account.Balance = balanceChange
 		}
-		account.Counter, _ = transferBatch.GetSenderCounter(accountUpdate)
 		accountBytes, err := json.Marshal(account)
 		if err != nil {
 			continue

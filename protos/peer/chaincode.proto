@@ -75,9 +75,8 @@ message ChaincodeSpec {
 
 message SenderSpec {
     bytes sender = 1;
-    uint64 counter = 2;
-    bytes ink_limit = 3;
-    bytes msg = 4;
+    bytes ink_limit = 2;
+    bytes msg = 3;
 }
 
 message SignContent {

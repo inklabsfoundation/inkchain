@@ -43,6 +43,8 @@ It has these top-level messages:
 	CrossTransferInfo
 	Transfer
 	TransferInfo
+	TransferExtractFee
+	TransferExtractFeeInfo
 	IssueTokenInfo
 	AnchorPeers
 	AnchorPeer

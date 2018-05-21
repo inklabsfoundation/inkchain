@@ -46,6 +46,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 // Logger for the shim package.
@@ -456,7 +457,7 @@ type HistoryQueryIterator struct {
 type resultType uint8
 
 const (
-	STATE_QUERY_RESULT resultType = iota + 1
+	STATE_QUERY_RESULT   resultType = iota + 1
 	HISTORY_QUERY_RESULT
 )
 
@@ -774,6 +775,28 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
 
+func (stub *ChaincodeStub) TransferExtractFee(to string, balanceType string, amount *big.Int) error {
+	if to == "" || len(to) != wallet.AddressStringLength {
+		return fmt.Errorf(".invalid address length.")
+	}
+	if amount.Cmp(big.NewInt(0)) < 0 {
+		return fmt.Errorf(".transfer amount should be a half-positive number.")
+	}
+	to = strings.ToLower(to)
+	addr := wallet.StringToAddress(to)
+	if addr == nil {
+		return fmt.Errorf("must be valid address")
+	}
+	efTran := &kveftranset.KVEfTrans{}
+	efTran.To = to
+	efTran.BalanceType = balanceType
+	efTran.Amount = amount.Bytes()
+	var efTranSet []*kveftranset.KVEfTrans
+	efTranSet = append(efTranSet, efTran)
+	efKvTranset := &kveftranset.KVEfTranSet{efTranSet}
+	return stub.handler.handleTransferExtractFee(efKvTranset, stub.TxID)
+}
+
 func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {
 	if pubTxId == "" {
 		return fmt.Errorf(".public chain txId should be valid code.")
@@ -790,7 +813,7 @@ func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *
 	tran.Amount = amount.Bytes()
 	var tranSet []*kvcrosstranset.KVCrossTrans
 	tranSet = append(tranSet, tran)
-	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform,BalanceType:balanceType}
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: balanceType}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {

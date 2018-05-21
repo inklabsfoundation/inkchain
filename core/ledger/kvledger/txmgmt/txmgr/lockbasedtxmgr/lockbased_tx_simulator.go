@@ -25,6 +25,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 // LockBasedTxSimulator is a transaction simulator used in `LockBasedTxMgr`
@@ -100,6 +101,19 @@ func (s *lockBasedTxSimulator) CrossTransfer(transet *kvcrosstranset.KVCrossTran
 	s.ledgerBuilder.CrossTranSetBuilder.SetTokenType(transet.BalanceType)
 	return nil
 }
+
+// Implementation for inkchain TxSimulator interface
+func (s *lockBasedTxSimulator) TransferExtractFee(efTranset *kveftranset.KVEfTranSet) error {
+	s.helper.checkDone()
+	for _, efTran := range efTranset.Eftrans {
+		if err := s.helper.txmgr.db.ValidateKey(efTran.To); err != nil {
+			return err
+		}
+		s.ledgerBuilder.EfTranSetBuilder.AddToTranSet(efTran.To, efTran.Amount)
+	}
+	return nil
+}
+
 
 // DeleteState implements method in interface `ledger.TxSimulator`
 func (s *lockBasedTxSimulator) DeleteState(ns string, key string) error {

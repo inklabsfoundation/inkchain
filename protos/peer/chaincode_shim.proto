@@ -49,6 +49,7 @@ message ChaincodeMessage {
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
         CROSS_TRANSFER = 824;
+        TRANSFER_EXTRACT_FEE =825;
     }
 
     Type type = 1;
@@ -119,6 +120,16 @@ message Transfer {
 
 message TransferInfo {
     repeated Transfer tranSet = 1;
+}
+
+message TransferExtractFee {
+    bytes to = 1;
+    bytes balanceType = 2;
+    bytes amount = 3;
+}
+
+message TransferExtractFeeInfo {
+    repeated TransferExtractFee tranSet = 2;
 }
 
 message IssueTokenInfo {

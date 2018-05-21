@@ -1,0 +1,17 @@
+/*
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+option go_package = "github.com/inklabsfoundation/inkchain/protos/ledger/eftranset";
+option java_package = "org.inklabsfoundation.inkchain.protos.ledger.eftranset";
+
+package eftranset;
+
+message EfTranset {
+    string from = 1;
+    bytes eftranset = 3;
+}

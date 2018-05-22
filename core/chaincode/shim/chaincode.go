@@ -46,7 +46,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 // Logger for the shim package.
@@ -775,7 +774,7 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
 
-func (stub *ChaincodeStub) TransferExtractFee(to string, balanceType string, amount *big.Int) error {
+func (stub *ChaincodeStub) TransferExtractFee(to string, amount *big.Int) error {
 	if to == "" || len(to) != wallet.AddressStringLength {
 		return fmt.Errorf(".invalid address length.")
 	}
@@ -787,14 +786,14 @@ func (stub *ChaincodeStub) TransferExtractFee(to string, balanceType string, amo
 	if addr == nil {
 		return fmt.Errorf("must be valid address")
 	}
-	efTran := &kveftranset.KVEfTrans{}
-	efTran.To = to
-	efTran.BalanceType = balanceType
-	efTran.Amount = amount.Bytes()
-	var efTranSet []*kveftranset.KVEfTrans
-	efTranSet = append(efTranSet, efTran)
-	efKvTranset := &kveftranset.KVEfTranSet{efTranSet}
-	return stub.handler.handleTransferExtractFee(efKvTranset, stub.TxID)
+	tran := &kvtranset.KVTrans{}
+	tran.To = to
+	tran.BalanceType = wallet.MAIN_BALANCE_NAME
+	tran.Amount = amount.Bytes()
+	var tranSet []*kvtranset.KVTrans
+	tranSet = append(tranSet, tran)
+	kvTranset := &kvtranset.KVTranSet{Trans: tranSet}
+	return stub.handler.handleTransferExtractFee(kvTranset, stub.TxID)
 }
 
 func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {

@@ -122,16 +122,6 @@ message TransferInfo {
     repeated Transfer tranSet = 1;
 }
 
-message TransferExtractFee {
-    bytes to = 1;
-    bytes balanceType = 2;
-    bytes amount = 3;
-}
-
-message TransferExtractFeeInfo {
-    repeated TransferExtractFee tranSet = 2;
-}
-
 message IssueTokenInfo {
     bytes address = 1;
     bytes balanceType = 2;

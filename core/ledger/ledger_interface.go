@@ -22,7 +22,6 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	"github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 // PeerLedgerProvider provides handle to ledger instances
@@ -132,5 +131,4 @@ type TxSimulator interface {
 
 	CrossTransfer(transet *kvcrosstranset.KVCrossTranSet) error
 	SetSender(sender string) error
-	TransferExtractFee(efTranset *kveftranset.KVEfTranSet) error
 }

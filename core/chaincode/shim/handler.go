@@ -33,7 +33,6 @@ import (
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 // PeerChaincodeStream interface for stream between Peer and chaincode instance.
@@ -772,16 +771,16 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
-func (handler *Handler) handleTransferExtractFee(efTrans *kveftranset.KVEfTranSet, txId string) error {
+func (handler *Handler) handleTransferExtractFee(trans *kvtranset.KVTranSet, txId string) error {
 	// Check if this is a transaction
 	chaincodeLogger.Debugf("[%s]Inside transfer extract fee", shorttxid(txId))
 	//we constructed a valid object. No need to check for error
-	var efTranset []*pb.TransferExtractFee
-	for _, efTran := range efTrans.Eftrans {
-		protoTran := pb.TransferExtractFee{To: []byte(strings.ToLower(efTran.To)), BalanceType: []byte(efTran.BalanceType), Amount: efTran.Amount}
-		efTranset = append(efTranset, &protoTran)
+	var tranSet []*pb.TransferExtractFee
+	for _, tran := range trans.Trans {
+		protoTran := pb.TransferExtractFee{To: []byte(strings.ToLower(tran.To)), BalanceType: []byte(tran.BalanceType), Amount: tran.Amount}
+		tranSet = append(tranSet, &protoTran)
 	}
-	efTransferInfo := &pb.TransferExtractFeeInfo{TranSet: efTranset}
+	efTransferInfo := &pb.TransferExtractFeeInfo{TranSet: tranSet}
 	payloadBytes, err := proto.Marshal(efTransferInfo)
 	// Create the channel on which to communicate the response from validating peer
 	if err != nil {

@@ -46,7 +46,6 @@ import (
 	"golang.org/x/net/context"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"strings"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/eftranset/kveftranset"
 )
 
 const (
@@ -1502,24 +1501,7 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 				res, err = proto.Marshal(response)
 			}
 		} else if msg.Type.String() == pb.ChaincodeMessage_TRANSFER_EXTRACT_FEE.String() {
-			efTransferInfo := &pb.TransferExtractFeeInfo{}
-			unmarshalErr := proto.Unmarshal(msg.Payload, efTransferInfo)
-			if unmarshalErr != nil {
-				errHandler([]byte(unmarshalErr.Error()), "[%s]Unable to decipher payload. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
-				return
-			}
-			var kvEfTrans []*kveftranset.KVEfTrans
-			for _, tran := range efTransferInfo.TranSet {
-				kvEfTran := kveftranset.KVEfTrans{}
-				kvEfTran.To = string(tran.To[:])
-				kvEfTran.BalanceType = string(tran.BalanceType[:])
-				kvEfTran.Amount = tran.Amount
-				kvEfTrans = append(kvEfTrans, &kvEfTran)
-			}
-			efTranSet := &kveftranset.KVEfTranSet{kvEfTrans}
-			txContext.txsimulator.TransferExtractFee(efTranSet)
 		}
-
 		if err != nil {
 			errHandler([]byte(err.Error()), "[%s]Failed to handle %s. Sending %s", shorttxid(msg.Txid), msg.Type.String(), pb.ChaincodeMessage_ERROR)
 			return

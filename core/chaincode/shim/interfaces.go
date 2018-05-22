@@ -221,7 +221,7 @@ type ChaincodeStubInterface interface {
 	// TransferExtractFee implements atomic balance. It allows an transaction of
 	// a specific type of token (e.g., INK) from one account to another one .
 	// And it allows cost Fee by amount if type of toke is INK
-	TransferExtractFee(to string, balanceType string, amount *big.Int) error
+	TransferExtractFee(to string, amount *big.Int) error
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

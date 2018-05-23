@@ -217,11 +217,6 @@ type ChaincodeStubInterface interface {
 	// GetSender returns the sender's address. The address is
 	// revealed from his/her signature.
 	GetSender() (string, error)
-
-	// TransferExtractFee implements atomic balance. It allows an transaction of
-	// a specific type of token (e.g., INK) from one account to another one .
-	// And it allows cost Fee by amount if type of toke is INK
-	TransferExtractFee(to string, amount *big.Int) error
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

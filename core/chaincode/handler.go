@@ -1500,7 +1500,6 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			} else {
 				res, err = proto.Marshal(response)
 			}
-		} else if msg.Type.String() == pb.ChaincodeMessage_TRANSFER_EXTRACT_FEE.String() {
 		}
 		if err != nil {
 			errHandler([]byte(err.Error()), "[%s]Failed to handle %s. Sending %s", shorttxid(msg.Txid), msg.Type.String(), pb.ChaincodeMessage_ERROR)

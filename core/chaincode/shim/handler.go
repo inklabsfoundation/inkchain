@@ -771,53 +771,6 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
-func (handler *Handler) handleTransferExtractFee(trans *kvtranset.KVTranSet, txId string) error {
-	// Check if this is a transaction
-	chaincodeLogger.Debugf("[%s]Inside transfer extract fee", shorttxid(txId))
-	//we constructed a valid object. No need to check for error
-	var tranSet []*pb.TransferExtractFee
-	for _, tran := range trans.Trans {
-		protoTran := pb.TransferExtractFee{To: []byte(strings.ToLower(tran.To)), BalanceType: []byte(tran.BalanceType), Amount: tran.Amount}
-		tranSet = append(tranSet, &protoTran)
-	}
-	efTransferInfo := &pb.TransferExtractFeeInfo{TranSet: tranSet}
-	payloadBytes, err := proto.Marshal(efTransferInfo)
-	// Create the channel on which to communicate the response from validating peer
-	if err != nil {
-		return err
-	}
-	var respChan chan pb.ChaincodeMessage
-	if respChan, err = handler.createChannel(txId); err != nil {
-		return err
-	}
-
-	defer handler.deleteChannel(txId)
-	// Send Transfer message to validator chaincode support
-	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_TRANSFER_EXTRACT_FEE, Payload: payloadBytes, Txid: txId}
-	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_TRANSFER_EXTRACT_FEE)
-
-	var responseMsg pb.ChaincodeMessage
-
-	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
-		return errors.New(fmt.Sprintf("[%s]error sending TRANSFER_EXTRACT_FEE %s", msg.Txid, err))
-	}
-
-	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
-		// Success response
-		chaincodeLogger.Debugf("[%s]Received %s. Successfully transfered with extract fee", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
-		return nil
-	}
-
-	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
-		// Error response
-		chaincodeLogger.Errorf("[%s]Received %s. Payload: %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR, responseMsg.Payload)
-		return errors.New(string(responseMsg.Payload[:]))
-	}
-
-	// Incorrect chaincode message received
-	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
-}
-
 func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet, txId string) error {
 	// Check if this is a transaction
 	chaincodeLogger.Debugf("[%s]Inside cross transfer", shorttxid(txId))

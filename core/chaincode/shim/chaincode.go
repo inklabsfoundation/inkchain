@@ -774,28 +774,6 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
 
-func (stub *ChaincodeStub) TransferExtractFee(to string, amount *big.Int) error {
-	if to == "" || len(to) != wallet.AddressStringLength {
-		return fmt.Errorf(".invalid address length.")
-	}
-	if amount.Cmp(big.NewInt(0)) < 0 {
-		return fmt.Errorf(".transfer amount should be a half-positive number.")
-	}
-	to = strings.ToLower(to)
-	addr := wallet.StringToAddress(to)
-	if addr == nil {
-		return fmt.Errorf("must be valid address")
-	}
-	tran := &kvtranset.KVTrans{}
-	tran.To = to
-	tran.BalanceType = wallet.MAIN_BALANCE_NAME
-	tran.Amount = amount.Bytes()
-	var tranSet []*kvtranset.KVTrans
-	tranSet = append(tranSet, tran)
-	kvTranset := &kvtranset.KVTranSet{Trans: tranSet}
-	return stub.handler.handleTransferExtractFee(kvTranset, stub.TxID)
-}
-
 func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {
 	if pubTxId == "" {
 		return fmt.Errorf(".public chain txId should be valid code.")

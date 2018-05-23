@@ -199,8 +199,8 @@ type ChaincodeStubInterface interface {
 
 	// Interfaces added by Inklabs Foundation
 
-	// Tranfer implements atomic balance changes. It allows an transaction of
-	// a specific tpye of token (e.g., INK) from one account to another one.
+	// Transfer implements atomic balance changes. It allows an transaction of
+	// a specific type of token (e.g., INK) from one account to another one.
 	Transfer(to string, balanceType string, amount *big.Int) error
 
 	CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error

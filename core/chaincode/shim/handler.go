@@ -770,6 +770,7 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
+
 func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet, txId string) error {
 	// Check if this is a transaction
 	chaincodeLogger.Debugf("[%s]Inside cross transfer", shorttxid(txId))
@@ -779,7 +780,7 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 		protoTran := pb.CrossTransfer{To: []byte(strings.ToLower(tran.To)), Amount: tran.Amount}
 		tranSet = append(tranSet, &protoTran)
 	}
-	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm),BalanceType:[]byte(trans.BalanceType)}
+	crossTransferInfo := &pb.CrossTransferInfo{TranSet: tranSet, PubTxId: []byte(trans.PubTxId), FromPlatForm: []byte(trans.FromPlatForm), BalanceType: []byte(trans.BalanceType)}
 	payloadBytes, err := proto.Marshal(crossTransferInfo)
 	// Create the channel on which to communicate the response from validating peer
 	if err != nil {

@@ -27,6 +27,9 @@ func (ledgerSet *LedgerSet) ToProtoBytes() ([]byte, error) {
 		return nil, err
 	}
 	protoLedgerSet.Crosstranset, err = ledgerSet.CrossTranSet.ToProtoBytes()
+	if err != nil {
+		return nil, err
+	}
 	protoLedgerSetBytes, err := proto.Marshal(protoLedgerSet)
 	return protoLedgerSetBytes, nil
 }
@@ -62,6 +65,7 @@ func (ledgerSet *LedgerSet) FromProtoBytes(protoBytes []byte) error {
 	} else {
 		ledgerSet.CrossTranSet = nil
 	}
+
 	ledgerSet.TxRwSet = &rwsetutil.TxRwSet{}
 	err = ledgerSet.TxRwSet.FromProtoBytes(protoLedgerSet.Txrwset)
 	if err != nil {

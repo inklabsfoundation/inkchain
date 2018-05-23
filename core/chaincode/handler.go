@@ -452,10 +452,11 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
-			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():    func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_TRANSFER.String():       func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_CROSS_TRANSFER.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():          func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():          func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_TRANSFER.String():             func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_CROSS_TRANSFER.String():       func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_TRANSFER_EXTRACT_FEE.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
 			"enter_" + establishedstate: func(e *fsm.Event) { v.enterEstablishedState(e, v.FSM.Current()) },
 			"enter_" + readystate:       func(e *fsm.Event) { v.enterReadyState(e, v.FSM.Current()) },
@@ -1500,7 +1501,6 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 				res, err = proto.Marshal(response)
 			}
 		}
-
 		if err != nil {
 			errHandler([]byte(err.Error()), "[%s]Failed to handle %s. Sending %s", shorttxid(msg.Txid), msg.Type.String(), pb.ChaincodeMessage_ERROR)
 			return

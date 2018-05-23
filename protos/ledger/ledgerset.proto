@@ -16,4 +16,5 @@ message LedgerSet {
     bytes txrwset = 1;
     bytes transet = 2;
     bytes crosstranset = 3;
+    bytes eftranset = 4;
 }

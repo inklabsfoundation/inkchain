@@ -334,11 +334,16 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-	txLength := len(simResult)
-	if cis.SenderSpec != nil {
-		txLength += len(cis.SenderSpec.String())
+	contentLength := 0
+	if cis.ChaincodeSpec.Input!= nil{
+		for _,arg := range cis.ChaincodeSpec.Input.Args  {
+			contentLength +=len(arg)
+		}
 	}
-	err = e.checkCounterAndInk(cis, txsim, txLength, account)
+	if cis.SenderSpec!=nil{
+		contentLength+= len(cis.SenderSpec.Msg)
+	}
+	err = e.checkCounterAndInk(cis, txsim, contentLength, account)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

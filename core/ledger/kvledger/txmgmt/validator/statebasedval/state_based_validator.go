@@ -147,10 +147,14 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			return nil, nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 
-		contentLength := len(respPayload.Results)
-		logger.Debug(respPayload.Results)
-		if cis.SenderSpec != nil {
-			contentLength += len(cis.SenderSpec.String())
+		contentLength := 0
+		if cis.ChaincodeSpec.Input!= nil{
+			for _,arg := range cis.ChaincodeSpec.Input.Args  {
+				contentLength +=len(arg)
+			}
+		}
+		if cis.SenderSpec!=nil{
+			contentLength+= len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {

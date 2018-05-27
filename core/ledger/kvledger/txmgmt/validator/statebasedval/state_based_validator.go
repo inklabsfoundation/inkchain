@@ -148,11 +148,6 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		}
 
 		contentLength := 0
-		if cis.ChaincodeSpec.Input!= nil{
-			for _,arg := range cis.ChaincodeSpec.Input.Args  {
-				contentLength +=len(arg)
-			}
-		}
 		if cis.SenderSpec!=nil{
 			contentLength+= len(cis.SenderSpec.Msg)
 		}

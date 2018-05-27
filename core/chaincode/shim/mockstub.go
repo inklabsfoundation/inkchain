@@ -416,12 +416,12 @@ func (stub *MockStub) Transfer(to string, balanceType string, amount *big.Int) e
 }
 
 // warning!  This method can not produce right outputs cause the sender is obtained from ChaincodeInvokeSpec
-func (stub *MockStub) TransferExtractFee(to string, amount *big.Int) error {
+func (stub *MockStub) GetFee(funcName string, args []string) (int64, error) {
 	if stub.TxID == "" {
 		mockLogger.Error("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
-		return errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
+		return 0, errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
 	}
-	return errors.New(" this function could not be used in mock invocation")
+	return 0, errors.New(" this function could not be used in mock invocation")
 }
 
 func (stub *MockStub) CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error {

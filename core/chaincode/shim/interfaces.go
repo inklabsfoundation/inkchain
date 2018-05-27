@@ -217,6 +217,10 @@ type ChaincodeStubInterface interface {
 	// GetSender returns the sender's address. The address is
 	// revealed from his/her signature.
 	GetSender() (string, error)
+
+	//GetFee returns the fee of operate, And only can be called
+	//by invoke
+	GetFee(funcName string, args []string) (int64, error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

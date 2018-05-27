@@ -850,12 +850,12 @@ func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
 }
 
-func (stub *ChaincodeStub) GetFee(funcName string, args []string) (int64, error) {
+func (stub *ChaincodeStub) GetFee() (int64, error) {
 	msg, err := stub.getSenderMsg(stub.proposal)
 	if err != nil {
 		return 0, err
 	}
-	contentLength := len(msg) + len(funcName)
+	contentLength := len(msg)
 	inkFee, err := stub.InkFeeCalc.CalcInk(contentLength)
 	if err != nil {
 		return 0, err

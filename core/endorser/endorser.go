@@ -335,11 +335,6 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 
 	//---4. check counter and ink
 	contentLength := 0
-	if cis.ChaincodeSpec.Input!= nil{
-		for _,arg := range cis.ChaincodeSpec.Input.Args  {
-			contentLength +=len(arg)
-		}
-	}
 	if cis.SenderSpec!=nil{
 		contentLength+= len(cis.SenderSpec.Msg)
 	}

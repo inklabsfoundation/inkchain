@@ -896,6 +896,44 @@ func (handler *Handler) handleIssueToken(address string, balanceType string, amo
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
+// handleGetFee communicates to calculate the fee of content.
+func (handler *Handler) handleGetFee(content string, txId string) (*big.Int, error) {
+	// Create the channel on which to communicate the response from validating peer
+	var respChan chan pb.ChaincodeMessage
+	var err error
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return nil, err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	payload := []byte(content)
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_GET_FEE, Payload: payload, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_FEE)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return nil, errors.New(fmt.Sprintf("[%s]error sending GET_FEE %s", shorttxid(txId), err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]GetFee received payload %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		fee := big.NewInt(0)
+		fee.SetBytes(responseMsg.Payload[:])
+		return fee, nil
+	}
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]GetState received error %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR)
+		return nil, errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return nil, errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+
 //---------------------------
 
 func (handler *Handler) createResponse(status int32, payload []byte) pb.Response {

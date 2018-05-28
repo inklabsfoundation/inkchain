@@ -46,16 +46,11 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
-	"github.com/inklabsfoundation/inkchain/core/wallet/ink"
-	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 )
 
 // Logger for the shim package.
 var chaincodeLogger = logging.MustGetLogger("shim")
 var logOutput = os.Stderr
-var inkFeeK = float32(1)
-var inkFeeX0 = float32(0)
-var inkFeeB = float32(0)
 
 const (
 	minUnicodeRuneValue   = 0            //U+0000
@@ -74,7 +69,6 @@ type ChaincodeStub struct {
 	handler        *Handler
 	signedProposal *pb.SignedProposal
 	proposal       *pb.Proposal
-	InkFeeCalc     ink.InkAlg
 
 	// Additional fields extracted from the signedProposal
 	creator   []byte
@@ -125,7 +119,6 @@ func Start(cc Chaincode) error {
 	// If Start() is called, we assume this is a standalone chaincode and set
 	// up formatted logging.
 	SetupChaincodeLogging()
-	SetInkFeeArgs()
 
 	chaincodename := viper.GetString("chaincode.id.name")
 	if chaincodename == "" {
@@ -383,10 +376,7 @@ func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.Chainco
 	stub.args = input.Args
 	stub.handler = handler
 	stub.signedProposal = signedProposal
-	impl.InkFeeK = inkFeeK
-	impl.InkFeeB = inkFeeB
-	impl.InkFeeX0 = inkFeeX0
-	stub.InkFeeCalc = impl.NewSimpleInkAlg()
+
 	// TODO: sanity check: verify that every call to init with a nil
 	// signedProposal is a legitimate one, meaning it is an internal call
 	// to system chaincodes.
@@ -416,12 +406,6 @@ func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.Chainco
 	}
 
 	return nil
-}
-
-func SetInkFeeArgs() {
-	inkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
-	inkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
-	inkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
 }
 
 // GetTxID returns the transaction ID
@@ -821,6 +805,7 @@ func (stub *ChaincodeStub) CrossTransfer(to string, balanceType string, amount *
 	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: balanceType}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
+
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {
 	if address == "" || len(address) != wallet.AddressStringLength {
 		return nil, fmt.Errorf("invalid address length")
@@ -850,17 +835,13 @@ func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
 }
 
-func (stub *ChaincodeStub) GetFee() (int64, error) {
+func (stub *ChaincodeStub) GetFee() (*big.Int, error) {
 	msg, err := stub.getSenderMsg(stub.proposal)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	contentLength := len(msg)
-	inkFee, err := stub.InkFeeCalc.CalcInk(contentLength)
-	if err != nil {
-		return 0, err
-	}
-	return inkFee, nil
+	content :=  msg
+	return stub.handler.handleGetFee(content, stub.TxID)
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {

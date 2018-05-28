@@ -49,7 +49,7 @@ message ChaincodeMessage {
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
         CROSS_TRANSFER = 824;
-        TRANSFER_EXTRACT_FEE =825;
+        GET_FEE =825;
     }
 
     Type type = 1;

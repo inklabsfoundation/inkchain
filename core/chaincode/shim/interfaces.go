@@ -220,7 +220,7 @@ type ChaincodeStubInterface interface {
 
 	//GetFee returns the fee of operate, And only can be called
 	//by invoke
-	GetFee(funcName string, args []string) (int64, error)
+	GetFee() (*big.Int, error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

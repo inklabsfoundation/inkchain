@@ -59,16 +59,6 @@ services:
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      # peer private key
-      - CORE_PEER_QTUM_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
-      - CORE_PEER_QTUM_ADDRESS=192.168.2.85:3001
-      - CORE_PEER_QTUM_CONTRACT=0d8f3e130f7d3cb6d3b1c17ecf1059cb9a53538a
-      - CORE_PEER_ETH_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
-      - CORE_PEER_ETH_ADDRESS=47.254.32.219:18547
-      - CORE_PEER_ETH_CONTRACT=0x20823d15265e20a256719a233727fc3df0e071f2
-      - CORE_PEER_TOKENADDRESS=i3c97f146e8de9807ef723538521fcecd5f64c79a
-      - CORE_PEER_CROSSCHAINMANAGER=i4230a12f5b0693dd88bb35c79d7e56a68614b199
-      - CORE_PEER_CHAINNAME=INK
       - GODEBUG=netdns=go
     ports:
       - 7051:7051

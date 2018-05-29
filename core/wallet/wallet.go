@@ -22,19 +22,12 @@ const (
 	ADDRESS_PREFIX      = "i"
 	WALLET_NAMESPACE    = "ink"
 	MAIN_BALANCE_NAME   = "INK"
-	TOKEN_NAMESPACE     = "ascc"
 )
 
 type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
-var FullNodeIps map[string]string
-var LocalPlatform = "INK"
-var PublicPlatformPrivateKey map[string]string
-var TokenAddress = ""
-var CrossChainManager = ""
-var ContractList map[string]map[string]string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`

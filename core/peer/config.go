@@ -100,23 +100,19 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
-	wallet.FullNodeIps = map[string]string{}
-	wallet.ContractList = map[string]map[string]string{}
-	wallet.PublicPlatformPrivateKey = map[string]string{}
-	wallet.FullNodeIps["eth"] = viper.GetString("peer.eth.address")
-	wallet.FullNodeIps["qtum"] = viper.GetString("peer.qtum.address")
-	wallet.ContractList["eth"] = viper.GetStringMapString("peer.eth.contracts")
-	wallet.ContractList["qtum"] = viper.GetStringMapString("peer.qtum.contracts")
+	wallet.PublicInfos = map[string]*wallet.PublicNodeInfo{}
 	ethPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.eth.privateKey.file"))
 	if err != nil {
 		return fmt.Errorf("Error loading eth privateKe (%s)", err)
+	} else {
+		wallet.PublicInfos["eth"] = getFullNodeConfig("eth", ethPrivateKey, "peer.eth.address", []string{"INK"})
 	}
 	qtumPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.qtum.privateKey.file"))
 	if err != nil {
 		return fmt.Errorf("Error loading qtum privateKe (%s)", err)
+	} else {
+		wallet.PublicInfos["qtum"] = getFullNodeConfig("qtum", qtumPrivateKey, "peer.qtum.address", []string{"INK"})
 	}
-	wallet.PublicPlatformPrivateKey["eth"] = strings.Join(strings.Fields(string([]rune(string(ethPrivateKey)))),"")
-	wallet.PublicPlatformPrivateKey["qtum"] = strings.Join(strings.Fields(string([]rune(string(qtumPrivateKey)))),"")
 	wallet.TokenAddress = map[string]string{}
 	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
 	wallet.TokenAddress = viper.GetStringMapString("peer.tokenAddress")
@@ -130,6 +126,24 @@ func CacheConfiguration() (err error) {
 		return localAddressError
 	}
 	return
+}
+
+//get and build fullNodeConfig
+func getFullNodeConfig(publicChain string, privateFile []byte, ipKey string, contractsKey []string) *wallet.PublicNodeInfo {
+	info := wallet.PublicNodeInfo{
+		PrivateKey:   strings.Join(strings.Fields(string([]rune(string(privateFile)))), ""),
+		FullNodeIp:   viper.GetString(ipKey),
+		ContractList: map[string]wallet.PubContractInfo{},
+	}
+	for _, item := range contractsKey {
+		key := "peer." + publicChain + ".contracts." + item + "."
+		tmp := wallet.PubContractInfo{
+			Address: viper.GetString(key + "address"),
+			Version: viper.GetString(key + "version"),
+		}
+		info.ContractList[item] = tmp
+	}
+	return &info
 }
 
 // cacheConfiguration logs an error if error checks have failed.

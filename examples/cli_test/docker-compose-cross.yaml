@@ -76,8 +76,12 @@ services:
       # peer private key
       - CORE_PEER_QTUM_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
       - CORE_PEER_QTUM_ADDRESS=192.168.2.85:3001
+      - CORE_PEER_QTUM_CONTRACTS_INK_ADDRESS=0d8f3e130f7d3cb6d3b1c17ecf1059cb9a53538a
+      - CORE_PEER_QTUM_CONTRACTS_INK_VERSION=1
       - CORE_PEER_ETH_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
       - CORE_PEER_ETH_ADDRESS=47.254.32.219:18547
+      - CORE_PEER_ETH_CONTRACTS_INK_ADDRESS=0xffd42efcc27e1c513049a7c53418c68fe0324dae
+      - CORE_PEER_ETH_CONTRACTS_INK_VERSION=1
       - CORE_PEER_CROSSCHAINMANAGER=i4230a12f5b0693dd88bb35c79d7e56a68614b199
       - CORE_PEER_CHAINNAME=INK
     ports:
@@ -101,8 +105,12 @@ services:
       # peer private key
       - CORE_PEER_QTUM_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
       - CORE_PEER_QTUM_ADDRESS=192.168.2.85:3033
+      - CORE_PEER_QTUM_CONTRACTS_INK_ADDRESS=0d8f3e130f7d3cb6d3b1c17ecf1059cb9a53538a
+      - CORE_PEER_QTUM_CONTRACTS_INK_VERSION=1
       - CORE_PEER_ETH_PRIVATEKEY_FILE=/etc/inkchain/privateKey/qtum.txt
       - CORE_PEER_ETH_ADDRESS=47.254.32.219:18547
+      - CORE_PEER_ETH_CONTRACTS_INK_ADDRESS=0xffd42efcc27e1c513049a7c53418c68fe0324dae
+      - CORE_PEER_ETH_CONTRACTS_INK_VERSION=1
       - CORE_PEER_CROSSCHAINMANAGER=i4230a12f5b0693dd88bb35c79d7e56a68614b199
       - CORE_PEER_CHAINNAME=INK
     ports:
@@ -113,7 +121,7 @@ services:
       - ./channel/privateKey:/etc/inkchain/privateKey/
     depends_on:
       - orderer.example.com
-      
+
   peer0.org2.example.com:
     container_name: peer0.org2.example.com
     extends:
@@ -126,8 +134,12 @@ services:
       # peer private key
       - CORE_PEER_QTUM_PRIVATEKEY_FILE=/etc/inkchain/privateKey/eth.txt
       - CORE_PEER_QTUM_ADDRESS=192.168.2.85:3001
+      - CORE_PEER_QTUM_CONTRACTS_INK_ADDRESS=0d8f3e130f7d3cb6d3b1c17ecf1059cb9a53538a
+      - CORE_PEER_QTUM_CONTRACTS_INK_VERSION=1
       - CORE_PEER_ETH_PRIVATEKEY_FILE=/etc/inkchain/privateKey/eth.txt
       - CORE_PEER_ETH_ADDRESS=47.254.32.219:18547
+      - CORE_PEER_ETH_CONTRACTS_INK_ADDRESS=0xffd42efcc27e1c513049a7c53418c68fe0324dae
+      - CORE_PEER_ETH_CONTRACTS_INK_VERSION=1
       - CORE_PEER_CROSSCHAINMANAGER=i4230a12f5b0693dd88bb35c79d7e56a68614b199
       - CORE_PEER_CHAINNAME=INK
     ports:

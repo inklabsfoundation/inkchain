@@ -356,12 +356,21 @@ func (c *CrossTrainSysCC) buildTurnOutMessage(fromAccount string, balanceType st
 }
 
 //sign
-func (c *CrossTrainSysCC) signJson(json []byte, platform string) (string, error) {
-	privateKey := wallet.PublicPlatformPrivateKey[platform]
+func (c *CrossTrainSysCC) signJson(balanceType string, str string, platform string) (string, error) {
+	publicNode, ok := wallet.PublicInfos[platform]
+	if !ok {
+		return "", errors.New("platform not support")
+	}
+	privateKey := publicNode.PrivateKey
 	if privateKey == "" {
 		return "", errors.New("platform info not exist...")
 	}
-	result, err := wallet.SignJson(json, privateKey)
+	contract, ok := publicNode.ContractList[balanceType]
+	if !ok {
+		return "", errors.New("balance type not support..")
+	}
+	str += contract.Version
+	result, err := wallet.SignJson([]byte(str), privateKey)
 	if result == nil {
 		err = errors.New("signature failed")
 		return "", err

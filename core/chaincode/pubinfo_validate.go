@@ -72,9 +72,14 @@ type qtumBlockInfo struct {
 
 //validate pubTxId from eth
 func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
-	url := wallet.FullNodeIps["eth"]
+	publicNode,ok:= wallet.PublicInfos["eth"]
+	if !ok{
+		err = errors.New("platform not support")
+		return
+	}
+	url := publicNode.FullNodeIp
 	localPlatform := wallet.LocalPlatform
-	contractList := wallet.ContractList["eth"]
+	contractList := publicNode.ContractList
 	if url == "" {
 		err = errors.New("not support this coin or public chain")
 		return
@@ -102,8 +107,8 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		return
 	}
 	balanceType = ""
-	for coinType, contractAddress := range contractList {
-		if transInfo.ToContract == contractAddress {
+	for coinType, contract := range contractList {
+		if transInfo.ToContract == contract.Address {
 			balanceType = coinType
 			break
 		}
@@ -165,9 +170,14 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 
 //validate pubTxId from qtum
 func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
-	url := wallet.FullNodeIps["qtum"]
+	publicNode,ok:= wallet.PublicInfos["qtum"]
+	if !ok{
+		err = errors.New("platform not support")
+		return
+	}
+	url := publicNode.FullNodeIp
 	localPlatform := wallet.LocalPlatform
-	contractList := wallet.ContractList["qtum"]
+	contractList := publicNode.ContractList
 	if url == "" {
 		err = errors.New("not support this coin or public chain")
 		return
@@ -209,8 +219,8 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		return
 	}
 	balanceType = ""
-	for coinType, contractAddress := range contractList {
-		if transInfo.ContractAddress == contractAddress {
+	for coinType, contract := range contractList {
+		if transInfo.ContractAddress == contract.Address {
 			balanceType = coinType
 			break
 		}

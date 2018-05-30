@@ -268,14 +268,18 @@ peer:
         privateKey:
             file: /etc/inkchain/privateKey/qtum.txt
         contracts:
-            INK: 293bbd282b7f950c7f80d36d2087a7c465a247a1
+            INK:
+                address: 293bbd282b7f950c7f80d36d2087a7c465a247a1
+                version: 1
 
     eth:
         address: 127.0.0.1
         privateKey:
             file: /etc/inkchain/privateKey/ethKey.txt
         contracts:
-            INK: 0x2fda776c716588724765f60267f1a6614c4da89d
+            INK:
+                address: 0x2fda776c716588724765f60267f1a6614c4da89d
+                version: 1
 
     # Setting for xscc
     tokenAddress:

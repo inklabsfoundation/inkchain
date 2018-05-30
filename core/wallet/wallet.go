@@ -29,12 +29,10 @@ type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
-var FullNodeIps map[string]string
 var LocalPlatform = "INK"
-var PublicPlatformPrivateKey map[string]string
 var TokenAddress map[string]string
 var CrossChainManager = ""
-var ContractList map[string]map[string]string
+
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`
@@ -46,6 +44,24 @@ type TxData struct {
 	Recipient   *Address `json:"to"`
 	BalanceType string   `json:"balanceType"`
 	Amount      *big.Int `json:"amount"`
+}
+
+//type for public-chain contract
+type PubContractInfo struct {
+	//contract address
+	Address string
+	//contract version
+	Version string
+}
+
+//type for public-chain fullnode info
+type PublicNodeInfo struct {
+	//cross-chain voter's private key
+	PrivateKey string
+	//full node ip
+	FullNodeIp string
+	//cross-chain contracts
+	ContractList map[string]PubContractInfo
 }
 
 // type GenAccount
@@ -61,6 +77,8 @@ type Token struct {
 	// token decimals
 	Decimals int `json:"decimals"`
 }
+
+var PublicInfos map[string]*PublicNodeInfo
 
 func (a *Address) SetBytes(b []byte) {
 	if len(b) > AddressLength {

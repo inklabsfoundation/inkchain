@@ -450,10 +450,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_PUT_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-
-			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String(): func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_TRANSFER.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			
 			"after_" + pb.ChaincodeMessage_GET_FEE.String():        func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():    func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },

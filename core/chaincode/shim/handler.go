@@ -896,8 +896,8 @@ func (handler *Handler) handleIssueToken(address string, balanceType string, amo
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
-// handleGetFee communicates to calculate the fee of content.
-func (handler *Handler) handleGetFee(content string, txId string) (*big.Int, error) {
+// handleCalcFee communicates to calculate the fee of content.
+func (handler *Handler) handleCalcFee(content string, txId string) (*big.Int, error) {
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error

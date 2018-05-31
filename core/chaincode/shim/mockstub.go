@@ -416,7 +416,7 @@ func (stub *MockStub) Transfer(to string, balanceType string, amount *big.Int) e
 }
 
 // warning!  This method can not produce right outputs cause the sender is obtained from ChaincodeInvokeSpec
-func (stub *MockStub) GetFee() (*big.Int, error) {
+func (stub *MockStub) CalcFeeByInvoke() (*big.Int, error) {
 	if stub.TxID == "" {
 		mockLogger.Error("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
 		return nil, errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
@@ -425,7 +425,7 @@ func (stub *MockStub) GetFee() (*big.Int, error) {
 }
 
 // warning!  This method can not produce right outputs cause the sender is obtained from ChaincodeInvokeSpec
-func (stub *MockStub) QueryFee(content string) (*big.Int, error) {
+func (stub *MockStub) CalcFee(content string) (*big.Int, error) {
 	if stub.TxID == "" {
 		mockLogger.Error("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
 		return nil, errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")

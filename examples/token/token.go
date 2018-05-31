@@ -24,7 +24,7 @@ const (
 	Transfer   string = "transfer"
 	Counter    string = "counter"
 	Sender     string = "sender"
-	Fee        string = "fee"
+	CalcFee    string = "calcFee"
 )
 
 // User chaincode for token operations
@@ -74,11 +74,11 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error("Get sender failed.")
 		}
 		return shim.Success([]byte(sender))
-	case Fee:
+	case CalcFee:
 		if len(args) != 1 {
 			return shim.Error("Incorrect number of arguments. Expecting 1.")
 		}
-		return t.queryFee(stub, args)
+		return t.calcFee(stub, args)
 	}
 
 	return shim.Error("Invalid invoke function name. Expecting \"getBalance\", \"getAccount\", \"transfer\", \"counter\" , \"sender\" , \"fee\".")
@@ -179,8 +179,8 @@ func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []str
 	return shim.Success([]byte(strconv.FormatUint(account.Counter, 10)))
 }
 
-func (t *tokenChaincode) queryFee(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	fee, err := stub.QueryFee(string(args[0]))
+func (t *tokenChaincode) calcFee(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	fee, err := stub.CalcFee(string(args[0]))
 	if err != nil {
 		return shim.Error("Query fee failed.")
 	}

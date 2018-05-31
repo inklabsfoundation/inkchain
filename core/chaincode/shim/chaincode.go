@@ -835,19 +835,19 @@ func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
 }
 
-//query fee for the invoke function
-func (stub *ChaincodeStub) GetFee() (*big.Int, error) {
+//calc fee for the invoke function
+func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
 	msg, err := stub.getSenderMsg(stub.proposal)
 	if err != nil {
 		return nil, err
 	}
 	content :=  msg
-	return stub.handler.handleGetFee(content, stub.TxID)
+	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
-//query fee by passed paramaters
-func (stub *ChaincodeStub) QueryFee (content string) (*big.Int, error) {
-	return stub.handler.handleGetFee(content, stub.TxID)
+//calc fee by passed paramaters
+func (stub *ChaincodeStub) CalcFee (content string) (*big.Int, error) {
+	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {

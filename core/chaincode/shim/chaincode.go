@@ -356,6 +356,18 @@ func (stub *ChaincodeStub) verifySigAndGetSender(proposal *pb.Proposal) (string,
 	return senderStr, nil
 }
 
+// get sender msg info
+func (stub *ChaincodeStub) getSenderMsg(proposal *pb.Proposal) (string, error) {
+	cis, err := putils.GetChaincodeInvocationSpecFromSignedProposal(proposal)
+	if err != nil {
+		return "", fmt.Errorf("Failed extracting signedProposal from signed signedProposal. [%s]", err)
+	}
+	if cis.Sig == nil || cis.SenderSpec == nil {
+		return "", nil
+	}
+	return string(cis.SenderSpec.Msg), nil
+}
+
 //*********
 
 func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.ChaincodeInput, signedProposal *pb.SignedProposal) error {
@@ -800,6 +812,21 @@ func (stub *ChaincodeStub) IssueToken(address string, balanceType string, amount
 
 func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
+}
+
+//calc fee for the invoke function
+func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
+	msg, err := stub.getSenderMsg(stub.proposal)
+	if err != nil {
+		return nil, err
+	}
+	content :=  msg
+	return stub.handler.handleCalcFee(content, stub.TxID)
+}
+
+//calc fee by passed paramaters
+func (stub *ChaincodeStub) CalcFee (content string) (*big.Int, error) {
+	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {

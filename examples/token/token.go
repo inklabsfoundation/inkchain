@@ -24,6 +24,7 @@ const (
 	Transfer   string = "transfer"
 	Counter    string = "counter"
 	Sender     string = "sender"
+	CalcFee    string = "calcFee"
 )
 
 // User chaincode for token operations
@@ -73,10 +74,14 @@ func (t *tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error("Get sender failed.")
 		}
 		return shim.Success([]byte(sender))
-
+	case CalcFee:
+		if len(args) != 1 {
+			return shim.Error("Incorrect number of arguments. Expecting 1.")
+		}
+		return t.calcFee(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"getBalance\", \"getAccount\", \"transfer\", \"counter\" or \"sender\".")
+	return shim.Error("Invalid invoke function name. Expecting \"getBalance\", \"getAccount\", \"transfer\", \"counter\" , \"sender\" , \"fee\".")
 }
 
 // getBalance
@@ -172,6 +177,21 @@ func (t *tokenChaincode) getCounter(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("account not exists for " + A)
 	}
 	return shim.Success([]byte(strconv.FormatUint(account.Counter, 10)))
+}
+
+func (t *tokenChaincode) calcFee(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	fee, err := stub.CalcFee(string(args[0]))
+	if err != nil {
+		return shim.Error("Query fee failed.")
+	}
+	res := map[string]interface{}{
+		"fee": fee,
+	}
+	resJson, err := json.Marshal(res)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(resJson)
 }
 
 func main() {

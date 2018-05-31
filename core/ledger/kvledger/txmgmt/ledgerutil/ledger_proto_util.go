@@ -46,6 +46,7 @@ func (ledgerSet *LedgerSet) FromProtoBytes(protoBytes []byte) error {
 	} else {
 		ledgerSet.TranSet = nil
 	}
+
 	ledgerSet.TxRwSet = &rwsetutil.TxRwSet{}
 	err = ledgerSet.TxRwSet.FromProtoBytes(protoLedgerSet.Txrwset)
 	if err != nil {

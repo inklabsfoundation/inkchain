@@ -144,9 +144,9 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 
-		contentLength := len(respPayload.Results)
+		contentLength := 0
 		if cis.SenderSpec != nil {
-			contentLength += len(cis.SenderSpec.String())
+			contentLength += len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {

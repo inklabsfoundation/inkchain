@@ -48,6 +48,7 @@ message ChaincodeMessage {
         TRANSFER = 820;
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
+        GET_FEE =825;
     }
 
     Type type = 1;

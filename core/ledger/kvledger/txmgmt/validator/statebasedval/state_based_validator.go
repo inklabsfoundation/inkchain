@@ -177,6 +177,7 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 				return nil, nil, senderCounter, txResult, err
 			}
 		}
+
 	}
 	return ledgerSet.TxRwSet, ledgerSet.TranSet, senderCounter, txResult, err
 }

@@ -203,8 +203,6 @@ type ChaincodeStubInterface interface {
 	// a specific type of token (e.g., INK) from one account to another one.
 	Transfer(to string, balanceType string, amount *big.Int) error
 
-	CrossTransfer(to string, balanceType string, amount *big.Int, pubTxId string, fromPlatform string) error
-
 	MultiTransfer(trans *kvtranset.KVTranSet) error
 
 	// GetAccount returns the account information of the given address.
@@ -218,12 +216,12 @@ type ChaincodeStubInterface interface {
 	// revealed from his/her signature.
 	GetSender() (string, error)
 
-	//GetFee returns the fee of operate, And only can be called
+	//CalcFeeByInvoke returns the fee of operate, And only can be called
 	//by invoke
-	GetFee() (*big.Int, error)
+	CalcFeeByInvoke() (*big.Int, error)
 
-	//GetFee returns the fee of passed content
-	QueryFee (content string) (*big.Int, error)
+	//CalcFee returns the fee of passed content
+	CalcFee (content string) (*big.Int, error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

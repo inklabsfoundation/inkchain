@@ -5,13 +5,11 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/transutil"
 	"github.com/inklabsfoundation/inkchain/protos/ledger"
-	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ctransutil"
 )
 
 type LedgerSet struct {
 	TranSet      *transutil.TranSet
 	TxRwSet      *rwsetutil.TxRwSet
-	CrossTranSet *ctransutil.CrossTranSet
 }
 
 func (ledgerSet *LedgerSet) ToProtoBytes() ([]byte, error) {
@@ -23,10 +21,6 @@ func (ledgerSet *LedgerSet) ToProtoBytes() ([]byte, error) {
 	}
 
 	protoLedgerSet.Txrwset, err = ledgerSet.TxRwSet.ToProtoBytes()
-	if err != nil {
-		return nil, err
-	}
-	protoLedgerSet.Crosstranset, err = ledgerSet.CrossTranSet.ToProtoBytes()
 	if err != nil {
 		return nil, err
 	}
@@ -51,19 +45,6 @@ func (ledgerSet *LedgerSet) FromProtoBytes(protoBytes []byte) error {
 		}
 	} else {
 		ledgerSet.TranSet = nil
-	}
-
-	if protoLedgerSet.Crosstranset != nil {
-		ledgerSet.CrossTranSet = &ctransutil.CrossTranSet{}
-		err = ledgerSet.CrossTranSet.FromProtoBytes(protoLedgerSet.Crosstranset)
-		if err != nil {
-			return err
-		}
-		if ledgerSet.CrossTranSet.TokenType == "" {
-			ledgerSet.CrossTranSet = nil
-		}
-	} else {
-		ledgerSet.CrossTranSet = nil
 	}
 
 	ledgerSet.TxRwSet = &rwsetutil.TxRwSet{}

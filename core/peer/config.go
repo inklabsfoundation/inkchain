@@ -99,28 +99,6 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
-	wallet.FullNodeIps = map[string]string{}
-	wallet.ContractList = map[string]map[string]string{}
-	wallet.PublicPlatformPrivateKey = map[string]string{}
-	wallet.FullNodeIps["eth"] = viper.GetString("peer.eth.address")
-	wallet.FullNodeIps["qtum"] = viper.GetString("peer.qtum.address")
-	wallet.ContractList["eth"] = viper.GetStringMapString("peer.eth.contracts")
-	wallet.ContractList["qtum"] = viper.GetStringMapString("peer.qtum.contracts")
-	ethPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.eth.privateKey.file"))
-	if err != nil {
-		return fmt.Errorf("Error loading eth privateKe (%s)", err)
-	}
-	qtumPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.qtum.privateKey.file"))
-	if err != nil {
-		return fmt.Errorf("Error loading qtum privateKe (%s)", err)
-	}
-	wallet.PublicPlatformPrivateKey["eth"] = string(ethPrivateKey)
-	wallet.PublicPlatformPrivateKey["qtum"] = string(qtumPrivateKey)
-	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
-	wallet.TokenAddress = viper.GetString("peer.tokenAddress")
-	if viper.GetString("chainName") != "" {
-		wallet.LocalPlatform = viper.GetString("chainName")
-	}
 
 	configurationCached = true
 

@@ -18,12 +18,12 @@ import (
 var logger = flogging.MustGetLogger("xscc")
 
 const (
-	Unlock         = "unlock"         //public chain turn into
-	Lock           = "lock"           //union chain turn out
-	RegistPlatform = "registPlatform" //register a platform
-	RemovePlatform = "removePlatform" //remove a platform
-	QueryTxInfo    = "queryTxInfo"    //query transaction info
-	QuerySignature = "querySignature" //query transaction signature
+	Unlock           = "unlock"           //public chain turn into
+	Lock             = "lock"             //union chain turn out
+	RegisterPlatform = "registerPlatform" //register a platform
+	RemovePlatform   = "removePlatform"   //remove a platform
+	QueryTxInfo      = "queryTxInfo"      //query transaction info
+	QuerySignature   = "querySignature"   //query transaction signature
 )
 
 //turn out state struct
@@ -46,7 +46,7 @@ type turnInMessage struct {
 	DateTime     string   `json:"dateTime"`
 }
 
-type CrossTrainSysCC struct {
+type CrossChainSysCC struct {
 	owner        string            //chain code owner
 	platName     string            //platform name
 	tokenAddress map[string]string //coin account
@@ -56,7 +56,7 @@ type CrossTrainSysCC struct {
 }
 
 //init chain code
-func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
+func (c *CrossChainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("xscc init")
 	// Init policy checker for access control
 	c.policyChecker = policyprovider.GetPolicyChecker()
@@ -69,12 +69,12 @@ func (c *CrossTrainSysCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success([]byte("init success"))
 }
 
-func (c *CrossTrainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+func (c *CrossChainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	funcName, args := stub.GetFunctionAndParameters()
 	logger.Debugf("xscc starts: %d args ", len(args))
 	switch funcName {
-	case RegistPlatform:
-		return c.registPlatform(stub, args)
+	case RegisterPlatform:
+		return c.registerPlatform(stub, args)
 	case RemovePlatform:
 		return c.removePlatform(stub, args)
 	case Unlock:
@@ -89,9 +89,9 @@ func (c *CrossTrainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success([]byte("Invalid invoke function name. Expecting \"RegistPlatform\" or \"RemovePlatform\" or \"Unlock\" or \"Lock\" or \"QueryTxInfo\" or \"QueryTxInfo\"."))
 }
 
-//register a platform
-//args platform  string supportCross bool
-func (c *CrossTrainSysCC) registPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+//registered a platform
+//args platform string  supportCross bool
+func (c *CrossChainSysCC) registerPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params Error")
 	}
@@ -123,7 +123,7 @@ func (c *CrossTrainSysCC) registPlatform(stub shim.ChaincodeStubInterface, args 
 
 //remove one platform
 //args platform string
-func (c *CrossTrainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params Error")
 	}
@@ -154,7 +154,7 @@ func (c *CrossTrainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args 
 }
 
 //public chain turn in
-func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 5 {
 		return shim.Error("Params Error")
 	}
@@ -176,7 +176,7 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
-		return shim.Error("The platform named " + fromPlatform + " is not registered")
+		return shim.Error("The platform named " + fromPlatform + " not registered")
 	}
 
 	//build state key
@@ -220,7 +220,7 @@ func (c *CrossTrainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 }
 
 //union chain turn out
-func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//return shim.Error("Unlock function had been moved to another chaincode")
 	if len(args) < 4 {
 		return shim.Error("Params Error")
@@ -254,7 +254,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
-		return shim.Error("The platform named " + platformLower + " is not registered")
+		return shim.Error("The platform named " + platformLower + " not registered")
 	}
 
 	//set txId to be key
@@ -287,7 +287,7 @@ func (c *CrossTrainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 }
 
 //query transaction info
-func (c *CrossTrainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params error")
 	}
@@ -305,7 +305,7 @@ func (c *CrossTrainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []s
 }
 
 //query transaction signature
-func (c *CrossTrainSysCC) querySignature(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) querySignature(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params error")
 	}
@@ -329,7 +329,7 @@ func (c *CrossTrainSysCC) querySignature(stub shim.ChaincodeStubInterface, args 
 	}
 	//sign
 	str := fmt.Sprintf("%s:0x%s:%s:0x%s:%d:%s:%s:", wallet.LocalPlatform, state.FromAccount[1:], state.ToPlatform, state.ToAccount, state.Value, state.BalanceType, key)
-	sign, err := c.signJson([]byte(str), strings.ToLower(state.ToPlatform))
+	sign, err := c.signJson(state.BalanceType, str, strings.ToLower(state.ToPlatform))
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -342,21 +342,21 @@ func (c *CrossTrainSysCC) querySignature(stub shim.ChaincodeStubInterface, args 
 }
 
 //build turn in state and change to json
-func (c *CrossTrainSysCC) buildTurnInMessage(txId string, fromAccount string, fromPlatform string, value *big.Int, toAccount string, pubTxId string, now string) []byte {
+func (c *CrossChainSysCC) buildTurnInMessage(txId string, fromAccount string, fromPlatform string, value *big.Int, toAccount string, pubTxId string, now string) []byte {
 	state := turnInMessage{txId, value, fromAccount, fromPlatform, toAccount, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }
 
 //build turn out state and change to json
-func (c *CrossTrainSysCC) buildTurnOutMessage(fromAccount string, balanceType string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
+func (c *CrossChainSysCC) buildTurnOutMessage(fromAccount string, balanceType string, toPlatform string, toAccount string, value *big.Int, now string) []byte {
 	state := turnOutMessage{fromAccount, balanceType, value, toPlatform, toAccount, now}
 	stateJson, _ := json.Marshal(state)
 	return stateJson
 }
 
 //sign
-func (c *CrossTrainSysCC) signJson(balanceType string, str string, platform string) (string, error) {
+func (c *CrossChainSysCC) signJson(balanceType string, str string, platform string) (string, error) {
 	publicNode, ok := wallet.PublicInfos[platform]
 	if !ok {
 		return "", errors.New("platform not support")

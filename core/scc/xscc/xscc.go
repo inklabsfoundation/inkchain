@@ -329,7 +329,7 @@ func (c *CrossTrainSysCC) querySignature(stub shim.ChaincodeStubInterface, args 
 	}
 	//sign
 	str := fmt.Sprintf("%s:0x%s:%s:0x%s:%d:%s:%s:", wallet.LocalPlatform, state.FromAccount[1:], state.ToPlatform, state.ToAccount, state.Value, state.BalanceType, key)
-	sign, err := c.signJson([]byte(str), strings.ToLower(state.ToPlatform))
+	sign, err := c.signJson(state.BalanceType, str, strings.ToLower(state.ToPlatform))
 	if err != nil {
 		return shim.Error(err.Error())
 	}

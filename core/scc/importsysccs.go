@@ -92,7 +92,7 @@ var systemChaincodes = []*SystemChaincode{
 		Name:              "xscc",
 		Path:              "github.com/inklabsfoundation/inkchain/core/scc/xscc",
 		InitArgs:          [][]byte{[]byte("")},
-		Chaincode:         &xscc.CrossTrainSysCC{},
+		Chaincode:         &xscc.CrossChainSysCC{},
 		InvokableExternal: true, // xscc is invoked for token management
 	},
 }

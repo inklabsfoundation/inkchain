@@ -20,7 +20,7 @@ var logger = flogging.MustGetLogger("xscc")
 const (
 	Unlock         = "unlock"         //public chain turn into
 	Lock           = "lock"           //union chain turn out
-	RegisteredPlatform = "registeredPlatform" //registered a platform
+	RegisterPlatform = "registerPlatform" //register a platform
 	RemovePlatform = "removePlatform" //remove a platform
 	QueryTxInfo    = "queryTxInfo"    //query transaction info
 	QuerySignature = "querySignature" //query transaction signature
@@ -73,8 +73,8 @@ func (c *CrossChainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	funcName, args := stub.GetFunctionAndParameters()
 	logger.Debugf("xscc starts: %d args ", len(args))
 	switch funcName {
-	case RegisteredPlatform:
-		return c.registeredPlatform(stub, args)
+	case RegisterPlatform:
+		return c.registerPlatform(stub, args)
 	case RemovePlatform:
 		return c.removePlatform(stub, args)
 	case Unlock:
@@ -91,7 +91,7 @@ func (c *CrossChainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 //registered a platform
 //args platform string  supportCross bool
-func (c *CrossChainSysCC) registeredPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (c *CrossChainSysCC) registerPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 1 {
 		return shim.Error("Params Error")
 	}
@@ -176,7 +176,7 @@ func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
-		return shim.Error("The platform named " + fromPlatform + " is not registered")
+		return shim.Error("The platform named " + fromPlatform + " not registered")
 	}
 
 	//build state key
@@ -254,7 +254,7 @@ func (c *CrossChainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 	if err != nil {
 		return shim.Error("Failed to get platform: " + err.Error())
 	} else if platState == nil {
-		return shim.Error("The platform named " + platformLower + " is not registered")
+		return shim.Error("The platform named " + platformLower + " not registered")
 	}
 
 	//set txId to be key

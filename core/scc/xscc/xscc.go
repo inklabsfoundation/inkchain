@@ -18,12 +18,12 @@ import (
 var logger = flogging.MustGetLogger("xscc")
 
 const (
-	Unlock         = "unlock"         //public chain turn into
-	Lock           = "lock"           //union chain turn out
+	Unlock           = "unlock"           //public chain turn into
+	Lock             = "lock"             //union chain turn out
 	RegisterPlatform = "registerPlatform" //register a platform
-	RemovePlatform = "removePlatform" //remove a platform
-	QueryTxInfo    = "queryTxInfo"    //query transaction info
-	QuerySignature = "querySignature" //query transaction signature
+	RemovePlatform   = "removePlatform"   //remove a platform
+	QueryTxInfo      = "queryTxInfo"      //query transaction info
+	QuerySignature   = "querySignature"   //query transaction signature
 )
 
 //turn out state struct

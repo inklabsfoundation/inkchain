@@ -63,7 +63,7 @@ registerCompany(){
     peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["registerCompany","test","china","999999"]}' -i "1000000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
-    verifyResult $res "Registr a new guide has Failed."
+    verifyResult $res "Register a new guide has Failed."
     echo_g "===================== A new company has been successfully registered======================= "
     echo
 }
@@ -73,7 +73,7 @@ addGuide(){
     peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["addGuide","i4230a12f5b0693dd88bb35c79d7e56a68614b199",""]}' -i "1000000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
-    verifyResult $res "Registr a new guide has Failed."
+    verifyResult $res "Register a new guide has Failed."
     echo_g "===================== A new company has been successfully registered======================= "
     echo
 }
@@ -103,7 +103,7 @@ setGuideToBlackList(){
     peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["setGuideToBlackList","i4230a12f5b0693dd88bb35c79d7e56a68614b199","nothing"]}' -i "1000000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
     res=$?
     cat log.txt
-    verifyResult $res "Registr a new guide has Failed."
+    verifyResult $res "Register a new guide has Failed."
     echo_g "===================== A new company has been successfully registered======================= "
     echo
 }
@@ -125,6 +125,36 @@ queryBlackList(){
     cat log.txt
     verifyResult $res "Query black list has Failed."
     echo_g "===================== Query black list has been successfully ======================= "
+    echo
+}
+
+removeFromCompany(){
+    sleep 3
+    peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["removeFromCompany","i4230a12f5b0693dd88bb35c79d7e56a68614b199","just remove"]}' -i "1000000000" -z bc4bcb06a0793961aec4ee377796e050561b6a84852deccea5ad4583bb31eebe >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Remove a guide from company has Failed."
+    echo_g "===================== Remove a guide from company has been successfully registered======================= "
+    echo
+}
+
+queryGuideWorkList(){
+    sleep 3
+    peer chaincode query -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["queryGuideWorkList","i4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Query guide work list has Failed."
+    echo_g "===================== Query guide work list has been successfully ======================= "
+    echo
+}
+
+queryGuideLeaveLogs(){
+    sleep 3
+    peer chaincode query -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C ${CHANNEL_NAME} -n ${CC_ID} -c '{"Args":["queryLeaveLogs","i4230a12f5b0693dd88bb35c79d7e56a68614b199"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "Query guide leave logs has Failed."
+    echo_g "===================== Query guide leave logs has been successfully ======================= "
     echo
 }
 
@@ -157,6 +187,18 @@ queryOperateLogs
 
 echo_b "=====================14.Query black list info========================="
 queryBlackList
+
+echo_b "=====================15.Remove guide from company========================="
+removeFromCompany
+
+echo_b "=====================16.Query a guide info============================="
+queryGuideInfo
+
+echo_b "=====================17.Query guide work list============================="
+queryGuideWorkList
+
+echo_b "=====================18.Query guide leave logs============================="
+queryGuideLeaveLogs
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

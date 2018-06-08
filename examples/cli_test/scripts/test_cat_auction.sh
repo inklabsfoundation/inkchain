@@ -91,7 +91,7 @@ endAuction(){
 payAuction(){
     echo_b "Attempting to payAuction"
     sleep 3
-    peer chaincode invoke -C mychannel -n cat --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["payAuction","8415","1","310",""]}' -i "10" -z 344c267e5acb2ac9107465fc85eba24cbb17509e918c3cc3f5098dddf42167e5 >&log.txt
+    peer chaincode invoke -C mychannel -n cat --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c '{"Args":["payAuction","8415","1","310"]}' -i "10" -z 344c267e5acb2ac9107465fc85eba24cbb17509e918c3cc3f5098dddf42167e5 >&log.txt
     res=$?
     cat log.txt
     verifyResult $res "cat invoke has Failed."

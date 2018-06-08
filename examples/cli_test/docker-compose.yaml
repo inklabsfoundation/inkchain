@@ -95,6 +95,7 @@ services:
         - ../xcDemo:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/xcDemo
         - ../cat:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/cat
         - ../inkwork:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/inkwork
+        - ../guide_credit:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/guide_credit
         - ./channel/crypto-config:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/scripts/
         - ./channel/mychannel.tx:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/channel-artifacts/mychannel.tx

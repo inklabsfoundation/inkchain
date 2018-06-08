@@ -171,8 +171,8 @@ func (c *CatChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		}
 		return c.endAuction(stub, args)
 	case PayAuction:
-		if len(args) != 4 {
-			return shim.Error("PayAuction, Incorrect number of arguments. Expecting 4")
+		if len(args) != 3 {
+			return shim.Error("PayAuction, Incorrect number of arguments. Expecting 3")
 		}
 		return c.payAuction(stub, args)
 	case QueryAuction:
@@ -1038,7 +1038,6 @@ func (c *CatChainCode) payAuction(stub shim.ChaincodeStubInterface, args []strin
 	// 1. check cat exist or not
 	gene := args[0]
 	bidPrice, err := strconv.ParseInt(args[2], 10, 32)
-	orderTime, err := strconv.ParseInt(args[3], 10, 64)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -1061,28 +1060,13 @@ func (c *CatChainCode) payAuction(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("pay auction failed,already is cat owner")
 	}
 
-	// 3.check order exist or not
-	bOk := c.checkBidOrder(stub, args)
-	if bOk == false {
-		return shim.Error("order is not exist!")
-	}
-
-	// 4.check order Expiration Date
-	timStamp, err := stub.GetTxTimestamp()
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	if (timStamp.GetSeconds()-orderTime) >= BidOrderExpiryDate {
-		return shim.Error("order is expired!")
-	}
-
-	// 5. check account balance is enough or not
+	// 4. check account balance is enough or not
 	bEnough := c.checkBalance(stub, bidder, int(bidPrice))
 	if bEnough == false {
 		return shim.Error("bid failed, balance not enough")
 	}
 
-	// 6. pay cat owner cost
+	// 5. pay cat owner cost
 	amount := big.NewInt(0)
 	_, good := amount.SetString(args[2], 10)
 	if !good {
@@ -1093,7 +1077,7 @@ func (c *CatChainCode) payAuction(stub shim.ChaincodeStubInterface, args []strin
 		return shim.Error("transfer error" + err.Error())
 	}
 
-	// 7. edit cat date and put
+	// 6. edit cat date and put
 	myCat.Owner = bidder
 	myCat.SaleState = 0
 	myCat.MateState = 0

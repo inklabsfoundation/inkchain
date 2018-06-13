@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/AlpherJang/inkchain/core/chaincode/shim"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"strings"
 	"strconv"
@@ -85,14 +85,14 @@ type GraduationInfo struct {
 }
 
 const (
-	RegisterSchool       = "registerSchool"
-	RegisterStudent      = "registerStudent"
-	Enrolment            = "enrolment"
-	Graduate             = "graduate"
-	QuerySchoolInfo      = "querySchoolInfo"
-	QueryStudentInfo     = "queryStudentInfo"
-	QueryStudentStudyLog = "queryStudentStudyLog"
-	QueryStudentGraduationLog="queryStudentGraduationLog"
+	RegisterSchool            = "registerSchool"
+	RegisterStudent           = "registerStudent"
+	Enrolment                 = "enrolment"
+	Graduate                  = "graduate"
+	QuerySchoolInfo           = "querySchoolInfo"
+	QueryStudentInfo          = "queryStudentInfo"
+	QueryStudentStudyLog      = "queryStudentStudyLog"
+	QueryStudentGraduationLog = "queryStudentGraduationLog"
 )
 
 type StudentChaincode struct {
@@ -111,7 +111,7 @@ func (s *StudentChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		}
 		return s.registerSchool(stub, args)
 	case RegisterStudent:
-		if len(args) < 3 {
+		if len(args) < 4 {
 			return shim.Error("RegisterStudent, Incorrect number of arguments. Expecting 3")
 		}
 		return s.registerStudent(stub, args)
@@ -141,10 +141,10 @@ func (s *StudentChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		}
 		return s.queryStudentStudyLog(stub, args)
 	case QueryStudentGraduationLog:
-		if len(args)<1{
+		if len(args) < 1 {
 			return shim.Error("QueryStudentGraduationLog, Incorrect number of arguments. At least 1")
 		}
-		return s.queryStudentGraduationLog(stub,args)
+		return s.queryStudentGraduationLog(stub, args)
 	}
 	return shim.Error("Function not found")
 }
@@ -240,17 +240,17 @@ func (s *StudentChaincode) registerStudent(stub shim.ChaincodeStubInterface, arg
 	}
 	age, err := strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("2st arg parse to int failed : " + err.Error())
+		return shim.Error("3st arg parse to int failed : " + err.Error())
 	}
 	if age <= 0 {
-		return shim.Error("2st arg must be more than 0")
+		return shim.Error("3st arg must be more than 0")
 	}
 	sex, err := strconv.Atoi(args[3])
 	if err != nil {
-		return shim.Error("3st arg parse to int failed : " + err.Error())
+		return shim.Error("4st arg parse to int failed : " + err.Error())
 	}
 	if sex != SEX_FAMEL && sex != SEX_MALE {
-		return shim.Error("3st arg must be 0 or 1")
+		return shim.Error("4st arg must be 0 or 1")
 	}
 	//build student struct
 	student := &Student{
@@ -497,7 +497,7 @@ func (s *StudentChaincode) queryStudentInfo(stub shim.ChaincodeStubInterface, ar
 	studentJson, err := stub.GetState(studentKey)
 	if err != nil {
 		return shim.Error("Failed to get student info : " + err.Error())
-	} else if studentJson != nil {
+	} else if studentJson == nil {
 		return shim.Error("Student not exists")
 	}
 	//unmarshal student info
@@ -520,7 +520,7 @@ func (s *StudentChaincode) queryStudentInfo(stub shim.ChaincodeStubInterface, ar
 		result["graduationLog"] = graduationInfoLog
 	}
 	//marshal result
-	resultJson, err := json.Marshal(graduationInfoLog)
+	resultJson, err := json.Marshal(result)
 	if err != nil {
 		return shim.Error("Failed to marshal result : " + err.Error())
 	}
@@ -536,7 +536,7 @@ func (s *StudentChaincode) queryStudentStudyLog(stub shim.ChaincodeStubInterface
 	studentJson, err := stub.GetState(STUDENT_PREFIX + studentAddr)
 	if err != nil {
 		return shim.Error("Failed to get student info : " + err.Error())
-	} else if studentJson != nil {
+	} else if studentJson == nil {
 		return shim.Error("Student not exists")
 	}
 	student := &Student{}
@@ -545,9 +545,14 @@ func (s *StudentChaincode) queryStudentStudyLog(stub shim.ChaincodeStubInterface
 		return shim.Error("Unmarshal student info failed : " + err.Error())
 	}
 	keyArg := []string{student.StudentNumber}
-	schoolNumber := strings.TrimSpace(strings.ToLower(args[1]))
-	if len(schoolNumber) > 0 {
-		keyArg = append(keyArg, schoolNumber)
+
+	if len(args)>1 {
+		schoolNumber := strings.TrimSpace(strings.ToLower(args[1]))
+		if len(schoolNumber)>0{
+			keyArg = append(keyArg, schoolNumber)
+		}else{
+			return shim.Error("1st arg must be non-empty string")
+		}
 	}
 	result, err := s.getStudentStudyLog(stub, keyArg)
 	if err != nil {
@@ -569,7 +574,7 @@ func (s *StudentChaincode) queryStudentGraduationLog(stub shim.ChaincodeStubInte
 	studentJson, err := stub.GetState(STUDENT_PREFIX + studentAddr)
 	if err != nil {
 		return shim.Error("Failed to get student info : " + err.Error())
-	} else if studentJson != nil {
+	} else if studentJson == nil {
 		return shim.Error("Student not exists")
 	}
 	student := &Student{}
@@ -578,9 +583,13 @@ func (s *StudentChaincode) queryStudentGraduationLog(stub shim.ChaincodeStubInte
 		return shim.Error("Unmarshal student info failed : " + err.Error())
 	}
 	keyArg := []string{student.StudentNumber}
-	schoolNumber := strings.TrimSpace(strings.ToLower(args[1]))
-	if len(schoolNumber) > 0 {
-		keyArg = append(keyArg, schoolNumber)
+	if len(args)>1 {
+		schoolNumber := strings.TrimSpace(strings.ToLower(args[1]))
+		if len(schoolNumber)>0{
+			keyArg = append(keyArg, schoolNumber)
+		}else{
+			return shim.Error("1st arg must be non-empty string")
+		}
 	}
 	result, err := s.getStudentGraduationLog(stub, keyArg)
 	if err != nil {
@@ -659,7 +668,7 @@ func (s *StudentChaincode) saveStudyLog(stub shim.ChaincodeStubInterface, studen
 		return err
 	}
 	//create composite key
-	compositeKey, err := stub.CreateCompositeKey(STUDY_LOG_KEY, []string{student.Number, school.Number, enrolTime})
+	compositeKey, err := stub.CreateCompositeKey(STUDY_LOG_KEY, []string{student.StudentNumber, school.Number, enrolTime})
 	if err != nil {
 		return err
 	}
@@ -690,7 +699,7 @@ func (s *StudentChaincode) saveGraduateLog(stub shim.ChaincodeStubInterface, sch
 		return err
 	}
 	//create composite key
-	compositeKey, err := stub.CreateCompositeKey(GRADUATION_LOG_KEY, []string{student.Number, school.Number, student.GraduationTime})
+	compositeKey, err := stub.CreateCompositeKey(GRADUATION_LOG_KEY, []string{student.StudentNumber, school.Number, student.GraduationTime})
 	if err != nil {
 		return err
 	}

@@ -86,7 +86,7 @@ func (c *CrossChainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	case QuerySignature:
 		return c.querySignature(stub, args)
 	}
-	return shim.Success([]byte("Invalid invoke function name. Expecting \"RegistPlatform\" or \"RemovePlatform\" or \"Unlock\" or \"Lock\" or \"QueryTxInfo\" or \"QueryTxInfo\"."))
+	return shim.Error("Invalid invoke function name. Expecting \"RegistPlatform\" or \"RemovePlatform\" or \"Unlock\" or \"Lock\" or \"QueryTxInfo\" or \"QueryTxInfo\".")
 }
 
 //registered a platform

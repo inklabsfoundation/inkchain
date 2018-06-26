@@ -263,6 +263,11 @@ peer:
         listenAddress: 0.0.0.0:6060
 
     # Setting for restful api provided from full node
+    supportToken:
+        - INK
+    supportPlatform:
+        - qtum
+        - eth
     qtum:
         address: 127.0.0.1
         privateKey:

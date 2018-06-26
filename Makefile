@@ -73,8 +73,8 @@ PROJECT_FILES = $(shell git ls-files  | grep -v ^test | grep -v ^unit-test | \
 	grep -v ^.git | grep -v ^examples | grep -v ^devenv | grep -v .png$ | \
 	grep -v ^LICENSE )
 RELEASE_TEMPLATES = $(shell git ls-files | grep "release/templates")
-IMAGES = peer orderer ccenv javaenv buildenv zookeeper kafka couchdb tools
-#IMAGES = peer orderer ccenv javaenv buildenv tools
+#IMAGES = peer orderer ccenv javaenv buildenv zookeeper kafka couchdb tools
+IMAGES = peer orderer ccenv javaenv buildenv tools
 RELEASE_PLATFORMS = windows-amd64 darwin-amd64 linux-amd64 linux-ppc64le linux-s390x
 RELEASE_PKGS = configtxgen cryptogen configtxlator peer orderer
 

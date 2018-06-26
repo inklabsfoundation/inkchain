@@ -70,10 +70,20 @@ type qtumBlockInfo struct {
 	Version int    `json:"version"`
 }
 
+const (
+	CONFIRM_BLOCK_NUM = 6
+	ETH_FIELD_LENGTH  = 64 //log field's length in eth
+	QTUM_FIELD_LENGTH = 64 //log field's length in eth
+	ETH_PLACEHOLDER = "0"//placeholder in eth log
+	QTUM_PLACTHOLDER = "0"//placeholder in qtum log
+	ETH_HEADER_STR = "0x"//binary sign in eth api
+	QTUM_API_URL_PREFIX = "/qtum-insight-api"
+)
+
 //validate pubTxId from eth
 func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
-	publicNode,ok:= wallet.PublicInfos["eth"]
-	if !ok{
+	publicNode, ok := wallet.PublicInfos["eth"]
+	if !ok {
 		err = errors.New("platform not support")
 		return
 	}
@@ -96,7 +106,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 	if transInfo.BlockNumber == "" {
 		err = errors.New("transaction not confirmed")
 	}
-	valueData := strings.TrimLeft(transInfo.Logs[1].Data[130:194], "0")
+	valueData := strings.TrimLeft(transInfo.Logs[1].Data[2+2*ETH_FIELD_LENGTH:2+3*ETH_FIELD_LENGTH], ETH_PLACEHOLDER)
 	value, err := strconv.ParseInt(valueData, 16, 64)
 	if err != nil {
 		return
@@ -118,7 +128,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		return
 	}
 
-	platformData := strings.TrimRight(transInfo.Logs[1].Data[:66], "0")
+	platformData := strings.TrimRight(transInfo.Logs[1].Data[:ETH_FIELD_LENGTH+2], ETH_PLACEHOLDER)
 	if len(platformData)%2 != 0 {
 		platformData = platformData + "0"
 	}
@@ -131,12 +141,12 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		err = errors.New("transaction platform error")
 		return
 	}
-	toUserData := transInfo.Logs[1].Data[66:130]
-	if !strings.Contains(toUserData, toUser[1:]) {
+	toUserData := transInfo.Logs[1].Data[2+ETH_FIELD_LENGTH : 2+2*ETH_FIELD_LENGTH]
+	if !strings.Contains(toUserData, toUser[len(wallet.ADDRESS_PREFIX):]) {
 		err = errors.New("transaction turn out account error")
 		return
 	}
-	coinNameAsc := strings.TrimRight(transInfo.Logs[1].Data[194:], "0")
+	coinNameAsc := strings.TrimRight(transInfo.Logs[1].Data[2+3*ETH_FIELD_LENGTH:], ETH_PLACEHOLDER)
 	if len(coinNameAsc)%2 != 0 {
 		coinNameAsc = coinNameAsc + "0"
 	}
@@ -154,10 +164,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		return
 	}
 
-	blockNum = 6 + blockNum
-	if err != nil {
-		return
-	}
+	blockNum = CONFIRM_BLOCK_NUM + blockNum
 	// get block info to validate transaction confirmed
 	_, err = getEthBlockInfo(url, blockNum)
 	if err != nil {
@@ -170,8 +177,8 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 
 //validate pubTxId from qtum
 func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
-	publicNode,ok:= wallet.PublicInfos["qtum"]
-	if !ok{
+	publicNode, ok := wallet.PublicInfos["qtum"]
+	if !ok {
 		err = errors.New("platform not support")
 		return
 	}
@@ -191,7 +198,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction not belong to our contract")
 		return
 	}
-	valueData := strings.TrimLeft(transInfo.Log[1].Data[128:192], "0")
+	valueData := strings.TrimLeft(transInfo.Log[1].Data[2*QTUM_FIELD_LENGTH:3*QTUM_FIELD_LENGTH], QTUM_PLACTHOLDER)
 	value, err := strconv.ParseInt(valueData, 16, 64)
 	if err != nil {
 		return
@@ -201,7 +208,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction amount error")
 		return
 	}
-	platformData := strings.TrimRight(transInfo.Log[1].Data[:64], "0")
+	platformData := strings.TrimRight(transInfo.Log[1].Data[:QTUM_FIELD_LENGTH], QTUM_PLACTHOLDER)
 	if len(platformData)%2 != 0 {
 		platformData = platformData + "0"
 	}
@@ -213,8 +220,8 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction platform error")
 		return
 	}
-	toUserData := transInfo.Log[1].Data[64:128]
-	if !strings.Contains(toUserData, toUser[1:]) {
+	toUserData := transInfo.Log[1].Data[QTUM_FIELD_LENGTH : 2*QTUM_FIELD_LENGTH]
+	if !strings.Contains(toUserData, toUser[len(wallet.ADDRESS_PREFIX):]) {
 		err = errors.New("transaction turn out account error")
 		return
 	}
@@ -229,7 +236,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction data verified failed")
 		return
 	}
-	coinNameAsc := strings.TrimRight(transInfo.Log[1].Data[192:], "0")
+	coinNameAsc := strings.TrimRight(transInfo.Log[1].Data[3*QTUM_FIELD_LENGTH:], QTUM_PLACTHOLDER)
 	if len(coinNameAsc)%2 != 0 {
 		coinNameAsc = coinNameAsc + "0"
 	}
@@ -247,7 +254,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		return
 	}
 	//get block hash by index
-	confirmBlock, err := getQtumBlockHashByHeight(url, blockInfo.Height+6)
+	confirmBlock, err := getQtumBlockHashByHeight(url, blockInfo.Height+CONFIRM_BLOCK_NUM)
 	if err != nil {
 		return
 	}
@@ -281,7 +288,7 @@ func getEthTransInfo(url string, pubTxId string) (*ethTranRecInfo, error) {
 
 //get block detail from eth
 func getEthBlockInfo(url string, number int64) (*ethBlockInfo, error) {
-	numHex := fmt.Sprintf("0x%x", number)
+	numHex := fmt.Sprintf(ETH_HEADER_STR+"%x", number)
 	reqParam := map[string]interface{}{"id": 67, "method": "eth_getBlockByNumber", "params": []interface{}{numHex, true}}
 	res, err := quest("POST", url, reqParam)
 	if err != nil {
@@ -301,7 +308,7 @@ func getEthBlockInfo(url string, number int64) (*ethBlockInfo, error) {
 
 //get transaction from qtum
 func getQtumTransInfo(url string, pubTxId string) (*qtumTransInfo, error) {
-	url = url + "/qtum-insight-api/txs/" + pubTxId + "/receipt"
+	url = url + QTUM_API_URL_PREFIX+"/txs/" + pubTxId + "/receipt"
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -323,7 +330,7 @@ func getQtumTransInfo(url string, pubTxId string) (*qtumTransInfo, error) {
 
 //get block detail from qtum
 func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
-	url = url + "/qtum-insight-api/block/" + blockHash
+	url = url + QTUM_API_URL_PREFIX+"/block/" + blockHash
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -338,7 +345,7 @@ func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
 
 //get block hash from qtum
 func getQtumBlockHashByHeight(url string, height int) (map[string]interface{}, error) {
-	url = fmt.Sprintf("%s/qtum-insight-api/block-index/%d", url, height)
+	url = fmt.Sprintf("%s"+QTUM_API_URL_PREFIX+"/block-index/%d", url, height)
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -396,7 +403,7 @@ func asciiToString(str string) (s string, err error) {
 		if i == len(str)-2 {
 			tmp = str[i:]
 		} else {
-			tmp = str[i:i+2]
+			tmp = str[i : i+2]
 		}
 		tmpInt, err := strconv.ParseInt(tmp, 16, 64)
 		if err != nil {

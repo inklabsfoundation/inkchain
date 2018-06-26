@@ -101,21 +101,24 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
 	wallet.PublicInfos = map[string]*wallet.PublicNodeInfo{}
-	ethPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.eth.privateKey.file"))
-	if err != nil {
-		return fmt.Errorf("Error loading eth privateKe (%s)", err)
-	} else {
-		wallet.PublicInfos["eth"] = getFullNodeConfig("eth", ethPrivateKey, "peer.eth.address", []string{"INK"})
-	}
-	qtumPrivateKey, err := ioutil.ReadFile(config.GetPath("peer.qtum.privateKey.file"))
-	if err != nil {
-		return fmt.Errorf("Error loading qtum privateKe (%s)", err)
-	} else {
-		wallet.PublicInfos["qtum"] = getFullNodeConfig("qtum", qtumPrivateKey, "peer.qtum.address", []string{"INK"})
+	supportToken := viper.GetStringSlice("peer.supportToken")
+	supportPlatform:=viper.GetStringSlice("peer.supportPlatform")
+	if len(supportPlatform)>0{
+		for _,platform:= range supportPlatform {
+			privateKey,err:=ioutil.ReadFile(config.GetPath("peer."+platform+".privateKey.file"))
+			ipKey:= "peer."+platform+".address"
+			if err== nil{
+				wallet.PublicInfos[platform] = getFullNodeConfig(platform, privateKey, ipKey, supportToken)
+			}
+		}
 	}
 	wallet.TokenAddress = map[string]string{}
 	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
-	wallet.TokenAddress = viper.GetStringMapString("peer.tokenAddress")
+	if len(supportToken) > 0 {
+		for _, item := range supportToken {
+			wallet.TokenAddress[item] = viper.GetString("peer.tokenAddress." + item)
+		}
+	}
 	if viper.GetString("chainName") != "" {
 		wallet.LocalPlatform = viper.GetString("chainName")
 	}
@@ -129,19 +132,21 @@ func CacheConfiguration() (err error) {
 }
 
 //get and build fullNodeConfig
-func getFullNodeConfig(publicChain string, privateFile []byte, ipKey string, contractsKey []string) *wallet.PublicNodeInfo {
+func getFullNodeConfig(publicChain string, privateFile []byte, ipKey string, tokenKey []string) *wallet.PublicNodeInfo {
 	info := wallet.PublicNodeInfo{
 		PrivateKey:   strings.Join(strings.Fields(string([]rune(string(privateFile)))), ""),
 		FullNodeIp:   viper.GetString(ipKey),
 		ContractList: map[string]wallet.PubContractInfo{},
 	}
-	for _, item := range contractsKey {
-		key := "peer." + publicChain + ".contracts." + item + "."
-		tmp := wallet.PubContractInfo{
-			Address: viper.GetString(key + "address"),
-			Version: viper.GetString(key + "version"),
+	if len(tokenKey) > 0 {
+		for _, item := range tokenKey {
+			key := "peer." + publicChain + ".contracts." + item + "."
+			tmp := wallet.PubContractInfo{
+				Address: viper.GetString(key + "address"),
+				Version: viper.GetString(key + "version"),
+			}
+			info.ContractList[item] = tmp
 		}
-		info.ContractList[item] = tmp
 	}
 	return &info
 }

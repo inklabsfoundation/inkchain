@@ -770,6 +770,7 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
+
 func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet, txId string) error {
 	// Check if this is a transaction
 	chaincodeLogger.Debugf("[%s]Inside cross transfer", shorttxid(txId))
@@ -817,6 +818,7 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
+
 func (handler *Handler) handleGetAccount(address string, txid string) (*wallet.Account, error) {
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage

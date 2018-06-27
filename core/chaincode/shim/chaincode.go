@@ -793,6 +793,7 @@ func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId str
 	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: ""}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
+
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {
 	if address == "" || len(address) != wallet.AddressStringLength {
 		return nil, fmt.Errorf("invalid address length")

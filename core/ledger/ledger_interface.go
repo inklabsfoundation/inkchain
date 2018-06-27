@@ -130,5 +130,6 @@ type TxSimulator interface {
 	Transfer(transet *kvtranset.KVTranSet) error
 
 	CrossTransfer(transet *kvcrosstranset.KVCrossTranSet) error
+
 	SetSender(sender string) error
 }

@@ -92,7 +92,7 @@ func (c *CrossChainSysCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 //registered a platform
 //args platform string  supportCross bool
 func (c *CrossChainSysCC) registerPlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 1 {
+	if len(args) != 1 {
 		return shim.Error("Params Error")
 	}
 
@@ -124,7 +124,7 @@ func (c *CrossChainSysCC) registerPlatform(stub shim.ChaincodeStubInterface, arg
 //remove one platform
 //args platform string
 func (c *CrossChainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 1 {
+	if len(args) != 1 {
 		return shim.Error("Params Error")
 	}
 
@@ -155,7 +155,7 @@ func (c *CrossChainSysCC) removePlatform(stub shim.ChaincodeStubInterface, args 
 
 //public chain turn in
 func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 5 {
+	if len(args) != 6 {
 		return shim.Error("Params Error")
 	}
 
@@ -222,7 +222,7 @@ func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 //union chain turn out
 func (c *CrossChainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//return shim.Error("Unlock function had been moved to another chaincode")
-	if len(args) < 4 {
+	if len(args) != 4 {
 		return shim.Error("Params Error")
 	}
 	//get operator
@@ -288,7 +288,7 @@ func (c *CrossChainSysCC) lock(stub shim.ChaincodeStubInterface, args []string) 
 
 //query transaction info
 func (c *CrossChainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 1 {
+	if len(args) != 1 {
 		return shim.Error("Params error")
 	}
 	key := strings.ToLower(args[0])
@@ -306,7 +306,7 @@ func (c *CrossChainSysCC) queryTxInfo(stub shim.ChaincodeStubInterface, args []s
 
 //query transaction signature
 func (c *CrossChainSysCC) querySignature(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 1 {
+	if len(args) != 1 {
 		return shim.Error("Params error")
 	}
 	key := strings.ToLower(args[0])

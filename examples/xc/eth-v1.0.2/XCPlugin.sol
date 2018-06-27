@@ -74,8 +74,8 @@ contract XCPlugin is XCPluginInterface {
         platform.status = true;
         platform.name = "INK";
         platform.weight = 1;
-        platform.publicKeys.push(0x71f6ffe02c1e880bbb49e29db486fb088afc1ac1);
-        platform.publicKeys.push(0x315f0d8774c31d2efa47c138ba92014a2e8f3992);
+        // platform.publicKeys.push(0x71f6ffe02c1e880bbb49e29db486fb088afc1ac1);
+        // platform.publicKeys.push(0x315f0d8774c31d2efa47c138ba92014a2e8f3992);
     }
 
     function start() onlyAdmin external {
@@ -119,19 +119,13 @@ contract XCPlugin is XCPluginInterface {
     }
 
     function deleteCaller(address caller) onlyAdmin external {
-        if (_existCaller(caller)) {
-            bool exist;
-            for (uint i = 0; i <= callers.length; i++) {
-                if (exist) {
-                    if (i == callers.length) {
-                        delete callers[i - 1];
-                        callers.length--;
-                    } else {
-                        callers[i - 1] = callers[i];
-                    }
-                } else if (callers[i] == caller) {
-                    exist = true;
+        for (uint i = 0; i < callers.length; i++) {
+            if (callers[i] == caller) {
+                if (i != callers.length - 1 ) {
+                    callers[i] = callers[callers.length - 1];
                 }
+                callers.length--;
+                return;
             }
         }
     }
@@ -160,28 +154,24 @@ contract XCPlugin is XCPluginInterface {
     }
 
     function addPublicKey(address publicKey) onlyAdmin nonzeroAddress(publicKey) external {
-        address[] storage listOfPublicKey = platform.publicKeys;
-        for (uint i; i < listOfPublicKey.length; i++) {
-            if (publicKey == listOfPublicKey[i]) {
+        address[] storage publicKeys = platform.publicKeys;
+        for (uint i; i < publicKeys.length; i++) {
+            if (publicKey == publicKeys[i]) {
                 return;
             }
         }
-        listOfPublicKey.push(publicKey);
+        publicKeys.push(publicKey);
     }
 
     function deletePublicKey(address publicKey) onlyAdmin nonzeroAddress(publicKey) external {
-        address[] storage listOfPublicKey = platform.publicKeys;
-        bool exist;
-        for (uint i = 0; i <= listOfPublicKey.length; i++) {
-            if (exist) {
-                if (i == listOfPublicKey.length) {
-                    delete listOfPublicKey[i - 1];
-                    listOfPublicKey.length--;
-                } else {
-                    listOfPublicKey[i - 1] = listOfPublicKey[i];
+        address[] storage publicKeys = platform.publicKeys;
+        for (uint i = 0; i < publicKeys.length; i++) {
+            if (publicKeys[i] == publicKey) {
+                if (i != publicKeys.length - 1 ) {
+                    publicKeys[i] = publicKeys[publicKeys.length - 1];
                 }
-            } else if (listOfPublicKey[i] == publicKey) {
-                exist = true;
+                publicKeys.length--;
+                return;
             }
         }
     }
@@ -319,9 +309,9 @@ contract XCPlugin is XCPluginInterface {
     }
 
     function _existPublicKey(address publicKey) internal view returns (bool) {
-        address[] memory listOfPublicKey = platform.publicKeys;
-        for (uint i = 0; i < listOfPublicKey.length; i++) {
-            if (listOfPublicKey[i] == publicKey) {
+        address[] memory publicKeys = platform.publicKeys;
+        for (uint i = 0; i < publicKeys.length; i++) {
+            if (publicKeys[i] == publicKey) {
                 return true;
             }
         }

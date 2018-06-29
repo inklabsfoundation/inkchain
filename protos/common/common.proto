@@ -166,3 +166,9 @@ message BlockData {
 message BlockMetadata {
     repeated bytes metadata = 1;
 }
+
+// ProcessedBlock wraps an Block and The hash of the Block
+message ProcessedBlock {
+    Block block = 1;
+    bytes hash = 2;
+}

@@ -40,33 +40,33 @@ $ make docker
 
 ```
 
-> recommendation: You can also download those images at `https://hub.docker.com/u/inkchain/`
+> recommendation: Or you can use the [script](../scripts/inkchain_images_download.sh) to download the necessary images.
 
 Execute a `docker images` command in yout terminal, If the images compiled successfully, you should
 see output similar to the following:
 
 ```bash
 REPOSITORY                             TAG                    IMAGE ID            CREATED             SIZE
-inklabsfoundation/inkchain-tools       latest                 b94ae27d0032        8 days ago          1.342 GB
-inklabsfoundation/inkchain-tools       x86_64-0.10.3          b94ae27d0032        8 days ago          1.342 GB
-inklabsfoundation/inkchain-couchdb     latest                 71e7a843daac        8 days ago          1.514 GB
-inklabsfoundation/inkchain-couchdb     x86_64-0.10.3          71e7a843daac        8 days ago          1.514 GB
-inklabsfoundation/inkchain-kafka       latest                 1448be36a1d7        9 days ago          1.309 GB
-inklabsfoundation/inkchain-kafka       x86_64-0.10.3          1448be36a1d7        9 days ago          1.309 GB
-inklabsfoundation/inkchain-zookeeper   latest                 e9e3cc6b2883        9 days ago          1.327 GB
-inklabsfoundation/inkchain-zookeeper   x86_64-0.10.3          e9e3cc6b2883        9 days ago          1.327 GB
-inklabsfoundation/inkchain-orderer     latest                 fbb3b9b060a6        9 days ago          180.1 MB
-inklabsfoundation/inkchain-orderer     x86_64-0.10.3          fbb3b9b060a6        9 days ago          180.1 MB
-inklabsfoundation/inkchain-peer        latest                 ae96a865e213        9 days ago          183.4 MB
-inklabsfoundation/inkchain-peer        x86_64-0.10.3          ae96a865e213        9 days ago          183.4 MB
-inklabsfoundation/inkchain-javaenv     latest                 ef62109f2ad1        9 days ago          1.425 GB
-inklabsfoundation/inkchain-javaenv     x86_64-0.10.3          ef62109f2ad1        9 days ago          1.425 GB
-inklabsfoundation/inkchain-ccenv       latest                 dcaef40a4d5a        9 days ago          1.293 GB
-inklabsfoundation/inkchain-ccenv       x86_64-0.10.3          dcaef40a4d5a        9 days ago          1.293 GB
-inklabsfoundation/inkchain-ca          latest                 4f610a5b8393        7 weeks ago         238.2 MB
-inklabsfoundation/inkchain-ca          x86_64-0.10.3          4f610a5b8393        7 weeks ago         238.2 MB
-inklabsfoundation/inkchain-baseimage   x86_64-0.3.1           9f2e9ec7c527        7 months ago        1.268 GB
-inklabsfoundation/inkchain-baseos      x86_64-0.3.1           4b0cab202084        7 months ago        156.6 MB
+inklabsfoundation/inkchain-tools         latest              1626ee3e191e        4 days ago          1.45GB
+inklabsfoundation/inkchain-tools         x86_64-0.13.0       1626ee3e191e        4 days ago          1.45GB
+inklabsfoundation/inkchain-peer          latest              a024514b8fd3        4 days ago          279MB
+inklabsfoundation/inkchain-peer          x86_64-0.13.0       a024514b8fd3        4 days ago          279MB
+inklabsfoundation/inkchain-ccenv         latest              6c53a39ef9fb        4 days ago          1.29GB
+inklabsfoundation/inkchain-ccenv         x86_64-0.13.0       6c53a39ef9fb        4 days ago          1.29GB
+inklabsfoundation/inkchain-orderer       latest              3cadc0059ccc        4 days ago          275MB
+inklabsfoundation/inkchain-orderer       x86_64-0.13.0       3cadc0059ccc        4 days ago          275MB
+inklabsfoundation/inkchain-javaenv       latest              cc66f198b653        4 days ago          1.43GB
+inklabsfoundation/inkchain-javaenv       x86_64-0.13.0       cc66f198b653        4 days ago          1.43GB
+inklabsfoundation/inkchain-ca            latest              c216e43656f1        2 months ago        238MB
+inklabsfoundation/inkchain-ca            x86_64-0.13.0       c216e43656f1        2 months ago        238MB
+inklabsfoundation/inkchain-kafka         latest              01c020e46c87        3 months ago        1.31GB
+inklabsfoundation/inkchain-kafka         x86_64-0.13.0       01c020e46c87        3 months ago        1.31GB
+inklabsfoundation/inkchain-couchdb       latest              56babe466471        3 months ago        1.51GB
+inklabsfoundation/inkchain-couchdb       x86_64-0.13.0       56babe466471        3 months ago        1.51GB
+inklabsfoundation/inkchain-zookeeper     latest              720c4368c2f5        3 months ago        1.33GB
+inklabsfoundation/inkchain-zookeeper     x86_64-0.13.0       720c4368c2f5        3 months ago        1.33GB
+inklabsfoundation/inkchain-baseimage     x86_64-0.3.1        9f2e9ec7c527        7 months ago        1.268 GB
+inklabsfoundation/inkchain-baseos        x86_64-0.3.1        4b0cab202084        7 months ago        156.6 MB
 ```
 
 ## Run the examples

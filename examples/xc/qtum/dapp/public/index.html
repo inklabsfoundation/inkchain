@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XC TEST</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+</head>
+<body>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>INIT</h2>
+    <label style="width: 200px;display: inline-block;">platform:</label>
+    <select style="width: 500px;" id="platform" name="platform">
+        <option value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            INK:494e4b0000000000000000000000000000000000000000000000000000000000
+        </option>
+        <option disabled value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            A:4100000000000000000000000000000000000000000000000000000000000000
+        </option>
+    </select><br/>
+    <label style="width: 200px;display: inline-block;">publicKey:</label>
+    <input style="width: 500px;" readonly name="publicKey"
+           value="4230a12f5b0693dd88bb35c79d7e56a68614b199"/><br/>
+    <label style="width: 200px;display: inline-block;">publicKey2:</label>
+    <input style="width: 500px;" readonly name="publicKey2"
+           value="07caf88941eafcaaa3370657fccc261acb75dfba"/><br/>
+    <button id="submit1">Submit</button>
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>OUT</h2>
+    <label style="width: 200px;display: inline-block;">fromPlatform:</label>
+    <input style="width: 500px;" readonly name="fromPlatform"
+           value="QTUM:5154554d00000000000000000000000000000000000000000000000000000000"/><br/>
+    <label style="width: 200px;display: inline-block;">fromAccount:</label>
+    <input style="width: 500px;" readonly name="fromAccount"
+           value="INK.sender"/><br/>
+    <label style="width: 200px;display: inline-block;">toPlatform:</label>
+    <select style="width: 500px;" id="toPlatform" name="toPlatform">
+        <option value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            INK:494e4b0000000000000000000000000000000000000000000000000000000000
+        </option>
+        <option disabled value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            A:4100000000000000000000000000000000000000000000000000000000000000
+        </option>
+    </select><br/>
+    <label style="width: 200px;display: inline-block;">toAccount:</label>
+    <input style="width: 500px;" name="toAccount"
+           value="d6b39eb631df8ee60e46a576231ccf1fcd204a5e"/><br/>
+    <label style="width: 200px;display: inline-block;">value:</label>
+    <input style="width: 500px;" name="value" value="10000"/><br/>
+    <button id="submit2">Submit</button>
+</div>
+<br/>
+
+<div style="border:1px #0d47a1 solid;padding: 20px;">
+    <h2>IN</h2>
+    <label style="width: 200px;display: inline-block;">fromPlatform:</label>
+    <select style="width: 500px;" id="fromPlatform2" name="fromPlatform2">
+        <option value="494e4b0000000000000000000000000000000000000000000000000000000000">
+            INK:494e4b0000000000000000000000000000000000000000000000000000000000
+        </option>
+        <option disabled value="4100000000000000000000000000000000000000000000000000000000000000">
+            A:4100000000000000000000000000000000000000000000000000000000000000
+        </option>
+    </select><br/>
+    <label style="width: 200px;display: inline-block;">fromAccount:</label>
+    <input style="width: 500px;" name="fromAccount2"
+           value="4230a12f5b0693dd88bb35c79d7e56a68614b199"/><br/>
+    <label style="width: 200px;display: inline-block;">toPlatform:</label>
+    <input style="width: 500px;" readonly name="toPlatform2"
+           value="QTUM:5154554d00000000000000000000000000000000000000000000000000000000"/><br/>
+    <label style="width: 200px;display: inline-block;">toAccount:</label>
+    <input style="width: 500px;" name="toAccount2"
+           value="42cae74a99da4cea4c1c6b9e783f858aa9fe16bb"/><br/>
+    <label style="width: 200px;display: inline-block;">value: </label>
+    <input style="width: 500px;" name="value2" value="500"/><br/>
+    <label style="width: 200px;display: inline-block;">txid:</label>
+    <input style="width: 500px;" name="txid"
+           value="ec286f7dd3463a6a9c5384747bc64a8685de44b2c3d3a1156dc0085f758fcd28"/><br/>
+    <label style="width: 200px;display: inline-block;">sign:</label>
+    <input style="width: 500px;" name="sign"
+           value="c7ecd49384a51d5fb610423a30dfcbc963645c1dc37ddab598cb89555d9110f25d9569fdaafe9a3928649c32806332f4716ccc9fdd740cf6ef8678b97258653e00"/><br/>
+    <button id="submit3">complete Submit</button>
+    <br/>
+    {&nbsp;&nbsp;
+    <button id="voter">voter</button> &nbsp;&nbsp;
+    <button id="verifyProposal">verifyProposal</button> &nbsp;&nbsp;
+    <button id="unlock">unlock</button> &nbsp;&nbsp;}
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>LockBalance</h2>
+    <button id="LockBalance">LockBalance</button>
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>balanceOf</h2>
+    <label style="width: 200px;display: inline-block;">account:</label>
+    <input style="width: 500px;" name="account"
+           value="42cae74a99da4cea4c1c6b9e783f858aa9fe16bb"/><br/>
+    <button id="balanceOf">balanceOf</button>
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>setWeight</h2>
+    <label style="width: 200px;display: inline-block;">platformName:</label>
+    <input style="width: 500px;" readonly name="platformName"
+           value="INK:494e4b0000000000000000000000000000000000000000000000000000000000"/><br/>
+    <label style="width: 200px;display: inline-block;">weight:</label>
+    <input style="width: 500px;" name="weight"
+           value=""/><br/>
+    <button id="setWeight">setWeight</button>
+</div>
+<br/>
+<div style="border:1px #0d47a1 solid;padding:  20px;">
+    <h2>getWeight</h2>
+    <label style="width: 200px;display: inline-block;">platformName:</label>
+    <input style="width: 500px;" readonly name="platformName"
+           value="INK:494e4b0000000000000000000000000000000000000000000000000000000000"/><br/>
+    <button id="getWeight">getWeight</button>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#submit1").click(function () {
+            var platform = $.trim($("select[name=platform]").find("option:selected").text());
+            platform = platform.substr(platform.length - 64, 64)
+            var publicKey = $.trim($("input[name=publicKey]").val())
+            var publicKey2 = $.trim($("input[name=publicKey2]").val())
+
+            $.post("/xc/init", {
+                platform: platform,
+                publicKey: publicKey,
+                publicKey2: publicKey2
+            }, function (data, status) {
+                alert("数据: \n" + data + "\n状态: " + status);
+            });
+        });
+        $("#submit2").click(function () {
+            var toPlatform = $.trim($("select[name=toPlatform]").find("option:selected").text());
+            toPlatform = toPlatform.substr(toPlatform.length - 64, 64)
+            var toAccount = $.trim($("input[name=toAccount]").val())
+            var value = $("input[name=value]").val()
+            $.post("/xc/out", {
+                toPlatform: toPlatform,
+                toAccount: toAccount,
+                value: value
+            }, function (data, status) {
+                alert("数据: \n" + data + "\n状态: " + status);
+            });
+        });
+        $("#submit3").click(function () {
+            var fromPlatform = $.trim($("select[name=fromPlatform2]").find("option:selected").text());
+            fromPlatform = fromPlatform.substr(fromPlatform.length - 64, 64)
+            // alert(fromPlatform)
+            var fromAccount = $.trim($("input[name=fromAccount2]").val())
+            // alert(fromAccount)
+            var toAccount = $.trim($("input[name=toAccount2]").val())
+            // alert(toAccount)
+            var value = $("input[name=value2]").val()
+            // alert(value)
+            var txid = $.trim($("input[name=txid]").val())
+            // alert(txid)
+            var sign = $.trim($("input[name=sign]").val())
+
+            $.post("/xc/in", {
+                fromPlatform: fromPlatform,
+                fromAccount: fromAccount,
+                toAccount: toAccount,
+                value: value,
+                txid: txid,
+                sign: sign,
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#voter").click(function () {
+            var fromPlatform = $.trim($("select[name=fromPlatform2]").find("option:selected").text());
+            fromPlatform = fromPlatform.substr(fromPlatform.length - 64, 64)
+            // alert(fromPlatform)
+            var fromAccount = $.trim($("input[name=fromAccount2]").val())
+            // alert(fromAccount)
+            var toAccount = $.trim($("input[name=toAccount2]").val())
+            // alert(toAccount)
+            var value = $("input[name=value2]").val()
+            // alert(value)
+            var txid = $.trim($("input[name=txid]").val())
+            // alert(txid)
+            var sign = $.trim($("input[name=sign]").val())
+
+            $.post("/xc/voter", {
+                fromPlatform: fromPlatform,
+                fromAccount: fromAccount,
+                toAccount: toAccount,
+                value: value,
+                txid: txid,
+                sign: sign,
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#verifyProposal").click(function () {
+            var fromPlatform = $.trim($("select[name=fromPlatform2]").find("option:selected").text());
+            fromPlatform = fromPlatform.substr(fromPlatform.length - 64, 64)
+            // alert(fromPlatform)
+            var fromAccount = $.trim($("input[name=fromAccount2]").val())
+            // alert(fromAccount)
+            var toAccount = $.trim($("input[name=toAccount2]").val())
+            // alert(toAccount)
+            var value = $("input[name=value2]").val()
+            // alert(value)
+            var txid = $.trim($("input[name=txid]").val())
+            // alert(txid)
+            var sign = $.trim($("input[name=sign]").val())
+
+            $.post("/xc/verifyProposal", {
+                fromPlatform: fromPlatform,
+                fromAccount: fromAccount,
+                toAccount: toAccount,
+                value: value,
+                txid: txid,
+                sign: sign,
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#unlock").click(function () {
+            var fromPlatform = $.trim($("select[name=fromPlatform2]").find("option:selected").text());
+            fromPlatform = fromPlatform.substr(fromPlatform.length - 64, 64)
+            // alert(fromPlatform)
+            var fromAccount = $.trim($("input[name=fromAccount2]").val())
+            // alert(fromAccount)
+            var toAccount = $.trim($("input[name=toAccount2]").val())
+            // alert(toAccount)
+            var value = $("input[name=value2]").val()
+            // alert(value)
+            var txid = $.trim($("input[name=txid]").val())
+            // alert(txid)
+            var sign = $.trim($("input[name=sign]").val())
+
+            $.post("/xc/unlock", {
+                fromPlatform: fromPlatform,
+                fromAccount: fromAccount,
+                toAccount: toAccount,
+                value: value,
+                txid: txid,
+                sign: sign,
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#LockBalance").click(function () {
+            $.post("/xc/lockBalance", {}, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#balanceOf").click(function () {
+            var account = $.trim($("input[name=account]").val())
+            $.post("/xc/balanceOf", {
+                account: account
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#setWeight").click(function () {
+            var platformName = $.trim($("input[name=platformName]").val());
+            platformName = platformName.substr(platformName.length - 64, 64)
+            var weight = $.trim($("input[name=weight]").val())
+            $.post("/xc/setWeight", {
+                platformName: platformName,
+                weight: weight
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+        $("#getWeight").click(function () {
+            var platformName = $.trim($("input[name=platformName]").val());
+            platformName = platformName.substr(platformName.length - 64, 64)
+            $.post("/xc/getWeight", {
+                platformName: platformName
+            }, function (data, status) {
+                alert("Data: \n" + data + "\nStatus: " + status);
+            });
+        });
+
+    })
+
+</script>
+</html>

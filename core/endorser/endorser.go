@@ -120,12 +120,12 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if !ok || inkBalance.Cmp(fee) < 0 {
 		return fmt.Errorf("endorser: insufficient balance for ink consumption")
 	}
-	inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+	feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 	if !ok {
-		return fmt.Errorf("endorser: invalid inklimit.")
+		return fmt.Errorf("endorser: invalid feeLimit.")
 	}
-	if fee.Cmp(inkLimit) > 0 {
-		return fmt.Errorf("endorser: fee exceeds inkLimit.")
+	if fee.Cmp(feeLimit) > 0 {
+		return fmt.Errorf("endorser: fee exceeds feeLimit.")
 	}
 	if fee.Cmp(wallet.InkMinimumFee) < 0 {
 		return fmt.Errorf("endorser: fee too low")

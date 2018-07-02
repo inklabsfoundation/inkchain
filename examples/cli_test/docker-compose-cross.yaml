@@ -1,3 +1,4 @@
+
 #
 # Copyright INK Corp. All Rights Reserved.
 #
@@ -22,7 +23,7 @@ services:
     volumes:
       - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/inkchain/inkchain-ca-server-config
     container_name: ca_peerOrg1
-  
+
   ca.org2.example.com:
     image: inklabsfoundation/inkchain-ca
     environment:

@@ -24,7 +24,6 @@ import (
 	"fmt"
 
 	"github.com/inklabsfoundation/inkchain/common/flogging"
-	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ctransutil"
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/ledgerutil"
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/rwsetutil"
 	"github.com/inklabsfoundation/inkchain/core/ledger/kvledger/txmgmt/statedb"
@@ -35,7 +34,6 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/wallet/ink"
 	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"github.com/inklabsfoundation/inkchain/protos/common"
-	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/rwset/kvrwset"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
@@ -97,12 +95,12 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 				}
 			}
 			fee := big.NewInt(inkFee)
-			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+			feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 			if !ok {
-				return 0, fmt.Errorf("committer: invalid inklimit.")
+				return 0, fmt.Errorf("committer: invalid feeLimit.")
 			}
-			if fee.Cmp(inkLimit) > 0 {
-				return 0, fmt.Errorf("committer: fee exceeds inkLimit.")
+			if fee.Cmp(feeLimit) > 0 {
+				return 0, fmt.Errorf("committer: fee exceeds feeLimit.")
 			}
 			if !ok || inkBalance.Cmp(fee) < 0 {
 				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")
@@ -114,47 +112,46 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 }
 
 //validate endorser transaction
-func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, updates *statedb.UpdateBatch, transferUpdates *statedb.TransferBatch) (*rwsetutil.TxRwSet, *transutil.TranSet, *ctransutil.CrossTranSet, *transutil.SenderCounter, peer.TxValidationCode, error) {
+func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, updates *statedb.UpdateBatch, transferUpdates *statedb.TransferBatch) (*rwsetutil.TxRwSet, *transutil.TranSet, *transutil.SenderCounter, peer.TxValidationCode, error) {
 	// extract actions from the envelope message
 	cis, respPayload, err := putils.GetActionFromEnvelope(envBytes)
 	if err != nil {
-		return nil, nil, nil, nil, peer.TxValidationCode_NIL_TXACTION, nil
+		return nil, nil, nil, peer.TxValidationCode_NIL_TXACTION, nil
 	}
 	//preparation for extracting RWSet from transaction
 	// Get the Result from the Action
 	// and then Unmarshal it into a TxReadWriteSet using custom unmarshalling
 	ledgerSet := &ledgerutil.LedgerSet{}
 	if err = ledgerSet.FromProtoBytes(respPayload.Results); err != nil {
-		return nil, nil, nil, nil, peer.TxValidationCode_INVALID_OTHER_REASON, nil
+		return nil, nil, nil, peer.TxValidationCode_INVALID_OTHER_REASON, nil
 	}
 
 	txResult := peer.TxValidationCode_VALID
 
 	senderCounter := &transutil.SenderCounter{}
-	tokenAccount := &wallet.Account{}
 	// check signature
 	if cis.ChaincodeSpec.ChaincodeId.Name != "lscc" && cis.ChaincodeSpec.ChaincodeId.Name != "ascc" {
 		if cis.Sig == nil || cis.SenderSpec == nil {
-			return nil, nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
+			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 		hash, err := wallet.GetInvokeHash(cis.ChaincodeSpec, cis.IdGenerationAlg, cis.SenderSpec)
 		if err != nil {
-			return nil, nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
+			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 		sender, err := wallet.GetSenderFromSignature(hash, cis.Sig)
 		senderStr := sender.ToString()
 		if senderStr != string(cis.SenderSpec.Sender) || senderStr != ledgerSet.TranSet.From {
-			return nil, nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
+			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 
-		contentLength := len(respPayload.Results)
+		contentLength := 0
 		if cis.SenderSpec != nil {
-			contentLength += len(cis.SenderSpec.String())
+			contentLength += len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
 			fmt.Println(err)
-			return nil, nil, nil, nil, peer.TxValidationCode_BAD_COUNTER, nil
+			return nil, nil, nil, peer.TxValidationCode_BAD_COUNTER, nil
 		}
 		senderCounter.Sender = sender.ToString()
 		senderCounter.Counter = cis.SenderSpec.Counter
@@ -168,8 +165,7 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			if txResult, err = v.validateTx(ledgerSet.TxRwSet, updates); err != nil || txResult != peer.TxValidationCode_VALID {
 				ledgerSet.TxRwSet = nil
 				ledgerSet.TranSet = nil
-				ledgerSet.CrossTranSet = nil
-				return nil, nil, nil, senderCounter, txResult, err
+				return nil, nil, senderCounter, txResult, err
 			}
 		}
 		//validate transfer
@@ -178,28 +174,12 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 				(txResult != peer.TxValidationCode_VALID && txResult != peer.TxValidationCode_EXCEED_BALANCE) {
 				ledgerSet.TxRwSet = nil
 				ledgerSet.TranSet = nil
-				ledgerSet.CrossTranSet = nil
-				return nil, nil, nil, senderCounter, txResult, err
+				return nil, nil, senderCounter, txResult, err
 			}
 		}
-		//validate cross transfer
-		if ledgerSet.CrossTranSet != nil {
-			if txResult = v.getTokenAccount(ledgerSet.CrossTranSet, tokenAccount); txResult != peer.TxValidationCode_VALID {
-				ledgerSet.TxRwSet = nil
-				ledgerSet.TranSet = nil
-				ledgerSet.CrossTranSet = nil
-				return nil, nil, nil, senderCounter, txResult, err
-			}
-			if txResult, err = v.validateCrossTrans(ledgerSet.CrossTranSet, transferUpdates, tokenAccount); err != nil ||
-				(txResult != peer.TxValidationCode_VALID && txResult != peer.TxValidationCode_EXCEED_BALANCE) {
-				ledgerSet.TxRwSet = nil
-				ledgerSet.TranSet = nil
-				ledgerSet.CrossTranSet = nil
-				return nil, nil, nil, senderCounter, txResult, err
-			}
-		}
+
 	}
-	return ledgerSet.TxRwSet, ledgerSet.TranSet, ledgerSet.CrossTranSet, senderCounter, txResult, err
+	return ledgerSet.TxRwSet, ledgerSet.TranSet, senderCounter, txResult, err
 }
 
 // ValidateAndPrepareBatch implements method in Validator interface
@@ -250,7 +230,7 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 			continue
 		}
 
-		txRWSet, txTranSet, crossTranSet, senderCounter, txResult, err := v.validateEndorserTX(envBytes, doMVCCValidation, updates, transferUpdates)
+		txRWSet, txTranSet, senderCounter, txResult, err := v.validateEndorserTX(envBytes, doMVCCValidation, updates, transferUpdates)
 
 		if err != nil {
 			return nil, err
@@ -269,9 +249,6 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 			}
 			if txTranSet != nil {
 				addTranSetToBatch(txTranSet, committingTxHeight, transferUpdates)
-			}
-			if crossTranSet != nil {
-				addCrossTranSetToBatch(crossTranSet, committingTxHeight, transferUpdates)
 			}
 		}
 		txsFilter.SetFlag(txIndex, txResult)
@@ -299,21 +276,6 @@ func addTranSetToBatch(tranSet *transutil.TranSet, txHeight *version.Height, tra
 			continue
 		}
 		transferBatch.Put(from, tran.To, tran.BalanceType, tran.Amount, txHeight)
-	}
-}
-
-//add cross transet to transferBatch
-func addCrossTranSetToBatch(tranSet *ctransutil.CrossTranSet, txHeight *version.Height, transferBatch *statedb.TransferBatch) {
-	from := tranSet.TokenAddr
-	if wallet.StringToAddress(from) == nil {
-		return
-	}
-	for _, tran := range tranSet.KvTranSet.Trans {
-		if wallet.StringToAddress(tran.To) == nil || tran.Amount == nil {
-			continue
-		}
-		//do sub with from and do add with to
-		transferBatch.Put(from, tran.To, tranSet.TokenType, tran.Amount, txHeight)
 	}
 }
 
@@ -353,70 +315,6 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 	}
 
 	return peer.TxValidationCode_VALID, nil
-}
-
-func (v *Validator) validateCrossTrans(tranSet *ctransutil.CrossTranSet, updates *statedb.TransferBatch, tokenAccount *wallet.Account) (peer.TxValidationCode, error) {
-	for _, kvTo := range tranSet.KvTranSet.Trans {
-		if valid, err := v.validateKVCrossTransfer(tokenAccount, tranSet.TokenAddr, tranSet.TokenType, kvTo, updates); valid != peer.TxValidationCode_VALID || err != nil {
-			return valid, nil
-		}
-	}
-
-	return peer.TxValidationCode_VALID, nil
-}
-
-func (v *Validator) validateKVCrossTransfer(tokenAccount *wallet.Account, tokenAddr string, balanceType string, kvTo *kvcrosstranset.KVCrossTrans, updates *statedb.TransferBatch) (peer.TxValidationCode, error) {
-	tokenBalance, ok := tokenAccount.Balance[balanceType]
-	if !ok {
-		return peer.TxValidationCode_BAD_BALANCE, nil
-	}
-	if updates.ExistsFrom(tokenAddr) {
-		tokenUpdate := updates.GetBalanceUpdate(tokenAddr, balanceType)
-		if tokenUpdate != nil {
-			tokenBalance = tokenBalance.Add(tokenBalance, tokenUpdate)
-		}
-	}
-	transferAmount := new(big.Int).SetBytes(kvTo.Amount)
-	if tokenBalance.Cmp(transferAmount) < 0 {
-		return peer.TxValidationCode_EXCEED_BALANCE, nil
-	} else {
-		return peer.TxValidationCode_VALID, nil
-	}
-	return peer.TxValidationCode_INVALID_OTHER_REASON, nil
-}
-
-func (v *Validator) getTokenAccount(crossTranSet *ctransutil.CrossTranSet, tokenAccount *wallet.Account) peer.TxValidationCode {
-	tokenValue, err := v.db.GetState(wallet.TOKEN_NAMESPACE, crossTranSet.TokenType)
-	if err != nil {
-		return peer.TxValidationCode_BAD_TOKEN_TYPE
-	}
-	if tokenValue != nil {
-		token := &wallet.Token{}
-		jsonErr := json.Unmarshal(tokenValue.Value, token)
-		if jsonErr != nil {
-			return peer.TxValidationCode_BAD_TOKEN_TYPE
-		}
-		accountValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, token.Address)
-		if err != nil {
-			return peer.TxValidationCode_BAD_TOKEN_ADDR
-		}
-		if accountValue != nil {
-			jsonErr = json.Unmarshal(accountValue.Value, tokenAccount)
-			if jsonErr != nil {
-				tokenAccount = nil
-				return peer.TxValidationCode_BAD_TOKEN_ADDR
-			}
-			accountBalance := tokenAccount.Balance
-			if accountBalance == nil {
-				tokenAccount = nil
-				return peer.TxValidationCode_BAD_TOKEN_ADDR
-			} else {
-				crossTranSet.TokenAddr = token.Address
-				return peer.TxValidationCode_VALID
-			}
-		}
-	}
-	return peer.TxValidationCode_BAD_TOKEN_ADDR
 }
 
 func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {

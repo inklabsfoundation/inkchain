@@ -25,7 +25,6 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/scc/qscc"
 	"github.com/inklabsfoundation/inkchain/core/scc/samplesyscc"
 	"github.com/inklabsfoundation/inkchain/core/scc/vscc"
-	"github.com/inklabsfoundation/inkchain/core/scc/xscc"
 )
 
 //see systemchaincode_test.go for an example using "sample_syscc"
@@ -86,14 +85,6 @@ var systemChaincodes = []*SystemChaincode{
 		Chaincode:         &samplesyscc.SampleSysCC{},
 		InvokableExternal: true,
 		InvokableCC2CC:    true,
-	},
-	{
-		Enabled:           true,
-		Name:              "xscc",
-		Path:              "github.com/inklabsfoundation/inkchain/core/scc/xscc",
-		InitArgs:          [][]byte{[]byte("")},
-		Chaincode:         &xscc.CrossChainSysCC{},
-		InvokableExternal: true, // xscc is invoked for token management
 	},
 }
 

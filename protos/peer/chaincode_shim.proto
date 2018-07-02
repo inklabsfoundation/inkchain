@@ -48,8 +48,8 @@ message ChaincodeMessage {
         TRANSFER = 820;
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
-        CROSS_TRANSFER = 824;
         GET_FEE =825;
+        CROSS_TRANSFER = 824;
     }
 
     Type type = 1;

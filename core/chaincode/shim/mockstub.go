@@ -436,9 +436,9 @@ func (stub *MockStub) CalcFee(content string) (*big.Int, error) {
 func (stub *MockStub) CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string) error {
 	if stub.TxID == "" {
 		mockLogger.Error("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
-		return errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
+		return nil, errors.New("Cannot Transfer without a transactions - call stub.MockTransactionStart()?")
 	}
-	return errors.New(" this function could not be used in mock invocation")
+	return nil, errors.New(" this function could not be used in mock invocation")
 }
 
 func (stub *MockStub) MultiTransfer(trans *kvtranset.KVTranSet) error {

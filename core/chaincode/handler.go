@@ -44,6 +44,7 @@ import (
 	"github.com/looplab/fsm"
 	"github.com/op/go-logging"
 	"golang.org/x/net/context"
+	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"strings"
 )

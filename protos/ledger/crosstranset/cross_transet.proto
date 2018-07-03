@@ -1,0 +1,24 @@
+/*
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+option go_package = "github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset";
+option java_package = "org.inklabsfoundation.inkchain.protos.ledger.crosstranset";
+
+package crosstranset;
+
+message Version {
+    uint64 block_num = 1;
+    uint64 tx_num = 2;
+}
+
+message CrossTranSet {
+    string from = 1;
+    bytes ctranset = 2;
+    string token_addr = 3;
+    string token_type = 4;
+}

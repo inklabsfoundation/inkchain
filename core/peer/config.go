@@ -42,6 +42,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/core/comm"
 	"github.com/inklabsfoundation/inkchain/core/config"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
+	"strings"
 )
 
 // Is the configuration cached?
@@ -99,6 +100,28 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeK = float32(viper.GetFloat64("peer.simpleFeeK"))
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
+	wallet.PublicInfos = map[string]*wallet.PublicNodeInfo{}
+	supportToken := viper.GetStringSlice("peer.supportToken")
+	supportPlatform:=viper.GetStringSlice("peer.supportPlatform")
+	if len(supportPlatform)>0{
+		for _,platform:= range supportPlatform {
+			privateKey,err:=ioutil.ReadFile(config.GetPath("peer."+platform+".privateKey.file"))
+			ipKey:= "peer."+platform+".address"
+			if err== nil{
+				wallet.PublicInfos[platform] = getFullNodeConfig(platform, privateKey, ipKey, supportToken)
+			}
+		}
+	}
+	wallet.TokenAddress = map[string]string{}
+	wallet.CrossChainManager = viper.GetString("peer.crossChainManager")
+	if len(supportToken) > 0 {
+		for _, item := range supportToken {
+			wallet.TokenAddress[item] = viper.GetString("peer.tokenAddress." + item)
+		}
+	}
+	if viper.GetString("chainName") != "" {
+		wallet.LocalPlatform = viper.GetString("chainName")
+	}
 
 	configurationCached = true
 
@@ -106,6 +129,26 @@ func CacheConfiguration() (err error) {
 		return localAddressError
 	}
 	return
+}
+
+//get and build fullNodeConfig
+func getFullNodeConfig(publicChain string, privateFile []byte, ipKey string, tokenKey []string) *wallet.PublicNodeInfo {
+	info := wallet.PublicNodeInfo{
+		PrivateKey:   strings.Join(strings.Fields(string([]rune(string(privateFile)))), ""),
+		FullNodeIp:   viper.GetString(ipKey),
+		ContractList: map[string]wallet.PubContractInfo{},
+	}
+	if len(tokenKey) > 0 {
+		for _, item := range tokenKey {
+			key := "peer." + publicChain + ".contracts." + item + "."
+			tmp := wallet.PubContractInfo{
+				Address: viper.GetString(key + "address"),
+				Version: viper.GetString(key + "version"),
+			}
+			info.ContractList[item] = tmp
+		}
+	}
+	return &info
 }
 
 // cacheConfiguration logs an error if error checks have failed.

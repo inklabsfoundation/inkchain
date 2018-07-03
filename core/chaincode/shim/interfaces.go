@@ -203,6 +203,8 @@ type ChaincodeStubInterface interface {
 	// a specific type of token (e.g., INK) from one account to another one.
 	Transfer(to string, balanceType string, amount *big.Int) error
 
+	CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string) error
+
 	MultiTransfer(trans *kvtranset.KVTranSet) error
 
 	// GetAccount returns the account information of the given address.

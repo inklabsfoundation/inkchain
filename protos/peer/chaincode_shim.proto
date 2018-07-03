@@ -48,6 +48,7 @@ message ChaincodeMessage {
         TRANSFER = 820;
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
+        CROSS_TRANSFER = 824;
         GET_FEE =825;
     }
 
@@ -98,6 +99,16 @@ message QueryResponse {
     repeated QueryResultBytes results = 1;
     bool has_more = 2;
     string id = 3;
+}
+
+message CrossTransfer {
+    bytes to=1;
+    bytes amount = 3;
+}
+message CrossTransferInfo {
+    repeated CrossTransfer tranSet = 1;
+    bytes pubTxId = 2;
+    bytes fromPlatForm = 3;
 }
 
 message Transfer {

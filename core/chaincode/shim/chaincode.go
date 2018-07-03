@@ -45,6 +45,7 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 )
 
 // Logger for the shim package.
@@ -783,6 +784,26 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	tranSet = append(tranSet, tran)
 	kvTranSet := &kvtranset.KVTranSet{Trans: tranSet}
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
+}
+
+func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string) error {
+	if pubTxId == "" {
+		return fmt.Errorf(".public chain txId should be valid code.")
+	}
+	if to == "" || len(to) != wallet.AddressStringLength {
+		return fmt.Errorf(".from and to should be valid addresses.")
+	}
+	if amount.Cmp(big.NewInt(0)) < 0 {
+		return fmt.Errorf(".transfer amount should be a half-positive number.")
+	}
+	to = strings.ToLower(to)
+	tran := &kvcrosstranset.KVCrossTrans{}
+	tran.To = to
+	tran.Amount = amount.Bytes()
+	var tranSet []*kvcrosstranset.KVCrossTrans
+	tranSet = append(tranSet, tran)
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: ""}
+	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
 
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {

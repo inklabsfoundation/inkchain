@@ -262,6 +262,36 @@ peer:
         enabled:     false
         listenAddress: 0.0.0.0:6060
 
+    # Setting for restful api provided from full node
+    supportToken:
+        - INK
+    supportPlatform:
+        - qtum
+        - eth
+    qtum:
+        address: 127.0.0.1
+        privateKey:
+            file: /etc/inkchain/privateKey/qtum.txt
+        contracts:
+            INK:
+                address: 293bbd282b7f950c7f80d36d2087a7c465a247a1
+                version: 1
+
+    eth:
+        address: 127.0.0.1
+        privateKey:
+            file: /etc/inkchain/privateKey/ethKey.txt
+        contracts:
+            INK:
+                address: 0x2fda776c716588724765f60267f1a6614c4da89d
+                version: 1
+
+    # Setting for xscc
+    tokenAddress:
+        INK: i3c97f146e8de9807ef723538521fcecd5f64c79a
+    crossChainManager: i4230a12f5b0693dd88bb35c79d7e56a68614b199
+    chainName: INK
+
 ###############################################################################
 #
 #    VM section

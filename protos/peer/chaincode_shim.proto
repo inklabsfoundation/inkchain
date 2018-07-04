@@ -49,6 +49,7 @@ message ChaincodeMessage {
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
         GET_FEE =825;
+        GET_SIGN_RESULT=826;
     }
 
     Type type = 1;

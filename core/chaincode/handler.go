@@ -437,6 +437,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			{Name: pb.ChaincodeMessage_ISSUE_TOKEN.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_ACCOUNT.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_FEE.String(), Src: []string{readystate}, Dst: readystate},
+			{Name: pb.ChaincodeMessage_GET_SIGN_RESULT.String(), Src: []string{readystate}, Dst: readystate},
 		},
 		fsm.Callbacks{
 			"before_" + pb.ChaincodeMessage_REGISTER.String():           func(e *fsm.Event) { v.beforeRegisterEvent(e, v.FSM.Current()) },
@@ -450,11 +451,12 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_PUT_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			
-			"after_" + pb.ChaincodeMessage_GET_FEE.String():        func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():    func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_TRANSFER.String():       func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+
+			"after_" + pb.ChaincodeMessage_GET_FEE.String():     func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String(): func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_TRANSFER.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_"+pb.ChaincodeMessage_GET_SIGN_RESULT.String(): func(e *fsm.Event) {v.afterGetSignResult(e, v.FSM.Current())},
 
 			"enter_" + establishedstate: func(e *fsm.Event) { v.enterEstablishedState(e, v.FSM.Current()) },
 			"enter_" + readystate:       func(e *fsm.Event) { v.enterReadyState(e, v.FSM.Current()) },
@@ -610,6 +612,18 @@ func (handler *Handler) afterGetAccount(e *fsm.Event, state string) {
 
 	// Query ledger for state
 	handler.handleGetAccount(msg)
+}
+
+// afterGetSignResult handles a GET_SIGN_RESULT request from the chaincode.
+func (handler *Handler) afterGetSignResult(e *fsm.Event, state string) {
+	msg, ok := e.Args[0].(*pb.ChaincodeMessage)
+	if !ok {
+		e.Cancel(fmt.Errorf("Received unexpected message type"))
+		return
+	}
+	chaincodeLogger.Debugf("[%s]Received %s, invoking get state from ledger", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_SIGN_RESULT)
+
+	handler.handleGetSignResult(msg)
 }
 
 // afterGetAccount handles a GET_FEE request from the chaincode.
@@ -807,6 +821,55 @@ func (handler *Handler) handleGetFee(msg *pb.ChaincodeMessage) {
 			}
 			fee := big.NewInt(inkFee)
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: fee.Bytes(), Txid: msg.Txid}
+		}
+	}()
+}
+
+func (handler *Handler) handleGetSignResult(msg *pb.ChaincodeMessage) {
+	go func() {
+		// Check if this is the unique state request from this chaincode txid
+		uniqueReq := handler.createTXIDEntry(msg.Txid)
+		if !uniqueReq {
+			// Drop this request
+			chaincodeLogger.Error("Another state request pending for this Txid. Cannot process.")
+			return
+		}
+
+		var serialSendMsg *pb.ChaincodeMessage
+		var txContext *transactionContext
+		txContext, serialSendMsg = handler.isValidTxSim(msg.Txid,
+			"[%s]No ledger context for GetFee. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+
+		defer func() {
+			handler.deleteTXIDEntry(msg.Txid)
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]handleGetSignResult serial send %s",
+					shorttxid(serialSendMsg.Txid), serialSendMsg.Type)
+			}
+			handler.serialSendAsync(serialSendMsg, nil)
+		}()
+
+		if txContext == nil {
+			return
+		}
+		content := msg.Payload[:]
+		if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+			chaincodeLogger.Debugf("[%s] getting sign result for content %s, channel %s",
+				shorttxid(msg.Txid), content, txContext.chainID)
+		}
+		sign,err:= wallet.SignJson(content,wallet.SignPrivateKey)
+		if err != nil {
+			// Send error msg back to chaincode. GetState will not trigger event
+			payload := []byte(err.Error())
+			chaincodeLogger.Errorf("[%s]Failed to get sign result(%s). Sending %s",
+				shorttxid(msg.Txid), err, pb.ChaincodeMessage_ERROR)
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
+		} else {
+			// Send response msg back to chaincode. GetState will not trigger event
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]Got sign result. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_RESPONSE)
+			}
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: sign, Txid: msg.Txid}
 		}
 	}()
 }

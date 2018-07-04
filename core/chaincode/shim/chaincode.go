@@ -820,17 +820,22 @@ func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
 	if err != nil {
 		return nil, err
 	}
-	content :=  msg
+	content := msg
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 //calc fee by passed paramaters
-func (stub *ChaincodeStub) CalcFee (content string) (*big.Int, error) {
+func (stub *ChaincodeStub) CalcFee(content string) (*big.Int, error) {
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return stub.handler.handleTransfer(trans, stub.TxID)
+}
+
+//get sign for data
+func (stub *ChaincodeStub) GetSignResult(data []byte) (result string, err error) {
+	return stub.handler.handleGetSignResult(data, stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

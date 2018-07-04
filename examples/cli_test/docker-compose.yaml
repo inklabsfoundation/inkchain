@@ -66,6 +66,7 @@ services:
     volumes:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/inkchain/crypto/peer
         - ./channel/privateKey:/etc/inkchain/privateKey/
+        - ./channel/file/:/etc/inkchain/file/
     depends_on:
       - orderer.example.com
   cli:

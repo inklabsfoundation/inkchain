@@ -41,6 +41,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	"github.com/inklabsfoundation/inkchain/protos/peer"
 	putils "github.com/inklabsfoundation/inkchain/protos/utils"
+	"strings"
 )
 
 var logger = flogging.MustGetLogger("statevalidator")
@@ -148,8 +149,8 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		}
 
 		contentLength := 0
-		if cis.SenderSpec!=nil{
-			contentLength+= len(cis.SenderSpec.Msg)
+		if cis.SenderSpec != nil {
+			contentLength += len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
@@ -392,6 +393,7 @@ func (v *Validator) getTokenAccount(crossTranSet *ctransutil.CrossTranSet, token
 	}
 	if tokenValue != nil {
 		token := &wallet.Token{}
+		token.Address = strings.ToLower(token.Address)
 		jsonErr := json.Unmarshal(tokenValue.Value, token)
 		if jsonErr != nil {
 			return peer.TxValidationCode_BAD_TOKEN_TYPE

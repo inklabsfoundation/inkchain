@@ -76,7 +76,7 @@ message ChaincodeSpec {
 message SenderSpec {
     bytes sender = 1;
     uint64 counter = 2;
-    bytes ink_limit = 3;
+    bytes fee_limit = 3;
     bytes msg = 4;
 }
 

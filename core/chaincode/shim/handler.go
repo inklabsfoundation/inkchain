@@ -32,6 +32,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
+	"strconv"
 )
 
 // PeerChaincodeStream interface for stream between Peer and chaincode instance.
@@ -897,7 +898,6 @@ func (handler *Handler) handleGetSignResult(data []byte, txId string) (string, e
 
 	defer handler.deleteChannel(txId)
 
-	//payload := []byte(content)
 	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_GET_SIGN_RESULT, Payload: data, Txid: txId}
 	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_SIGN_RESULT)
 
@@ -921,6 +921,47 @@ func (handler *Handler) handleGetSignResult(data []byte, txId string) (string, e
 
 	// Incorrect chaincode message received
 	return "", errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+
+// handleGetSignCheck communicates to check sign that from GetSignResult
+func (handler *Handler) handleGetSignCheck(signature string, data []byte, txId string) (bool, error) {
+	//we constructed a valid object. No need to check for error
+	payloadBytes, _ := proto.Marshal(&pb.GetSignCheck{Signature: signature, Data: data})
+	// Create the channel on which to communicate the response from validating peer
+	var respChan chan pb.ChaincodeMessage
+	var err error
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return false, err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_GET_SIGN_CHECK, Payload: payloadBytes, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_SIGN_CHECK)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return false, errors.New(fmt.Sprintf("[%s]error sending GET_SIGN_CHECK %s", shorttxid(txId), err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]GetSignCheck received payload %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		result, err := strconv.ParseBool(string(responseMsg.Payload[:]))
+		if err != nil {
+			return false, errors.New(fmt.Sprintf("[%s]error parse result from GET_SIGN_CHECK response", shorttxid(txId)))
+		}
+		return result, nil
+	}
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]GetSignCheck received error %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR)
+		return false, errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return false, errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
 //---------------------------

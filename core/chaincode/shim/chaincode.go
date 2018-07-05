@@ -834,8 +834,19 @@ func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 }
 
 //get sign for data
-func (stub *ChaincodeStub) GetSignResult(data []byte) (result string, err error) {
+func (stub *ChaincodeStub) GetSignResult(data []byte) (sign string, err error) {
 	return stub.handler.handleGetSignResult(data, stub.TxID)
+}
+
+//check sign result for signature from GetSignResult
+func (stub *ChaincodeStub) GetSignCheck(sign string, data []byte) (result bool, err error) {
+	if data == nil || len(data) <= 0 {
+		return false, fmt.Errorf("data must not be empty")
+	}
+	if len(sign) <= 0 {
+		return false, fmt.Errorf("signature must be none-empty string")
+	}
+	return stub.handler.handleGetSignCheck(sign,data,stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

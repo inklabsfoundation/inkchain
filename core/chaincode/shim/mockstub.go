@@ -442,6 +442,11 @@ func (stub *MockStub) GetSignResult(data []byte) (result string, err error) {
 	return "", nil
 }
 
+//get signature check result for data
+func (stub *MockStub) GetSignCheck(signature string, data []byte) (result bool, err error) {
+	return false, nil
+}
+
 func (stub *MockStub) GetAccount(address string) (*wallet.Account, error) {
 	address = strings.ToLower(address)
 	if accountBytes, ok := stub.State[address]; ok {

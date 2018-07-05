@@ -59,6 +59,8 @@ services:
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_SIGNADDRESS=i46e182b03e444272cb03e781884f45b8d6e3abf6
+      - CORE_PEER_SIGNPRIVATEFILE=/etc/inkchain/file/private.key
       - GODEBUG=netdns=go
     ports:
       - 7051:7051

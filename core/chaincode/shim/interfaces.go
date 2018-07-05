@@ -224,7 +224,10 @@ type ChaincodeStubInterface interface {
 	CalcFee(content string) (*big.Int, error)
 
 	//get sign for data
-	GetSignResult(data []byte) (result string, err error)
+	GetSignResult(data []byte) (sign string, err error)
+
+	//check sign result for signature from GetSignResult
+	GetSignCheck(sign string, data []byte) (result bool, err error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

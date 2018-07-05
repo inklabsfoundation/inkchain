@@ -45,6 +45,7 @@ import (
 	"github.com/op/go-logging"
 	"golang.org/x/net/context"
 	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
+	"strconv"
 )
 
 const (
@@ -438,6 +439,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			{Name: pb.ChaincodeMessage_GET_ACCOUNT.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_FEE.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_SIGN_RESULT.String(), Src: []string{readystate}, Dst: readystate},
+			{Name: pb.ChaincodeMessage_GET_SIGN_CHECK.String(), Src: []string{readystate}, Dst: readystate},
 		},
 		fsm.Callbacks{
 			"before_" + pb.ChaincodeMessage_REGISTER.String():           func(e *fsm.Event) { v.beforeRegisterEvent(e, v.FSM.Current()) },
@@ -452,11 +454,12 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
-			"after_" + pb.ChaincodeMessage_GET_FEE.String():     func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String(): func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String(): func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_" + pb.ChaincodeMessage_TRANSFER.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
-			"after_"+pb.ChaincodeMessage_GET_SIGN_RESULT.String(): func(e *fsm.Event) {v.afterGetSignResult(e, v.FSM.Current())},
+			"after_" + pb.ChaincodeMessage_GET_FEE.String():         func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():     func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():     func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_TRANSFER.String():        func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_SIGN_RESULT.String(): func(e *fsm.Event) { v.afterGetSignResult(e, v.FSM.Current()) },
+			"after_" + pb.ChaincodeMessage_GET_SIGN_CHECK.String():  func(e *fsm.Event) { v.afterGetSignCheck(e, v.FSM.Current()) },
 
 			"enter_" + establishedstate: func(e *fsm.Event) { v.enterEstablishedState(e, v.FSM.Current()) },
 			"enter_" + readystate:       func(e *fsm.Event) { v.enterReadyState(e, v.FSM.Current()) },
@@ -624,6 +627,18 @@ func (handler *Handler) afterGetSignResult(e *fsm.Event, state string) {
 	chaincodeLogger.Debugf("[%s]Received %s, invoking get state from ledger", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_SIGN_RESULT)
 
 	handler.handleGetSignResult(msg)
+}
+
+// afterGetSignCheck handles a GET_SIGN_CHECK request from the chaincode.
+func (handler *Handler) afterGetSignCheck(e *fsm.Event, state string) {
+	msg, ok := e.Args[0].(*pb.ChaincodeMessage)
+	if !ok {
+		e.Cancel(fmt.Errorf("Received unexpected message type"))
+		return
+	}
+	chaincodeLogger.Debugf("[%s]Received %s, invoking get state from ledger", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_SIGN_CHECK)
+
+	handler.handleGetSignCheck(msg)
 }
 
 // afterGetAccount handles a GET_FEE request from the chaincode.
@@ -857,7 +872,7 @@ func (handler *Handler) handleGetSignResult(msg *pb.ChaincodeMessage) {
 			chaincodeLogger.Debugf("[%s] getting sign result for content %s, channel %s",
 				shorttxid(msg.Txid), content, txContext.chainID)
 		}
-		sign,err:= wallet.SignJson(content,wallet.SignPrivateKey)
+		sign, err := wallet.SignJson(content, wallet.SignPrivateKey)
 		if err != nil {
 			// Send error msg back to chaincode. GetState will not trigger event
 			payload := []byte(err.Error())
@@ -870,6 +885,67 @@ func (handler *Handler) handleGetSignResult(msg *pb.ChaincodeMessage) {
 				chaincodeLogger.Debugf("[%s]Got sign result. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_RESPONSE)
 			}
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: sign, Txid: msg.Txid}
+		}
+	}()
+}
+
+func (handler *Handler) handleGetSignCheck(msg *pb.ChaincodeMessage) {
+	go func() {
+		// Check if this is the unique state request from this chaincode txid
+		uniqueReq := handler.createTXIDEntry(msg.Txid)
+		if !uniqueReq {
+			// Drop this request
+			chaincodeLogger.Error("Another state request pending for this Txid. Cannot process.")
+			return
+		}
+
+		var serialSendMsg *pb.ChaincodeMessage
+		var txContext *transactionContext
+		txContext, serialSendMsg = handler.isValidTxSim(msg.Txid,
+			"[%s]No ledger context for GetSignCheck. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+
+		defer func() {
+			handler.deleteTXIDEntry(msg.Txid)
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]handleGetSignCheck serial send %s",
+					shorttxid(serialSendMsg.Txid), serialSendMsg.Type)
+			}
+			handler.serialSendAsync(serialSendMsg, nil)
+		}()
+
+		if txContext == nil {
+			return
+		}
+		checkData := &pb.GetSignCheck{}
+		unmarshalErr := proto.Unmarshal(msg.Payload, checkData)
+		if unmarshalErr != nil {
+			payload := []byte(unmarshalErr.Error())
+			chaincodeLogger.Errorf("Failed to unmarshall data from getSignCheck . Sending %s", pb.ChaincodeMessage_ERROR)
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
+			return
+		}
+		if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+			chaincodeLogger.Debugf("[%s] getting signature check results for signature %s, channel %s",
+				shorttxid(msg.Txid), checkData.Signature, txContext.chainID)
+		}
+		sender, err := wallet.CheckAndGetSenderFromSignature(checkData.Signature, checkData.Data)
+
+		if err != nil {
+			// Send error msg back to chaincode. GetState will not trigger event
+			payload := []byte(err.Error())
+			chaincodeLogger.Errorf("[%s]Failed to get signature check results(%s). Sending %s",
+				shorttxid(msg.Txid), err, pb.ChaincodeMessage_ERROR)
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
+		} else {
+			result := true
+			if sender != wallet.SignAddress {
+				result = true
+			}
+			// Send response msg back to chaincode. GetState will not trigger event
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]Got signature check results. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_RESPONSE)
+			}
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: []byte(strconv.FormatBool(result)), Txid: msg.Txid}
 		}
 	}()
 }

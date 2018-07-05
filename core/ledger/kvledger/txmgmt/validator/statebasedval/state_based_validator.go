@@ -95,12 +95,12 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 				}
 			}
 			fee := big.NewInt(inkFee)
-			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+			feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 			if !ok {
-				return 0, fmt.Errorf("committer: invalid inklimit.")
+				return 0, fmt.Errorf("committer: invalid feeLimit.")
 			}
-			if fee.Cmp(inkLimit) > 0 {
-				return 0, fmt.Errorf("committer: fee exceeds inkLimit.")
+			if fee.Cmp(feeLimit) > 0 {
+				return 0, fmt.Errorf("committer: fee exceeds feeLimit.")
 			}
 			if !ok || inkBalance.Cmp(fee) < 0 {
 				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")

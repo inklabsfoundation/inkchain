@@ -63,7 +63,7 @@ interface XCInterface {
      * Set the comparison symbol in the contract.
      * @param symbol comparison symbol ({"-=" : ">" , "+=" : ">=" }).
      */
-    function setCompare(bytes2 symbol) onlyAdmin external;
+    function setCompare(bytes2 symbol) external;
 
     /**
      * Get the comparison symbol in the contract.
@@ -99,5 +99,5 @@ interface XCInterface {
      * @param account the specified account.
      * @param value transfer amount.
      */
-    function transfer(address account, uint value) onlyAdmin external payable;
+    function transfer(address account, uint value) external payable;
 }

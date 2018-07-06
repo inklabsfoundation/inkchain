@@ -117,7 +117,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		return
 	}
 	valueInt := big.NewInt(value)
-	if amount.Cmp(valueInt) < 0 {
+	if amount.Cmp(valueInt) != 0 {
 		err = errors.New("transaction amount error")
 		return
 	}
@@ -209,7 +209,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		return
 	}
 	valueInt := big.NewInt(value)
-	if amount.Cmp(valueInt) < 0 {
+	if amount.Cmp(valueInt) != 0 {
 		err = errors.New("transaction amount error")
 		return
 	}

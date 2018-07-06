@@ -60,18 +60,6 @@ interface XCInterface {
     function getXCPlugin() external view returns (address);
 
     /**
-     * Set the comparison symbol in the contract.
-     * @param symbol comparison symbol ({"-=" : ">" , "+=" : ">=" }).
-     */
-    function setCompare(bytes2 symbol) external;
-
-    /**
-     * Get the comparison symbol in the contract.
-     * @return comparison symbol.
-     */
-    function getCompare() external view returns (bytes2);
-
-    /**
      * Transfer out of cross chain.
      * @param toAccount account of to platform.
      * @param value transfer amount.
@@ -93,11 +81,4 @@ interface XCInterface {
      * @param value transfer amount.
      */
     function withdraw(address account, uint value) external;
-
-    /**
-     * Transfer the qtum from the contract account.
-     * @param account the specified account.
-     * @param value transfer amount.
-     */
-    function transfer(address account, uint value) external payable;
 }

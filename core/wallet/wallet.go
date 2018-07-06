@@ -29,10 +29,10 @@ type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
+
 var LocalPlatform = "INK"
 var TokenAddress map[string]string
 var CrossChainManager = ""
-
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`

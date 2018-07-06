@@ -41,6 +41,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	"github.com/inklabsfoundation/inkchain/protos/peer"
 	putils "github.com/inklabsfoundation/inkchain/protos/utils"
+	"strings"
 )
 
 var logger = flogging.MustGetLogger("statevalidator")
@@ -97,12 +98,12 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 				}
 			}
 			fee := big.NewInt(inkFee)
-			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+			feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 			if !ok {
-				return 0, fmt.Errorf("committer: invalid inklimit.")
+				return 0, fmt.Errorf("committer: invalid feeLimit.")
 			}
-			if fee.Cmp(inkLimit) > 0 {
-				return 0, fmt.Errorf("committer: fee exceeds inkLimit.")
+			if fee.Cmp(feeLimit) > 0 {
+				return 0, fmt.Errorf("committer: fee exceeds feeLimit.")
 			}
 			if !ok || inkBalance.Cmp(fee) < 0 {
 				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")
@@ -147,9 +148,9 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			return nil, nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 
-		contentLength := len(respPayload.Results)
+		contentLength := 0
 		if cis.SenderSpec != nil {
-			contentLength += len(cis.SenderSpec.String())
+			contentLength += len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
@@ -392,6 +393,7 @@ func (v *Validator) getTokenAccount(crossTranSet *ctransutil.CrossTranSet, token
 	}
 	if tokenValue != nil {
 		token := &wallet.Token{}
+		token.Address = strings.ToLower(token.Address)
 		jsonErr := json.Unmarshal(tokenValue.Value, token)
 		if jsonErr != nil {
 			return peer.TxValidationCode_BAD_TOKEN_TYPE

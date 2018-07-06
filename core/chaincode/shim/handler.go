@@ -770,6 +770,7 @@ func (handler *Handler) handleTransfer(trans *kvtranset.KVTranSet, txid string) 
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
+
 func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet, txId string) error {
 	// Check if this is a transaction
 	chaincodeLogger.Debugf("[%s]Inside cross transfer", shorttxid(txId))
@@ -817,6 +818,7 @@ func (handler *Handler) handleCrossTransfer(trans *kvcrosstranset.KVCrossTranSet
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
+
 func (handler *Handler) handleGetAccount(address string, txid string) (*wallet.Account, error) {
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
@@ -893,6 +895,44 @@ func (handler *Handler) handleIssueToken(address string, balanceType string, amo
 
 	// Incorrect chaincode message received
 	return errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+
+// handleCalcFee communicates to calculate the fee of content.
+func (handler *Handler) handleCalcFee(content string, txId string) (*big.Int, error) {
+	// Create the channel on which to communicate the response from validating peer
+	var respChan chan pb.ChaincodeMessage
+	var err error
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return nil, err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	payload := []byte(content)
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_GET_FEE, Payload: payload, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_FEE)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return nil, errors.New(fmt.Sprintf("[%s]error sending GET_FEE %s", shorttxid(txId), err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]GetFee received payload %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		fee := big.NewInt(0)
+		fee.SetBytes(responseMsg.Payload[:])
+		return fee, nil
+	}
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]GetState received error %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR)
+		return nil, errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return nil, errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
 //---------------------------

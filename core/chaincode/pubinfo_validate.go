@@ -1,3 +1,8 @@
+/*
+Copyright Ziggurat Corp. 2017 All Rights Reserved.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 package chaincode
 
 import (
@@ -73,7 +78,7 @@ type qtumBlockInfo struct {
 const (
 	CONFIRM_BLOCK_NUM = 6
 	ETH_FIELD_LENGTH  = 64 //log field's length in eth
-	QTUM_FIELD_LENGTH = 64 //log field's length in eth
+	QTUM_FIELD_LENGTH = 64 //log field's length in qtum
 	ETH_PLACEHOLDER = "0"//placeholder in eth log
 	QTUM_PLACTHOLDER = "0"//placeholder in qtum log
 	ETH_HEADER_STR = "0x"//binary sign in eth api

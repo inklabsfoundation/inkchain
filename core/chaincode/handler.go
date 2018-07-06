@@ -44,6 +44,7 @@ import (
 	"github.com/looplab/fsm"
 	"github.com/op/go-logging"
 	"golang.org/x/net/context"
+	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"github.com/inklabsfoundation/inkchain/protos/ledger/crosstranset/kvcrosstranset"
 	"strings"
 )
@@ -438,6 +439,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			{Name: pb.ChaincodeMessage_CROSS_TRANSFER.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_ISSUE_TOKEN.String(), Src: []string{readystate}, Dst: readystate},
 			{Name: pb.ChaincodeMessage_GET_ACCOUNT.String(), Src: []string{readystate}, Dst: readystate},
+			{Name: pb.ChaincodeMessage_GET_FEE.String(), Src: []string{readystate}, Dst: readystate},
 		},
 		fsm.Callbacks{
 			"before_" + pb.ChaincodeMessage_REGISTER.String():           func(e *fsm.Event) { v.beforeRegisterEvent(e, v.FSM.Current()) },
@@ -452,6 +454,7 @@ func newChaincodeSupportHandler(chaincodeSupport *ChaincodeSupport, peerChatStre
 			"after_" + pb.ChaincodeMessage_DEL_STATE.String():           func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_INVOKE_CHAINCODE.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 
+			"after_" + pb.ChaincodeMessage_GET_FEE.String():        func(e *fsm.Event) { v.afterGetFee(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_GET_ACCOUNT.String():    func(e *fsm.Event) { v.afterGetAccount(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_ISSUE_TOKEN.String():    func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
 			"after_" + pb.ChaincodeMessage_TRANSFER.String():       func(e *fsm.Event) { v.enterBusyState(e, v.FSM.Current()) },
@@ -613,6 +616,19 @@ func (handler *Handler) afterGetAccount(e *fsm.Event, state string) {
 	handler.handleGetAccount(msg)
 }
 
+// afterGetAccount handles a GET_FEE request from the chaincode.
+func (handler *Handler) afterGetFee(e *fsm.Event, state string) {
+	msg, ok := e.Args[0].(*pb.ChaincodeMessage)
+	if !ok {
+		e.Cancel(fmt.Errorf("Received unexpected message type"))
+		return
+	}
+	chaincodeLogger.Debugf("[%s]Received %s, invoking get state from ledger", shorttxid(msg.Txid), pb.ChaincodeMessage_GET_FEE)
+
+	// Query ledger for state
+	handler.handleGetFee(msg)
+}
+
 // is this a txid for which there is a valid txsim
 func (handler *Handler) isValidTxSim(txid string, fmtStr string, args ...interface{}) (*transactionContext, *pb.ChaincodeMessage) {
 	txContext := handler.getTxContext(txid)
@@ -746,6 +762,56 @@ func (handler *Handler) handleGetAccount(msg *pb.ChaincodeMessage) {
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: res, Txid: msg.Txid}
 		}
 
+	}()
+}
+
+func (handler *Handler) handleGetFee(msg *pb.ChaincodeMessage) {
+	go func() {
+		// Check if this is the unique state request from this chaincode txid
+		uniqueReq := handler.createTXIDEntry(msg.Txid)
+		if !uniqueReq {
+			// Drop this request
+			chaincodeLogger.Error("Another state request pending for this Txid. Cannot process.")
+			return
+		}
+
+		var serialSendMsg *pb.ChaincodeMessage
+		var txContext *transactionContext
+		txContext, serialSendMsg = handler.isValidTxSim(msg.Txid,
+			"[%s]No ledger context for GetFee. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_ERROR)
+
+		defer func() {
+			handler.deleteTXIDEntry(msg.Txid)
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]handleGetFee serial send %s",
+					shorttxid(serialSendMsg.Txid), serialSendMsg.Type)
+			}
+			handler.serialSendAsync(serialSendMsg, nil)
+		}()
+
+		if txContext == nil {
+			return
+		}
+		content := string(msg.Payload[:])
+		if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+			chaincodeLogger.Debugf("[%s] getting fee for content %s, channel %s",
+				shorttxid(msg.Txid), content, txContext.chainID)
+		}
+		inkFee, err := impl.NewSimpleInkAlg().CalcInk(len(content))
+		if err != nil {
+			// Send error msg back to chaincode. GetState will not trigger event
+			payload := []byte(err.Error())
+			chaincodeLogger.Errorf("[%s]Failed to get fee(%s). Sending %s",
+				shorttxid(msg.Txid), err, pb.ChaincodeMessage_ERROR)
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
+		} else {
+			// Send response msg back to chaincode. GetState will not trigger event
+			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
+				chaincodeLogger.Debugf("[%s]Got fee. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_RESPONSE)
+			}
+			fee := big.NewInt(inkFee)
+			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: fee.Bytes(), Txid: msg.Txid}
+		}
 	}()
 }
 

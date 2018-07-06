@@ -120,12 +120,12 @@ func (e *Endorser) checkCounterAndInk(cis *pb.ChaincodeInvocationSpec, txsim led
 	if !ok || inkBalance.Cmp(fee) < 0 {
 		return fmt.Errorf("endorser: insufficient balance for ink consumption")
 	}
-	inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+	feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 	if !ok {
-		return fmt.Errorf("endorser: invalid inklimit.")
+		return fmt.Errorf("endorser: invalid feeLimit.")
 	}
-	if fee.Cmp(inkLimit) > 0 {
-		return fmt.Errorf("endorser: fee exceeds inkLimit.")
+	if fee.Cmp(feeLimit) > 0 {
+		return fmt.Errorf("endorser: fee exceeds feeLimit.")
 	}
 	if fee.Cmp(wallet.InkMinimumFee) < 0 {
 		return fmt.Errorf("endorser: fee too low")
@@ -334,11 +334,11 @@ func (e *Endorser) simulateProposal(ctx context.Context, chainID string, txid st
 	}
 
 	//---4. check counter and ink
-	txLength := len(simResult)
-	if cis.SenderSpec != nil {
-		txLength += len(cis.SenderSpec.String())
+	contentLength := 0
+	if cis.SenderSpec!=nil{
+		contentLength+= len(cis.SenderSpec.Msg)
 	}
-	err = e.checkCounterAndInk(cis, txsim, txLength, account)
+	err = e.checkCounterAndInk(cis, txsim, contentLength, account)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

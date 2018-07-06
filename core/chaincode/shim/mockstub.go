@@ -437,13 +437,13 @@ func (stub *MockStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return errors.New(" this function could not be used in mock invocation")
 }
 
-//get sign for data
-func (stub *MockStub) GetSignResult(data []byte) (result string, err error) {
+//sign data
+func (stub *MockStub) Sign(data []byte) (result string, err error) {
 	return "", nil
 }
 
-//get signature check result for data
-func (stub *MockStub) GetSignCheck(signature string, data []byte) (result bool, err error) {
+//verify signature from Sign
+func (stub *MockStub) Verify(signature string, data []byte) (result bool, err error) {
 	return false, nil
 }
 

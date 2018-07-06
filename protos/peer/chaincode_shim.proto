@@ -49,8 +49,8 @@ message ChaincodeMessage {
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
         GET_FEE =825;
-        GET_SIGN_RESULT = 826;
-        GET_SIGN_CHECK = 927;
+        SIGN = 826;
+        VERIFY = 827;
     }
 
     Type type = 1;
@@ -118,7 +118,7 @@ message IssueTokenInfo {
     bytes amount = 3;
 }
 
-message GetSignCheck {
+message Verify {
     string signature = 1;
     bytes data = 2;
 }

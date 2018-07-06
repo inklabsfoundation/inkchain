@@ -833,20 +833,20 @@ func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return stub.handler.handleTransfer(trans, stub.TxID)
 }
 
-//get sign for data
-func (stub *ChaincodeStub) GetSignResult(data []byte) (sign string, err error) {
-	return stub.handler.handleGetSignResult(data, stub.TxID)
+//sign data
+func (stub *ChaincodeStub) Sign(data []byte) (sign string, err error) {
+	return stub.handler.handleSign(data, stub.TxID)
 }
 
-//check sign result for signature from GetSignResult
-func (stub *ChaincodeStub) GetSignCheck(sign string, data []byte) (result bool, err error) {
+//verify signature from Sign
+func (stub *ChaincodeStub) Verify(sign string, data []byte) (result bool, err error) {
 	if data == nil || len(data) <= 0 {
 		return false, fmt.Errorf("data must not be empty")
 	}
 	if len(sign) <= 0 {
 		return false, fmt.Errorf("signature must be none-empty string")
 	}
-	return stub.handler.handleGetSignCheck(sign,data,stub.TxID)
+	return stub.handler.handleVerify(sign,data,stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

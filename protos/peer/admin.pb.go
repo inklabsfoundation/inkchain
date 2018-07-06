@@ -42,7 +42,7 @@ It has these top-level messages:
 	Transfer
 	TransferInfo
 	IssueTokenInfo
-	GetSignCheck
+	Verify
 	AnchorPeers
 	AnchorPeer
 	ChaincodeReg

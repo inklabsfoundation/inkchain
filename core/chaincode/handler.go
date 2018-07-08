@@ -1412,7 +1412,8 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 			amount := big.NewInt(0)
 			platform := string(crossTransferInfo.FromPlatForm)
 			pubTxId := string(crossTransferInfo.PubTxId)
-			balanceType := ""
+			fromAccount := string(crossTransferInfo.FromAccount)
+			balanceType := string(crossTransferInfo.BalanceType)
 			fmt.Println("start to request node validate pubTxId.....")
 			platformStr := strings.ToLower(platform)
 			for _, tran := range crossTransferInfo.TranSet {
@@ -1426,9 +1427,9 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 
 				res := false
 				if platformStr == "qtum" {
-					res, balanceType, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount)
+					res, err = handler.validateQtumPubTxId(pubTxId, string(tran.To[:]), amount, fromAccount,balanceType)
 				} else if platformStr == "eth" {
-					res, balanceType, err = handler.validateEthPubTxId(pubTxId, string(tran.To[:]), amount)
+					res, err = handler.validateEthPubTxId(pubTxId, string(tran.To[:]), amount, fromAccount,balanceType)
 				} else {
 					errHandler([]byte("public chain "+platformStr+" not support cross transfer"), "[%s]pubTxId validate error ", pubTxId)
 					return
@@ -1436,8 +1437,7 @@ func (handler *Handler) enterBusyState(e *fsm.Event, state string) {
 				if err != nil {
 					errHandler([]byte(err.Error()), "[%s]pubTxId validate error ", pubTxId)
 					return
-				}
-				if !res || balanceType == "" {
+				}else if !res {
 					errHandler([]byte("public chain "+platformStr+" validate transaction error"), "[%s]pubTxId validate error ", pubTxId)
 					return
 				}

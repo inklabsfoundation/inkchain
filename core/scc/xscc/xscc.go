@@ -170,6 +170,7 @@ func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	_, ok := amount.SetString(args[2], 10)
 	toAccount := strings.ToLower(args[3])
 	pubTxId := strings.ToLower(args[4])
+	tokenType := args[5]
 
 	if !ok {
 		return shim.Error("Expecting integer value for amount")
@@ -184,6 +185,15 @@ func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 		return shim.Error("The platform named " + fromPlatform + " not registered")
 	}
 
+	publicInfo := wallet.PublicInfos[fromPlatform]
+	if publicInfo != nil {
+		if _, ok := publicInfo.ContractList[tokenType]; !ok {
+			return shim.Error("Not support token named : " + tokenType)
+		}
+	} else {
+		return shim.Error("The platform named " + fromPlatform + " not support")
+	}
+
 	//build state key
 	key := fromPlatform + "|" + pubTxId
 	//validate txId has not been processed
@@ -195,7 +205,7 @@ func (c *CrossChainSysCC) unlock(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	//do transfer  `wait to change`
-	err = stub.CrossTransfer(toAccount, amount, pubTxId, fromPlatform)
+	err = stub.CrossTransfer(toAccount, amount, pubTxId, fromPlatform, tokenType, fromAccount)
 	if err != nil {
 		return shim.Error("transfer error " + err.Error())
 	}

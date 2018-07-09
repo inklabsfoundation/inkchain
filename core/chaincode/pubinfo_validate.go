@@ -44,6 +44,7 @@ type ethTranRecInfo struct {
 	ContractAddress  string       `json:"contractAddress"`
 	BlockNumber      string       `json:"blockNumber"`
 	ToContract       string       `json:"to"`
+	FromAccount      string       `json:"from"`
 	BlockHash        string       `json:"blockHash"`
 	Logs             []ethTranLog `json:"logs"`
 }
@@ -59,6 +60,7 @@ type qtumTransInfo struct {
 	BlockHash       string    `json:"blockHash"`
 	BlockNumber     int       `json:"blockNumber"`
 	ContractAddress string    `json:"contractAddress"`
+	FromAccount     string    `json:"from"`
 	Log             []qtumLog `json:"log"`
 }
 
@@ -76,17 +78,20 @@ type qtumBlockInfo struct {
 }
 
 const (
-	CONFIRM_BLOCK_NUM = 6
-	ETH_FIELD_LENGTH  = 64 //log field's length in eth
-	QTUM_FIELD_LENGTH = 64 //log field's length in qtum
-	ETH_PLACEHOLDER = "0"//placeholder in eth log
-	QTUM_PLACTHOLDER = "0"//placeholder in qtum log
-	ETH_HEADER_STR = "0x"//binary sign in eth api
+	CONFIRM_BLOCK_NUM   = 6
+	ETH_FIELD_LENGTH    = 64   //log field's length in eth
+	QTUM_FIELD_LENGTH   = 64   //log field's length in qtum
+	ETH_PLACEHOLDER     = "0"  //placeholder in eth log
+	QTUM_PLACTHOLDER    = "0"  //placeholder in qtum log
+	ETH_HEADER_STR      = "0x" //binary sign in eth api
+	QTUM_HEADER_STR     = "0x" //binary sign in qtum api
 	QTUM_API_URL_PREFIX = "/qtum-insight-api"
+	ETH_ADDRESS_HEX_LEN = 2 //length of eth address hex tag
+	QTUM_ADDRES_HEX_LEN = 2 //length of qtum address hex tag
 )
 
 //validate pubTxId from eth
-func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
+func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount *big.Int, fromAccount string, tokenType string) (result bool, err error) {
 	publicNode, ok := wallet.PublicInfos["eth"]
 	if !ok {
 		err = errors.New("platform not support")
@@ -104,6 +109,14 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 	if err != nil {
 		return
 	}
+	//check from account
+	if fromAccount[:ETH_ADDRESS_HEX_LEN] != ETH_HEADER_STR {
+		fromAccount = ETH_HEADER_STR + fromAccount
+	}
+	if transInfo.FromAccount != fromAccount {
+		err = errors.New("public blockchain account address error")
+		return
+	}
 	if len(transInfo.Logs) < 2 || len(transInfo.Logs[0].Topics) < 3 {
 		err = errors.New("transaction verified failed")
 		return
@@ -117,11 +130,11 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 		return
 	}
 	valueInt := big.NewInt(value)
-	if amount.Cmp(valueInt) < 0 {
+	if amount.Cmp(valueInt) != 0 {
 		err = errors.New("transaction amount error")
 		return
 	}
-	balanceType = ""
+	balanceType := ""
 	for coinType, contract := range contractList {
 		if transInfo.ToContract == contract.Address {
 			balanceType = coinType
@@ -159,7 +172,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 	if err != nil {
 		return
 	}
-	if coinName != balanceType {
+	if coinName != balanceType || balanceType != tokenType {
 		err = errors.New("transaction coin type validate failed")
 		return
 	}
@@ -181,7 +194,7 @@ func (handler *Handler) validateEthPubTxId(pubTxId string, toUser string, amount
 }
 
 //validate pubTxId from qtum
-func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int) (result bool, balanceType string, err error) {
+func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amount *big.Int, fromAccount string, tokenType string) (result bool, err error) {
 	publicNode, ok := wallet.PublicInfos["qtum"]
 	if !ok {
 		err = errors.New("platform not support")
@@ -203,13 +216,21 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction not belong to our contract")
 		return
 	}
+	//check from account
+	if fromAccount[:QTUM_ADDRES_HEX_LEN] == QTUM_HEADER_STR {
+		fromAccount = fromAccount[QTUM_ADDRES_HEX_LEN:]
+	}
+	if transInfo.FromAccount != fromAccount {
+		err = errors.New("public blockchain account address error")
+		return
+	}
 	valueData := strings.TrimLeft(transInfo.Log[1].Data[2*QTUM_FIELD_LENGTH:3*QTUM_FIELD_LENGTH], QTUM_PLACTHOLDER)
 	value, err := strconv.ParseInt(valueData, 16, 64)
 	if err != nil {
 		return
 	}
 	valueInt := big.NewInt(value)
-	if amount.Cmp(valueInt) < 0 {
+	if amount.Cmp(valueInt) != 0 {
 		err = errors.New("transaction amount error")
 		return
 	}
@@ -230,7 +251,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 		err = errors.New("transaction turn out account error")
 		return
 	}
-	balanceType = ""
+	balanceType := ""
 	for coinType, contract := range contractList {
 		if transInfo.ContractAddress == contract.Address {
 			balanceType = coinType
@@ -249,7 +270,7 @@ func (handler *Handler) validateQtumPubTxId(pubTxId string, toUser string, amoun
 	if err != nil {
 		return
 	}
-	if coinName != balanceType {
+	if coinName != balanceType || balanceType != tokenType {
 		err = errors.New("transaction coin type validate failed")
 		return
 	}
@@ -313,7 +334,7 @@ func getEthBlockInfo(url string, number int64) (*ethBlockInfo, error) {
 
 //get transaction from qtum
 func getQtumTransInfo(url string, pubTxId string) (*qtumTransInfo, error) {
-	url = url + QTUM_API_URL_PREFIX+"/txs/" + pubTxId + "/receipt"
+	url = url + QTUM_API_URL_PREFIX + "/txs/" + pubTxId + "/receipt"
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -335,7 +356,7 @@ func getQtumTransInfo(url string, pubTxId string) (*qtumTransInfo, error) {
 
 //get block detail from qtum
 func getQtumBlockInfo(url string, blockHash string) (*qtumBlockInfo, error) {
-	url = url + QTUM_API_URL_PREFIX+"/block/" + blockHash
+	url = url + QTUM_API_URL_PREFIX + "/block/" + blockHash
 	res, err := quest("GET", url, nil)
 	if err != nil {
 		return nil, err

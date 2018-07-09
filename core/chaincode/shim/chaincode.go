@@ -786,7 +786,7 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
 
-func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string) error {
+func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId string, fromPlatform string, tokenType string,fromAccount string) error {
 	if pubTxId == "" {
 		return fmt.Errorf(".public chain txId should be valid code.")
 	}
@@ -796,13 +796,20 @@ func (stub *ChaincodeStub) CrossTransfer(to string, amount *big.Int, pubTxId str
 	if amount.Cmp(big.NewInt(0)) < 0 {
 		return fmt.Errorf(".transfer amount should be a half-positive number.")
 	}
+	if fromAccount == "" || len(fromAccount) <= 0 {
+		return fmt.Errorf(".fromAccount should be a non-empty string.")
+	}
+	if tokenType==""||len(tokenType)<=0{
+		return fmt.Errorf(".token type should be a non-empty string.")
+	}
 	to = strings.ToLower(to)
+	fromAccount = strings.ToLower(fromAccount)
 	tran := &kvcrosstranset.KVCrossTrans{}
 	tran.To = to
 	tran.Amount = amount.Bytes()
 	var tranSet []*kvcrosstranset.KVCrossTrans
 	tranSet = append(tranSet, tran)
-	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: ""}
+	kvTranSet := &kvcrosstranset.KVCrossTranSet{Trans: tranSet, PubTxId: pubTxId, FromPlatForm: fromPlatform, BalanceType: tokenType, FromAccount: fromAccount}
 	return stub.handler.handleCrossTransfer(kvTranSet, stub.TxID)
 }
 
@@ -841,12 +848,12 @@ func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
 	if err != nil {
 		return nil, err
 	}
-	content :=  msg
+	content := msg
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 //calc fee by passed paramaters
-func (stub *ChaincodeStub) CalcFee (content string) (*big.Int, error) {
+func (stub *ChaincodeStub) CalcFee(content string) (*big.Int, error) {
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 

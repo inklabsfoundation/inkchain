@@ -227,7 +227,7 @@ type ChaincodeStubInterface interface {
 	Sign(data []byte) (sign string, err error)
 
 	//verify signature from Sign
-	Verify(sign string, data []byte) (result bool, err error)
+	Verify(sign string, data []byte, address string) (result bool, err error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

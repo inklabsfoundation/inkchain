@@ -101,7 +101,6 @@ func CacheConfiguration() (err error) {
 	inkFeeImpl.InkFeeX0 = float32(viper.GetFloat64("peer.simpleFeeX0"))
 	inkFeeImpl.InkFeeB = float32(viper.GetFloat64("peer.simpleFeeB"))
 	wallet.SignPrivateKey = ""
-	wallet.SignAddress = ""
 	keyPath := config.GetPath("peer.signPrivateFile")
 	if fileIsExist(keyPath){
 		key, err := ioutil.ReadFile(keyPath)
@@ -109,7 +108,6 @@ func CacheConfiguration() (err error) {
 			wallet.SignPrivateKey = string(key)
 		}
 	}
-	wallet.SignAddress = viper.GetString("peer.signAddress")
 
 	configurationCached = true
 

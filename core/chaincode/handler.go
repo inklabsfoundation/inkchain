@@ -46,6 +46,7 @@ import (
 	"golang.org/x/net/context"
 	"github.com/inklabsfoundation/inkchain/core/wallet/ink/impl"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -938,7 +939,10 @@ func (handler *Handler) handleVerify(msg *pb.ChaincodeMessage) {
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
 		} else {
 			result := true
-			if sender != wallet.SignAddress {
+			if !strings.HasPrefix(checkData.Address, wallet.ADDRESS_PREFIX) {
+				checkData.Address = wallet.ADDRESS_PREFIX + checkData.Address
+			}
+			if sender != checkData.Address {
 				result = true
 			}
 			// Send response msg back to chaincode. GetState will not trigger event

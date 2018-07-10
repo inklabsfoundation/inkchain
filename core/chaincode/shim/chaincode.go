@@ -839,14 +839,17 @@ func (stub *ChaincodeStub) Sign(data []byte) (sign string, err error) {
 }
 
 //verify signature from Sign
-func (stub *ChaincodeStub) Verify(sign string, data []byte) (result bool, err error) {
+func (stub *ChaincodeStub) Verify(sign string, data []byte, address string) (result bool, err error) {
 	if data == nil || len(data) <= 0 {
 		return false, fmt.Errorf("data must not be empty")
 	}
-	if len(sign) <= 0 {
+	if len(strings.TrimSpace(sign)) <= 0 {
 		return false, fmt.Errorf("signature must be none-empty string")
 	}
-	return stub.handler.handleVerify(sign,data,stub.TxID)
+	if len(strings.TrimSpace(address)) <= 0 {
+		return false, fmt.Errorf("address must be none-empty string")
+	}
+	return stub.handler.handleVerify(sign, data,address, stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

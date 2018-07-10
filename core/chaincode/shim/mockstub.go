@@ -443,7 +443,7 @@ func (stub *MockStub) Sign(data []byte) (result string, err error) {
 }
 
 //verify signature from Sign
-func (stub *MockStub) Verify(signature string, data []byte) (result bool, err error) {
+func (stub *MockStub) Verify(signature string, data []byte, address string) (result bool, err error) {
 	return false, nil
 }
 

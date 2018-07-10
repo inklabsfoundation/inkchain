@@ -924,9 +924,9 @@ func (handler *Handler) handleSign(data []byte, txId string) (string, error) {
 }
 
 // handleGetSignCheck communicates to check signature from Sign
-func (handler *Handler) handleVerify(signature string, data []byte, txId string) (bool, error) {
+func (handler *Handler) handleVerify(signature string, data []byte, address string, txId string) (bool, error) {
 	//we constructed a valid object. No need to check for error
-	payloadBytes, _ := proto.Marshal(&pb.Verify{Signature: signature, Data: data})
+	payloadBytes, _ := proto.Marshal(&pb.Verify{Signature: signature, Data: data, Address: address})
 	// Create the channel on which to communicate the response from validating peer
 	var respChan chan pb.ChaincodeMessage
 	var err error

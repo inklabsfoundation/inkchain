@@ -121,6 +121,7 @@ message IssueTokenInfo {
 message Verify {
     string signature = 1;
     bytes data = 2;
+    string address = 3;
 }
 // Interface that provides support to chaincode execution. ChaincodeContext
 // provides the context necessary for the server to respond appropriately.

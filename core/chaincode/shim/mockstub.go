@@ -436,6 +436,17 @@ func (stub *MockStub) CalcFee(content string) (*big.Int, error) {
 func (stub *MockStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return errors.New(" this function could not be used in mock invocation")
 }
+
+//sign data
+func (stub *MockStub) Sign(data []byte) (result string, err error) {
+	return "", nil
+}
+
+//verify signature from Sign
+func (stub *MockStub) Verify(signature string, data []byte, address string) (result bool, err error) {
+	return false, nil
+}
+
 func (stub *MockStub) GetAccount(address string) (*wallet.Account, error) {
 	address = strings.ToLower(address)
 	if accountBytes, ok := stub.State[address]; ok {

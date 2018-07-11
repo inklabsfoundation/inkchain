@@ -49,6 +49,8 @@ message ChaincodeMessage {
         ISSUE_TOKEN = 821;
         GET_ACCOUNT = 823;
         GET_FEE =825;
+        SIGN = 826;
+        VERIFY = 827;
     }
 
     Type type = 1;
@@ -114,6 +116,12 @@ message IssueTokenInfo {
     bytes address = 1;
     bytes balanceType = 2;
     bytes amount = 3;
+}
+
+message Verify {
+    string signature = 1;
+    bytes data = 2;
+    string address = 3;
 }
 // Interface that provides support to chaincode execution. ChaincodeContext
 // provides the context necessary for the server to respond appropriately.

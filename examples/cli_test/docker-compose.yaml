@@ -59,6 +59,7 @@ services:
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_SIGNPRIVATEFILE=/etc/inkchain/file/private.key
       - GODEBUG=netdns=go
     ports:
       - 7051:7051
@@ -66,6 +67,7 @@ services:
     volumes:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/inkchain/crypto/peer
         - ./channel/privateKey:/etc/inkchain/privateKey/
+        - ./channel/file/:/etc/inkchain/file/
     depends_on:
       - orderer.example.com
   cli:
@@ -96,6 +98,7 @@ services:
         - ../cat:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/cat
         - ../inkwork:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/inkwork
         - ../guide_credit:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/guide_credit
+        - ../student:/opt/gopath/src/github.com/inklabsfoundation/inkchain/examples/chaincode/go/student
         - ./channel/crypto-config:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/scripts/
         - ./channel/mychannel.tx:/opt/gopath/src/github.com/inklabsfoundation/inkchain/peer/channel-artifacts/mychannel.tx

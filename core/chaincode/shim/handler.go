@@ -32,6 +32,7 @@ import (
 	"github.com/inklabsfoundation/inkchain/protos/ledger/transet/kvtranset"
 	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 	"github.com/looplab/fsm"
+	"strconv"
 )
 
 // PeerChaincodeStream interface for stream between Peer and chaincode instance.
@@ -884,6 +885,83 @@ func (handler *Handler) handleCalcFee(content string, txId string) (*big.Int, er
 
 	// Incorrect chaincode message received
 	return nil, errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+
+// handleSign communicates to get data signature.
+func (handler *Handler) handleSign(data []byte, txId string) (string, error) {
+	// Create the channel on which to communicate the response from validating peer
+	var respChan chan pb.ChaincodeMessage
+	var err error
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return "", err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_SIGN, Payload: data, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_SIGN)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return "", errors.New(fmt.Sprintf("[%s]error sending SIGN %s", shorttxid(txId), err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]Sign received payload %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		signStr := wallet.SignatureBytesToString(responseMsg.Payload[:])
+		return signStr, nil
+	}
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]Sign received error %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR)
+		return "", errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return "", errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
+}
+
+// handleGetSignCheck communicates to check signature from Sign
+func (handler *Handler) handleVerify(signature string, data []byte, address string, txId string) (bool, error) {
+	//we constructed a valid object. No need to check for error
+	payloadBytes, _ := proto.Marshal(&pb.Verify{Signature: signature, Data: data, Address: address})
+	// Create the channel on which to communicate the response from validating peer
+	var respChan chan pb.ChaincodeMessage
+	var err error
+	if respChan, err = handler.createChannel(txId); err != nil {
+		return false, err
+	}
+
+	defer handler.deleteChannel(txId)
+
+	msg := &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_VERIFY, Payload: payloadBytes, Txid: txId}
+	chaincodeLogger.Debugf("[%s]Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_VERIFY)
+
+	var responseMsg pb.ChaincodeMessage
+
+	if responseMsg, err = handler.sendReceive(msg, respChan); err != nil {
+		return false, errors.New(fmt.Sprintf("[%s]error sending VERIFY %s", shorttxid(txId), err))
+	}
+
+	if responseMsg.Type.String() == pb.ChaincodeMessage_RESPONSE.String() {
+		// Success response
+		chaincodeLogger.Debugf("[%s]Verify received payload %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_RESPONSE)
+		result, err := strconv.ParseBool(string(responseMsg.Payload[:]))
+		if err != nil {
+			return false, errors.New(fmt.Sprintf("[%s]error parse result from VERIFY response", shorttxid(txId)))
+		}
+		return result, nil
+	}
+	if responseMsg.Type.String() == pb.ChaincodeMessage_ERROR.String() {
+		// Error response
+		chaincodeLogger.Errorf("[%s]Verify received error %s", shorttxid(responseMsg.Txid), pb.ChaincodeMessage_ERROR)
+		return false, errors.New(string(responseMsg.Payload[:]))
+	}
+
+	// Incorrect chaincode message received
+	return false, errors.New(fmt.Sprintf("[%s]Incorrect chaincode message %s received. Expecting %s or %s", shorttxid(responseMsg.Txid), responseMsg.Type, pb.ChaincodeMessage_RESPONSE, pb.ChaincodeMessage_ERROR))
 }
 
 //---------------------------

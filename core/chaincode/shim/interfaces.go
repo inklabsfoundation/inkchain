@@ -199,8 +199,8 @@ type ChaincodeStubInterface interface {
 
 	// Interfaces added by Inklabs Foundation
 
-	// Tranfer implements atomic balance changes. It allows an transaction of
-	// a specific tpye of token (e.g., INK) from one account to another one.
+	// Transfer implements atomic balance changes. It allows an transaction of
+	// a specific type of token (e.g., INK) from one account to another one.
 	Transfer(to string, balanceType string, amount *big.Int) error
 
 	MultiTransfer(trans *kvtranset.KVTranSet) error
@@ -215,6 +215,19 @@ type ChaincodeStubInterface interface {
 	// GetSender returns the sender's address. The address is
 	// revealed from his/her signature.
 	GetSender() (string, error)
+
+	//CalcFeeByInvoke returns the fee of operate, And only can be called
+	//by invoke
+	CalcFeeByInvoke() (*big.Int, error)
+
+	//CalcFee returns the fee of passed content
+	CalcFee(content string) (*big.Int, error)
+
+	//sign data
+	Sign(data []byte) (sign string, err error)
+
+	//verify signature from Sign
+	Verify(sign string, data []byte, address string) (result bool, err error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

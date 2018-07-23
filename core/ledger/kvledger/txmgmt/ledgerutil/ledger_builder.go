@@ -6,8 +6,8 @@ import (
 )
 
 type LedgerSetBuilder struct {
-	TranSetBuilder *transutil.TranSetBuilder
-	RwSetBuilder   *rwsetutil.RWSetBuilder
+	TranSetBuilder      *transutil.TranSetBuilder
+	RwSetBuilder        *rwsetutil.RWSetBuilder
 }
 
 func (builder *LedgerSetBuilder) GetLedgerSet() *LedgerSet {

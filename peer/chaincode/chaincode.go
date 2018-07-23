@@ -41,7 +41,7 @@ func addFlags(cmd *cobra.Command) {
 	flags.BoolVarP(&tls, "tls", "", false, "Use TLS when communicating with the orderer endpoint")
 	flags.StringVarP(&caFile, "cafile", "", "", "Path to file containing PEM-encoded trusted certificate(s) for the ordering endpoint")
 	flags.StringVarP(&priKey, "priKey", "z", "", "Private key for signing Invoke")
-	flags.StringVarP(&inkLimit, "inkLimit", "i", "0", "inkLimit")
+	flags.StringVarP(&feeLimit, "feeLimit", "i", "0", "feeLimit")
 	flags.StringVarP(&msg, "msg", "m", "", "message for chaincode invocation")
 }
 
@@ -80,7 +80,7 @@ var (
 	tls               bool
 	caFile            string
 	priKey            string
-	inkLimit          string
+	feeLimit          string
 	msg               string
 )
 

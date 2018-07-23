@@ -8,8 +8,8 @@ import (
 )
 
 type LedgerSet struct {
-	TranSet *transutil.TranSet
-	TxRwSet *rwsetutil.TxRwSet
+	TranSet      *transutil.TranSet
+	TxRwSet      *rwsetutil.TxRwSet
 }
 
 func (ledgerSet *LedgerSet) ToProtoBytes() ([]byte, error) {
@@ -46,6 +46,7 @@ func (ledgerSet *LedgerSet) FromProtoBytes(protoBytes []byte) error {
 	} else {
 		ledgerSet.TranSet = nil
 	}
+
 	ledgerSet.TxRwSet = &rwsetutil.TxRwSet{}
 	err = ledgerSet.TxRwSet.FromProtoBytes(protoLedgerSet.Txrwset)
 	if err != nil {

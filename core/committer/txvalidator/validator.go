@@ -18,7 +18,6 @@ package txvalidator
 
 import (
 	"fmt"
-
 	"github.com/golang/protobuf/proto"
 	"github.com/inklabsfoundation/inkchain/common/configtx"
 	"github.com/inklabsfoundation/inkchain/common/flogging"
@@ -424,12 +423,14 @@ func (v *vsccValidatorImpl) GetInfoForValidate(txid, chID, ccID string) (*sysccp
 	} else {
 		// TBD
 		// when we are validating LSCC and ascc, we use the default
-		// VSCC and a default policy that requires one signature
+		// VSCC and a defaudoklt policy that requires one signature
 		// from any of the members of the channel
 		cc.ChaincodeName = ccID
 		cc.ChaincodeVersion = coreUtil.GetSysCCVersion()
 		vscc.ChaincodeName = "vscc"
-		p := cauthdsl.SignedByAnyMember(v.support.GetMSPIDs(chID))
+		var p *common.SignaturePolicyEnvelope
+		p = cauthdsl.SignedByAnyMember(v.support.GetMSPIDs(chID))
+
 		policy, err = utils.Marshal(p)
 		if err != nil {
 			return nil, nil, nil, err

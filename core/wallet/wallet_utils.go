@@ -135,6 +135,19 @@ func GetAddressHexFromPrikey(priKey string) (string, error) {
 	return hex.EncodeToString(PubkeyToAddress(ecdsa_prikey.PublicKey).ToBytes()), nil
 }
 
+func CheckAndGetSenderFromSignature(signature string, data []byte) (string, error) {
+	signatureBytes, err := SignatureStringToBytes(signature)
+	if err != nil {
+		return "", err
+	}
+	hashT := sha256.Sum256(data)
+	sender, err := GetSenderFromSignature(hashT[:], signatureBytes)
+	if err != nil {
+		return "", err
+	}
+	return sender.ToString(), nil
+}
+
 func HexToAddress(hexKey string) (*Address, error) {
 	b, err := hex.DecodeString(hexKey)
 	if err != nil {

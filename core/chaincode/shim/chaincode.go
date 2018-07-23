@@ -356,6 +356,18 @@ func (stub *ChaincodeStub) verifySigAndGetSender(proposal *pb.Proposal) (string,
 	return senderStr, nil
 }
 
+// get sender msg info
+func (stub *ChaincodeStub) getSenderMsg(proposal *pb.Proposal) (string, error) {
+	cis, err := putils.GetChaincodeInvocationSpecFromSignedProposal(proposal)
+	if err != nil {
+		return "", fmt.Errorf("Failed extracting signedProposal from signed signedProposal. [%s]", err)
+	}
+	if cis.Sig == nil || cis.SenderSpec == nil {
+		return "", nil
+	}
+	return string(cis.SenderSpec.Msg), nil
+}
+
 //*********
 
 func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.ChaincodeInput, signedProposal *pb.SignedProposal) error {
@@ -455,7 +467,7 @@ type HistoryQueryIterator struct {
 type resultType uint8
 
 const (
-	STATE_QUERY_RESULT resultType = iota + 1
+	STATE_QUERY_RESULT   resultType = iota + 1
 	HISTORY_QUERY_RESULT
 )
 
@@ -772,6 +784,7 @@ func (stub *ChaincodeStub) Transfer(to string, balanceType string, amount *big.I
 	kvTranSet := &kvtranset.KVTranSet{Trans: tranSet}
 	return stub.handler.handleTransfer(kvTranSet, stub.TxID)
 }
+
 func (stub *ChaincodeStub) GetAccount(address string) (*wallet.Account, error) {
 	if address == "" || len(address) != wallet.AddressStringLength {
 		return nil, fmt.Errorf("invalid address length")
@@ -801,8 +814,42 @@ func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
 }
 
+//calc fee for the invoke function
+func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
+	msg, err := stub.getSenderMsg(stub.proposal)
+	if err != nil {
+		return nil, err
+	}
+	content := msg
+	return stub.handler.handleCalcFee(content, stub.TxID)
+}
+
+//calc fee by passed paramaters
+func (stub *ChaincodeStub) CalcFee(content string) (*big.Int, error) {
+	return stub.handler.handleCalcFee(content, stub.TxID)
+}
+
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return stub.handler.handleTransfer(trans, stub.TxID)
+}
+
+//sign data
+func (stub *ChaincodeStub) Sign(data []byte) (sign string, err error) {
+	return stub.handler.handleSign(data, stub.TxID)
+}
+
+//verify signature from Sign
+func (stub *ChaincodeStub) Verify(sign string, data []byte, address string) (result bool, err error) {
+	if data == nil || len(data) <= 0 {
+		return false, fmt.Errorf("data must not be empty")
+	}
+	if len(strings.TrimSpace(sign)) <= 0 {
+		return false, fmt.Errorf("signature must be none-empty string")
+	}
+	if len(strings.TrimSpace(address)) <= 0 {
+		return false, fmt.Errorf("address must be none-empty string")
+	}
+	return stub.handler.handleVerify(sign, data,address, stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

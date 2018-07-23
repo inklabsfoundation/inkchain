@@ -28,6 +28,7 @@ type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
+var SignPrivateKey string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`
@@ -39,6 +40,20 @@ type TxData struct {
 	Recipient   *Address `json:"to"`
 	BalanceType string   `json:"balanceType"`
 	Amount      *big.Int `json:"amount"`
+}
+
+// type GenAccount
+type Token struct {
+	// token name
+	Name string `json:"tokenName"`
+	// total supply of the token
+	totalSupply *big.Int `json:"totalSupply"`
+	// initial address to issue
+	Address string `json:"address"`
+	// token status : Created, Delivered, Invalidate
+	Status string `json:"status"`
+	// token decimals
+	Decimals int `json:"decimals"`
 }
 
 func (a *Address) SetBytes(b []byte) {

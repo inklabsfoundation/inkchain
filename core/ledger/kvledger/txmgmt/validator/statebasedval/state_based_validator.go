@@ -95,12 +95,12 @@ func (v *Validator) validateCounterAndInk(sender string, cis *peer.ChaincodeInvo
 				}
 			}
 			fee := big.NewInt(inkFee)
-			inkLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.InkLimit), 10)
+			feeLimit, ok := new(big.Int).SetString(string(cis.SenderSpec.FeeLimit), 10)
 			if !ok {
-				return 0, fmt.Errorf("committer: invalid inklimit.")
+				return 0, fmt.Errorf("committer: invalid feeLimit.")
 			}
-			if fee.Cmp(inkLimit) > 0 {
-				return 0, fmt.Errorf("committer: fee exceeds inkLimit.")
+			if fee.Cmp(feeLimit) > 0 {
+				return 0, fmt.Errorf("committer: fee exceeds feeLimit.")
 			}
 			if !ok || inkBalance.Cmp(fee) < 0 {
 				return 0, fmt.Errorf("committer: insuffient balance for ink consumption.")
@@ -144,9 +144,9 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 			return nil, nil, nil, peer.TxValidationCode_BAD_SIGNATURE, nil
 		}
 
-		contentLength := len(respPayload.Results)
+		contentLength := 0
 		if cis.SenderSpec != nil {
-			contentLength += len(cis.SenderSpec.String())
+			contentLength += len(cis.SenderSpec.Msg)
 		}
 		inkFee, err := v.validateCounterAndInk(senderStr, cis, transferUpdates, contentLength)
 		if err != nil {
@@ -157,6 +157,7 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 		senderCounter.Counter = cis.SenderSpec.Counter
 		senderCounter.Ink = big.NewInt(inkFee)
 	}
+
 	//mvccvalidation, may invalidate transaction
 	if doMVCCValidation {
 		// validate signature
@@ -176,6 +177,7 @@ func (v *Validator) validateEndorserTX(envBytes []byte, doMVCCValidation bool, u
 				return nil, nil, senderCounter, txResult, err
 			}
 		}
+
 	}
 	return ledgerSet.TxRwSet, ledgerSet.TranSet, senderCounter, txResult, err
 }
@@ -236,9 +238,11 @@ func (v *Validator) ValidateAndPrepareBatch(block *common.Block, doMVCCValidatio
 		//txRWSet != nil => t is valid
 		committingTxHeight := version.NewHeight(block.Header.Number, uint64(txIndex))
 
+		//Set transfer sender's fee trans
 		if senderCounter != nil && (txResult == peer.TxValidationCode_VALID || txResult == peer.TxValidationCode_EXCEED_BALANCE) {
 			transferUpdates.UpdateSender(senderCounter.Sender, senderCounter.Counter, senderCounter.Ink, committingTxHeight)
 		}
+
 		if txResult == peer.TxValidationCode_VALID {
 			if txRWSet != nil {
 				addWriteSetToBatch(txRWSet, committingTxHeight, updates)
@@ -312,6 +316,7 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 
 	return peer.TxValidationCode_VALID, nil
 }
+
 func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
 	balance, ok := accountBalance[kvTo.BalanceType]
 	if !ok {
@@ -337,6 +342,7 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	return peer.TxValidationCode_INVALID_OTHER_REASON, nil
 }
+
 func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte, txHeight *version.Height) {
 	doInkDist := false
 	if feeAddress != nil && len(feeAddress) == wallet.AddressLength {
@@ -347,6 +353,7 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 	for accountUpdate, _ := range transferBatch.Updates {
 		//1. Get balance change from transferSet
 		balanceChange := transferBatch.GetAllBalanceUpdates(accountUpdate)
+		//2. Get inkFee from transfer
 		inkFee, ok := transferBatch.GetSenderInk(accountUpdate)
 		if !ok || inkFee == nil {
 			inkFee = bigZero
@@ -356,14 +363,17 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 			feeBalance = big.NewInt(0)
 			balanceChange[wallet.MAIN_BALANCE_NAME] = feeBalance
 		}
+		// 3.Get accountUpdate info from state
 		versionedValue, err := v.db.GetState(wallet.WALLET_NAMESPACE, accountUpdate)
 		if err != nil {
 			continue
 		}
+		//4. recalculate inkfee and balance if feeAddress exists feeBalance need to sub inkFee
 		if doInkDist && feeBalance != nil && inkFee.Cmp(bigZero) > 0 {
 			feeBalance = feeBalance.Sub(feeBalance, inkFee)
 			inkTotal = inkTotal.Add(inkTotal, inkFee)
 		}
+		//5.unmarshal accountUpdate info
 		account := &wallet.Account{}
 		if versionedValue != nil {
 			jsonErr := json.Unmarshal(versionedValue.Value, account)
@@ -389,6 +399,7 @@ func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, bat
 		}
 		batch.Put(wallet.WALLET_NAMESPACE, accountUpdate, accountBytes, transferBatch.GetBalanceVersion(accountUpdate))
 	}
+	//deduction
 	if doInkDist && inkTotal.Cmp(bigZero) > 0 {
 		account := &wallet.Account{}
 		var accountVersion *version.Height

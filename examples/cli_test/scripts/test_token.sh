@@ -97,6 +97,15 @@ queryToken(){
     echo
 }
 
+calcFee(){
+    echo_b "Attempting to calc fee for operate"
+    sleep 3
+    peer chaincode query -C mychannel -n token -c '{"Args":["calcFee","test"]}' >log.txt
+    res=$?
+    cat log.txt
+    verifyResult $res "calc fee Failed."
+}
+
 echo_b "=====================6.Issue a token using ascc========================"
 issueToken  INK
 issueToken2
@@ -114,6 +123,9 @@ chaincodeQueryB
 
 echo_b "=====================10.Query token====================="
 queryToken
+
+echo_b "=====================11.Calc fee====================="
+calcFee
 
 echo
 echo_g "=====================All GOOD, MVE Test completed ===================== "

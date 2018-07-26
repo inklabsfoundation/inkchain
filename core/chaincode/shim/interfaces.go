@@ -216,6 +216,9 @@ type ChaincodeStubInterface interface {
 	// revealed from his/her signature.
 	GetSender() (string, error)
 
+	// GetSenderPubKey returns the sender's public key.
+	GetSenderPubKey() (string, error)
+
 	//CalcFeeByInvoke returns the fee of operate, And only can be called
 	//by invoke
 	CalcFeeByInvoke() (*big.Int, error)

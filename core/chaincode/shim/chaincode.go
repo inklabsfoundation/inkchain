@@ -63,6 +63,7 @@ const (
 type ChaincodeStub struct {
 	TxID           string
 	Sender         string
+	SenderPubKey   string
 	chaincodeEvent *pb.ChaincodeEvent
 	args           [][]byte
 	handler        *Handler
@@ -348,12 +349,33 @@ func (stub *ChaincodeStub) verifySigAndGetSender(proposal *pb.Proposal) (string,
 	if err != nil {
 		return "", fmt.Errorf("invalid signature1. [%s]", err)
 	}
+	chaincodeLogger.Debugf("before getSender");
 	sender, err := wallet.GetSenderFromSignature(hash, cis.Sig)
 	senderStr := sender.ToString()
+	chaincodeLogger.Debugf("after getSender:" + senderStr);
 	if strings.Compare(senderStr, string(cis.SenderSpec.Sender[:])) != 0 {
 		return "", fmt.Errorf("invalid signature2. [%s]", err.Error())
 	}
 	return senderStr, nil
+}
+
+func (stub *ChaincodeStub) verifySigAndGetSenderPubKey(proposal *pb.Proposal) (string, error) {
+
+	cis, err := putils.GetChaincodeInvocationSpecFromSignedProposal(proposal)
+	if err != nil {
+		return "", fmt.Errorf("Failed extracting signedProposal from signed signedProposal. 1 [%s]", err)
+	}
+	if cis.Sig == nil || cis.SenderSpec == nil {
+		return "", nil
+	}
+	hash, err := wallet.GetInvokeHash(cis.ChaincodeSpec, cis.IdGenerationAlg, cis.SenderSpec)
+	if err != nil {
+		return "", fmt.Errorf("invalid signature1. [%s]", err)
+	}
+	chaincodeLogger.Debugf("before getSenderPubKey");
+	senderPubKey, err := wallet.GetSenderPubKeyFromSignature(hash, cis.Sig)
+	chaincodeLogger.Debugf("after:"+ senderPubKey)
+	return senderPubKey, nil
 }
 
 // get sender msg info
@@ -397,10 +419,22 @@ func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.Chainco
 		if err != nil {
 			return fmt.Errorf("Failed computing binding from signedProposal. [%s]", err)
 		}
+		chaincodeLogger.Debugf("before init stub:" + stub.Sender)
+		sender, err := stub.verifySigAndGetSender(stub.proposal)
+		bytes := make([]byte, len(sender))
+		copy(bytes,sender)
+		stub.Sender = string(bytes)
 
-		stub.Sender, err = stub.verifySigAndGetSender(stub.proposal)
+		chaincodeLogger.Debugf("after getSender:" + stub.Sender);
+		senderPubKey, err := stub.verifySigAndGetSenderPubKey(stub.proposal)
+		pubBytes := make([]byte, len(senderPubKey))
+		copy(pubBytes,senderPubKey)
+		stub.SenderPubKey = string(pubBytes)
+
+		chaincodeLogger.Debugf("init done! Sender:" + stub.Sender);
+		chaincodeLogger.Debugf("init done! SenderPub:" + stub.SenderPubKey);
 		if err != nil {
-			return fmt.Errorf("invalid sender or signature from signedProposal. [%s]", err)
+			return fmt.Errorf("unable to get pub key. [%s]", err)
 		}
 	}
 
@@ -811,8 +845,15 @@ func (stub *ChaincodeStub) IssueToken(address string, balanceType string, amount
 }
 
 func (stub *ChaincodeStub) GetSender() (string, error) {
+	chaincodeLogger.Warningf("call GetSender:" + stub.Sender);
 	return stub.Sender, nil
 }
+
+func (stub *ChaincodeStub) GetSenderPubKey() (string, error) {
+	chaincodeLogger.Warningf("call GetSenderPubKey:" + stub.Sender);
+	return stub.SenderPubKey, nil
+}
+
 
 //calc fee for the invoke function
 func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {

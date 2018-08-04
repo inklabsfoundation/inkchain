@@ -349,10 +349,8 @@ func (stub *ChaincodeStub) verifySigAndGetSender(proposal *pb.Proposal) (string,
 	if err != nil {
 		return "", fmt.Errorf("invalid signature1. [%s]", err)
 	}
-	chaincodeLogger.Debugf("before getSender");
 	sender, err := wallet.GetSenderFromSignature(hash, cis.Sig)
 	senderStr := sender.ToString()
-	chaincodeLogger.Debugf("after getSender:" + senderStr);
 	if strings.Compare(senderStr, string(cis.SenderSpec.Sender[:])) != 0 {
 		return "", fmt.Errorf("invalid signature2. [%s]", err.Error())
 	}
@@ -838,12 +836,10 @@ func (stub *ChaincodeStub) IssueToken(address string, balanceType string, amount
 }
 
 func (stub *ChaincodeStub) GetSender() (string, error) {
-	chaincodeLogger.Warningf("call GetSender:" + stub.Sender);
 	return stub.Sender, nil
 }
 
 func (stub *ChaincodeStub) GetSenderPubKey() (string, error) {
-	chaincodeLogger.Warningf("call GetSenderPubKey:" + stub.Sender);
 	return stub.SenderPubKey, nil
 }
 

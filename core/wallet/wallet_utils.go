@@ -85,7 +85,7 @@ func GetSenderPubKeyFromSignature(hashT []byte, signature []byte) (string, error
 	if err != nil {
 		return "", fmt.Errorf("invalid signature: %v", err)
 	}
-	return hex.EncodeToString(pub[:]), nil
+	return hex.EncodeToString(FromECDSAPub(ToECDSAPub(pub))[1:]), nil
 
 }
 

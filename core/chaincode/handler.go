@@ -938,11 +938,11 @@ func (handler *Handler) handleVerify(msg *pb.ChaincodeMessage) {
 				shorttxid(msg.Txid), err, pb.ChaincodeMessage_ERROR)
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_ERROR, Payload: payload, Txid: msg.Txid}
 		} else {
-			result := true
+			result := false
 			if !strings.HasPrefix(checkData.Address, wallet.ADDRESS_PREFIX) {
 				checkData.Address = wallet.ADDRESS_PREFIX + checkData.Address
 			}
-			if sender != checkData.Address {
+			if sender == checkData.Address {
 				result = true
 			}
 			// Send response msg back to chaincode. GetState will not trigger event

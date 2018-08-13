@@ -63,6 +63,7 @@ const (
 type ChaincodeStub struct {
 	TxID           string
 	Sender         string
+	SenderPubKey   string
 	chaincodeEvent *pb.ChaincodeEvent
 	args           [][]byte
 	handler        *Handler
@@ -356,6 +357,23 @@ func (stub *ChaincodeStub) verifySigAndGetSender(proposal *pb.Proposal) (string,
 	return senderStr, nil
 }
 
+func (stub *ChaincodeStub) verifySigAndGetSenderPubKey(proposal *pb.Proposal) (string, error) {
+
+	cis, err := putils.GetChaincodeInvocationSpecFromSignedProposal(proposal)
+	if err != nil {
+		return "", fmt.Errorf("Failed extracting signedProposal from signed signedProposal. 1 [%s]", err)
+	}
+	if cis.Sig == nil || cis.SenderSpec == nil {
+		return "", nil
+	}
+	hash, err := wallet.GetInvokeHash(cis.ChaincodeSpec, cis.IdGenerationAlg, cis.SenderSpec)
+	if err != nil {
+		return "", fmt.Errorf("invalid signature1. [%s]", err)
+	}
+	senderPubKey, err := wallet.GetSenderPubKeyFromSignature(hash, cis.Sig)
+	return senderPubKey, nil
+}
+
 // get sender msg info
 func (stub *ChaincodeStub) getSenderMsg(proposal *pb.Proposal) (string, error) {
 	cis, err := putils.GetChaincodeInvocationSpecFromSignedProposal(proposal)
@@ -397,11 +415,18 @@ func (stub *ChaincodeStub) init(handler *Handler, txid string, input *pb.Chainco
 		if err != nil {
 			return fmt.Errorf("Failed computing binding from signedProposal. [%s]", err)
 		}
+		sender, err := stub.verifySigAndGetSender(stub.proposal)
+		bytes := make([]byte, len(sender))
+		copy(bytes,sender)
+		stub.Sender = string(bytes)
 
-		stub.Sender, err = stub.verifySigAndGetSender(stub.proposal)
+		senderPubKey, err := stub.verifySigAndGetSenderPubKey(stub.proposal)
 		if err != nil {
-			return fmt.Errorf("invalid sender or signature from signedProposal. [%s]", err)
+			return fmt.Errorf("unable to get pub key. [%s]", err)
 		}
+		pubBytes := make([]byte, len(senderPubKey))
+		copy(pubBytes,senderPubKey)
+		stub.SenderPubKey = string(pubBytes)
 	}
 
 	return nil
@@ -813,6 +838,11 @@ func (stub *ChaincodeStub) IssueToken(address string, balanceType string, amount
 func (stub *ChaincodeStub) GetSender() (string, error) {
 	return stub.Sender, nil
 }
+
+func (stub *ChaincodeStub) GetSenderPubKey() (string, error) {
+	return stub.SenderPubKey, nil
+}
+
 
 //calc fee for the invoke function
 func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {

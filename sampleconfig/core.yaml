@@ -97,6 +97,8 @@ peer:
     simpleFeeK: 25000
     simpleFeeX0: 0
     simpleFeeB: 4000000
+
+    signPrivateFile:  /etc/inkchain/file/private.key
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
     addressAutoDetect: false

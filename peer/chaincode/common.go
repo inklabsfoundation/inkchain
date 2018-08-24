@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"strconv"
-	
+
 	"github.com/inklabsfoundation/inkchain/common/cauthdsl"
 	"github.com/inklabsfoundation/inkchain/core/chaincode"
 	"github.com/inklabsfoundation/inkchain/core/chaincode/platforms"
@@ -141,10 +141,10 @@ func getSenderSpec(cmd *cobra.Command, cf *ChaincodeCmdFactory) (*pb.SenderSpec,
 
 	senderSpec.Sender = []byte(address)
 	senderSpec.Counter = counter
-	if inkLimit == "" {
+	if feeLimit == "" {
 		return nil, errors.New("0 ink limit")
 	}
-	senderSpec.InkLimit = []byte(inkLimit)
+	senderSpec.FeeLimit = []byte(feeLimit)
 	senderSpec.Msg = []byte(msg)
 	return senderSpec, nil
 }

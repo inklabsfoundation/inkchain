@@ -221,7 +221,13 @@ type ChaincodeStubInterface interface {
 	CalcFeeByInvoke() (*big.Int, error)
 
 	//CalcFee returns the fee of passed content
-	CalcFee (content string) (*big.Int, error)
+	CalcFee(content string) (*big.Int, error)
+
+	//sign data
+	Sign(data []byte) (sign string, err error)
+
+	//verify signature from Sign
+	Verify(sign string, data []byte, address string) (result bool, err error)
 }
 
 // CommonIteratorInterface allows a chaincode to check whether any more result

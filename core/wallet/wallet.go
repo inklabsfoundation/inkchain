@@ -28,6 +28,7 @@ type Hash [HashLength]byte
 type Address [AddressLength]byte
 
 var InkMinimumFee *big.Int
+var SignPrivateKey string
 
 type Account struct {
 	Balance map[string]*big.Int `json:"balance"`

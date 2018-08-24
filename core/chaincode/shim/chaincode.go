@@ -820,17 +820,36 @@ func (stub *ChaincodeStub) CalcFeeByInvoke() (*big.Int, error) {
 	if err != nil {
 		return nil, err
 	}
-	content :=  msg
+	content := msg
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 //calc fee by passed paramaters
-func (stub *ChaincodeStub) CalcFee (content string) (*big.Int, error) {
+func (stub *ChaincodeStub) CalcFee(content string) (*big.Int, error) {
 	return stub.handler.handleCalcFee(content, stub.TxID)
 }
 
 func (stub *ChaincodeStub) MultiTransfer(trans *kvtranset.KVTranSet) error {
 	return stub.handler.handleTransfer(trans, stub.TxID)
+}
+
+//sign data
+func (stub *ChaincodeStub) Sign(data []byte) (sign string, err error) {
+	return stub.handler.handleSign(data, stub.TxID)
+}
+
+//verify signature from Sign
+func (stub *ChaincodeStub) Verify(sign string, data []byte, address string) (result bool, err error) {
+	if data == nil || len(data) <= 0 {
+		return false, fmt.Errorf("data must not be empty")
+	}
+	if len(strings.TrimSpace(sign)) <= 0 {
+		return false, fmt.Errorf("signature must be none-empty string")
+	}
+	if len(strings.TrimSpace(address)) <= 0 {
+		return false, fmt.Errorf("address must be none-empty string")
+	}
+	return stub.handler.handleVerify(sign, data,address, stub.TxID)
 }
 
 // ------------- Logging Control and Chaincode Loggers ---------------

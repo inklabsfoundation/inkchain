@@ -330,13 +330,13 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	if kvTo.BalanceType == wallet.MAIN_BALANCE_NAME {
 		transferAmount := new(big.Int).SetBytes(kvTo.Amount)
-		if balance.Cmp(transferAmount.Add(transferAmount, inkFee)) >= 0 {
+		if balance.Sub(balance,transferAmount.Add(transferAmount, inkFee)).Cmp(big.NewInt(0)) >= 0 {
 			return peer.TxValidationCode_VALID, nil
 		} else {
 			return peer.TxValidationCode_EXCEED_BALANCE, nil
 		}
 	} else {
-		if balance.Cmp(new(big.Int).SetBytes(kvTo.Amount)) >= 0 {
+		if balance.Sub(balance,new(big.Int).SetBytes(kvTo.Amount)).Cmp(big.NewInt(0)) >= 0 {
 			return peer.TxValidationCode_VALID, nil
 		}
 	}

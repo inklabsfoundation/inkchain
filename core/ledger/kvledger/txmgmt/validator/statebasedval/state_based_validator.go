@@ -308,6 +308,18 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 		}
 	}
 
+	if updates.ExistsFrom(from) {
+		balanceUpdates := updates.GetAllBalanceUpdates(from)
+		for tokenType, value := range balanceUpdates {
+			balance, ok := accountBalance[tokenType]
+			if ok {
+				balance = balance.Add(balance, value)
+			} else {
+				accountBalance[tokenType] = value
+			}
+		}
+	}
+
 	for _, kvTo := range tranSet.KvTranSet.Trans {
 		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates, inkFee); valid != peer.TxValidationCode_VALID || err != nil {
 			return valid, nil
@@ -322,25 +334,16 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	if !ok {
 		return peer.TxValidationCode_BAD_BALANCE, nil
 	}
-	if updates.ExistsFrom(from) {
-		balanceUpdate := updates.GetBalanceUpdate(from, kvTo.BalanceType)
-		if balanceUpdate != nil {
-			balance = balance.Add(balance, balanceUpdate)
-		}
-	}
+	transferAmount := new(big.Int).SetBytes(kvTo.Amount)
+	balance = balance.Sub(balance, transferAmount)
 	if kvTo.BalanceType == wallet.MAIN_BALANCE_NAME {
-		transferAmount := new(big.Int).SetBytes(kvTo.Amount)
-		if balance.Sub(balance,transferAmount.Add(transferAmount, inkFee)).Cmp(big.NewInt(0)) >= 0 {
-			return peer.TxValidationCode_VALID, nil
-		} else {
-			return peer.TxValidationCode_EXCEED_BALANCE, nil
-		}
-	} else {
-		if balance.Sub(balance,new(big.Int).SetBytes(kvTo.Amount)).Cmp(big.NewInt(0)) >= 0 {
-			return peer.TxValidationCode_VALID, nil
-		}
+		balance = balance.Sub(balance, inkFee)
 	}
-	return peer.TxValidationCode_INVALID_OTHER_REASON, nil
+	if balance.Cmp(big.NewInt(0)) >= 0 {
+		return peer.TxValidationCode_VALID, nil
+	} else {
+		return peer.TxValidationCode_EXCEED_BALANCE, nil
+	}
 }
 
 func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte, txHeight *version.Height) {

@@ -316,6 +316,10 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 				balance = balance.Add(balance, value)
 			} else {
 				accountBalance[tokenType] = value
+				balance = accountBalance[tokenType]
+			}
+			if tokenType==wallet.MAIN_BALANCE_NAME{
+				balance = balance.Sub(balance, inkFee)
 			}
 		}
 	}
@@ -336,9 +340,6 @@ func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kv
 	}
 	transferAmount := new(big.Int).SetBytes(kvTo.Amount)
 	balance = balance.Sub(balance, transferAmount)
-	if kvTo.BalanceType == wallet.MAIN_BALANCE_NAME {
-		balance = balance.Sub(balance, inkFee)
-	}
 	if balance.Cmp(big.NewInt(0)) >= 0 {
 		return peer.TxValidationCode_VALID, nil
 	} else {

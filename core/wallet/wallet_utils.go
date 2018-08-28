@@ -80,6 +80,15 @@ func GetSenderFromSignature(hashT []byte, signature []byte) (*Address, error) {
 
 }
 
+func GetSenderPubKeyFromSignature(hashT []byte, signature []byte) (string, error) {
+	pub, err := crypto.Ecrecover(hashT, signature)
+	if err != nil {
+		return "", fmt.Errorf("invalid signature: %v", err)
+	}
+	return hex.EncodeToString(FromECDSAPub(ToECDSAPub(pub))[1:]), nil
+
+}
+
 func Keccak256(data ...[]byte) []byte {
 	d := sha3.NewKeccak256()
 	for _, b := range data {

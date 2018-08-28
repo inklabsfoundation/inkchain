@@ -540,6 +540,11 @@ func (stub *MockStub) GetSender() (string, error) {
 	return "", nil
 }
 
+// Not implemented yet
+func (stub *MockStub) GetSenderPubKey() (string, error) {
+	return "", nil
+}
+
 // Not implemented
 func (stub *MockStub) GetSignedProposal() (*pb.SignedProposal, error) {
 	return stub.signedProposal, nil

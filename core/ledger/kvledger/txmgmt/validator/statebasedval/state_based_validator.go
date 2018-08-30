@@ -318,14 +318,14 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 				accountBalance[tokenType] = value
 				balance = accountBalance[tokenType]
 			}
-			if tokenType==wallet.MAIN_BALANCE_NAME{
+			if tokenType == wallet.MAIN_BALANCE_NAME {
 				balance = balance.Sub(balance, inkFee)
 			}
 		}
 	}
 
 	for _, kvTo := range tranSet.KvTranSet.Trans {
-		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates, inkFee); valid != peer.TxValidationCode_VALID || err != nil {
+		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates); valid != peer.TxValidationCode_VALID || err != nil {
 			return valid, nil
 		}
 	}
@@ -333,7 +333,7 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 	return peer.TxValidationCode_VALID, nil
 }
 
-func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
+func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch) (peer.TxValidationCode, error) {
 	balance, ok := accountBalance[kvTo.BalanceType]
 	if !ok {
 		return peer.TxValidationCode_BAD_BALANCE, nil

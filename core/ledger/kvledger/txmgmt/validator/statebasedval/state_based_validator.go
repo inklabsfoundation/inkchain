@@ -308,8 +308,24 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 		}
 	}
 
+	if updates.ExistsFrom(from) {
+		balanceUpdates := updates.GetAllBalanceUpdates(from)
+		for tokenType, value := range balanceUpdates {
+			balance, ok := accountBalance[tokenType]
+			if ok {
+				balance = balance.Add(balance, value)
+			} else {
+				accountBalance[tokenType] = value
+				balance = accountBalance[tokenType]
+			}
+			if tokenType == wallet.MAIN_BALANCE_NAME {
+				balance = balance.Sub(balance, inkFee)
+			}
+		}
+	}
+
 	for _, kvTo := range tranSet.KvTranSet.Trans {
-		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates, inkFee); valid != peer.TxValidationCode_VALID || err != nil {
+		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates); valid != peer.TxValidationCode_VALID || err != nil {
 			return valid, nil
 		}
 	}
@@ -317,30 +333,18 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 	return peer.TxValidationCode_VALID, nil
 }
 
-func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch, inkFee *big.Int) (peer.TxValidationCode, error) {
+func (v *Validator) validateKVTransfer(from string, fromVer *transet.Version, kvTo *kvtranset.KVTrans, accountBalance map[string]*big.Int, updates *statedb.TransferBatch) (peer.TxValidationCode, error) {
 	balance, ok := accountBalance[kvTo.BalanceType]
 	if !ok {
 		return peer.TxValidationCode_BAD_BALANCE, nil
 	}
-	if updates.ExistsFrom(from) {
-		balanceUpdate := updates.GetBalanceUpdate(from, kvTo.BalanceType)
-		if balanceUpdate != nil {
-			balance = balance.Add(balance, balanceUpdate)
-		}
-	}
-	if kvTo.BalanceType == wallet.MAIN_BALANCE_NAME {
-		transferAmount := new(big.Int).SetBytes(kvTo.Amount)
-		if balance.Cmp(transferAmount.Add(transferAmount, inkFee)) >= 0 {
-			return peer.TxValidationCode_VALID, nil
-		} else {
-			return peer.TxValidationCode_EXCEED_BALANCE, nil
-		}
+	transferAmount := new(big.Int).SetBytes(kvTo.Amount)
+	balance = balance.Sub(balance, transferAmount)
+	if balance.Cmp(big.NewInt(0)) >= 0 {
+		return peer.TxValidationCode_VALID, nil
 	} else {
-		if balance.Cmp(new(big.Int).SetBytes(kvTo.Amount)) >= 0 {
-			return peer.TxValidationCode_VALID, nil
-		}
+		return peer.TxValidationCode_EXCEED_BALANCE, nil
 	}
-	return peer.TxValidationCode_INVALID_OTHER_REASON, nil
 }
 
 func (v *Validator) addTransferToRWSet(transferBatch *statedb.TransferBatch, batch *statedb.UpdateBatch, feeAddress []byte, txHeight *version.Height) {

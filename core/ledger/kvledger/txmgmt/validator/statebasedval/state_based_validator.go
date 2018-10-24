@@ -318,11 +318,12 @@ func (v *Validator) validateTrans(tranSet *transutil.TranSet, updates *statedb.T
 				accountBalance[tokenType] = value
 				balance = accountBalance[tokenType]
 			}
-			if tokenType == wallet.MAIN_BALANCE_NAME {
-				balance = balance.Sub(balance, inkFee)
-			}
 		}
 	}
+
+	mainBalance := accountBalance[wallet.MAIN_BALANCE_NAME]
+	mainBalance = mainBalance.Sub(mainBalance, inkFee)
+
 
 	for _, kvTo := range tranSet.KvTranSet.Trans {
 		if valid, err := v.validateKVTransfer(from, fromVer, kvTo, accountBalance, updates); valid != peer.TxValidationCode_VALID || err != nil {

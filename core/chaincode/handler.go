@@ -823,7 +823,7 @@ func (handler *Handler) handleGetFee(msg *pb.ChaincodeMessage) {
 			chaincodeLogger.Debugf("[%s] getting fee for content %s, channel %s",
 				shorttxid(msg.Txid), content, txContext.chainID)
 		}
-		inkFee, err := impl.NewSimpleInkAlg().CalcInk(len(content))
+		feeTmp, err := impl.NewSimpleInkAlg().CalcInk(len(content))
 		if err != nil {
 			// Send error msg back to chaincode. GetState will not trigger event
 			payload := []byte(err.Error())
@@ -835,7 +835,7 @@ func (handler *Handler) handleGetFee(msg *pb.ChaincodeMessage) {
 			if chaincodeLogger.IsEnabledFor(logging.DEBUG) {
 				chaincodeLogger.Debugf("[%s]Got fee. Sending %s", shorttxid(msg.Txid), pb.ChaincodeMessage_RESPONSE)
 			}
-			fee := big.NewInt(inkFee)
+			fee := big.NewInt(feeTmp)
 			serialSendMsg = &pb.ChaincodeMessage{Type: pb.ChaincodeMessage_RESPONSE, Payload: fee.Bytes(), Txid: msg.Txid}
 		}
 	}()

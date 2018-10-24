@@ -27,7 +27,7 @@
 #   - unit-test-clean - cleans unit test state (particularly from docker)
 
 PROJECT_NAME   = inklabsfoundation/inkchain
-BASE_VERSION = 0.13.0
+BASE_VERSION = 0.13.2-test
 PREV_VERSION = 0.12.0
 IS_RELEASE = true
 
@@ -56,7 +56,7 @@ GO_LDFLAGS = $(patsubst %,-X $(PKGNAME)/common/metadata.%,$(METADATA_VAR))
 
 GO_TAGS ?=
 
-CHAINTOOL_URL ?= https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/chaintool-$(CHAINTOOL_RELEASE)/hyperledger-fabric-chaintool-$(CHAINTOOL_RELEASE).jar
+CHAINTOOL_URL ?= http://39.105.67.252/hyperledger-fabric-chaintool-$(CHAINTOOL_RELEASE).jar
 
 export GO_LDFLAGS
 

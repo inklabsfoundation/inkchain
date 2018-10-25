@@ -148,20 +148,21 @@ func (l *kvLedger) GetTransactionByID(txID string) (*peer.ProcessedTransaction, 
 	}
 	txVResult, err := l.blockStore.RetrieveTxValidationCodeByTxID(txID)
 
-	cis, respPayload, err := putils.GetActionFromEnvelopeProp(tranEnv)
+	cis, _, err := putils.GetActionFromEnvelopeProp(tranEnv)
 	if err != nil {
 		return nil, fmt.Errorf("nil tx action")
 	}
 	fee := int64(0)
 	if cis.SenderSpec != nil {
-		contentLength := len(respPayload.Results) + len(cis.SenderSpec.String())
+		contentLength := 0
+		contentLength += len(cis.SenderSpec.Msg)
 		fee, err = l.inkCalculator.CalcInk(contentLength)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult), BlockHash: block.Header.Hash(), InkFee: fee}
+	processedTran := &peer.ProcessedTransaction{TransactionEnvelope: tranEnv, ValidationCode: int32(txVResult), BlockHash: block.Header.Hash(), Fee: fee}
 	return processedTran, nil
 }
 
@@ -178,7 +179,7 @@ func (l *kvLedger) GetBlockByNumber(blockNumber uint64) (*common.Block, error) {
 
 // GetBlockWithHashByNumber retrieves a block with hash by block number
 func (l *kvLedger) GetBlockWithHashByNumber(blockNumber uint64) (*common.ProcessedBlock, error) {
-	block, err :=  l.blockStore.RetrieveBlockByNumber(blockNumber)
+	block, err := l.blockStore.RetrieveBlockByNumber(blockNumber)
 	if err != nil {
 		return nil, err
 	}

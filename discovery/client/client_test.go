@@ -95,7 +95,7 @@ var (
 	}
 
 	propertiesWithChaincodes = &gossip.Properties{
-		Chaincodes: []*gossip.Chaincode{cc, cc2, cc3},
+		Chaincodes: []*gossip.Chaincode{cc, cc2},
 	}
 
 	expectedConf = &discovery.ConfigResult{
@@ -402,7 +402,7 @@ func TestClient(t *testing.T) {
 		assert.Equal(t, ErrNotFound, err)
 		assert.Nil(t, peers)
 
-		endorsers, err := fakeChannel.Endorsers(ccCall("mycc"), NoFilter)
+		endorsers, err := fakeChannel.Endorsers(ccCall("mycc"), NoPriorities, NoExclusion)
 		assert.Equal(t, ErrNotFound, err)
 		assert.Nil(t, endorsers)
 
@@ -430,7 +430,7 @@ func TestClient(t *testing.T) {
 
 	t.Run("Endorser query without chaincode installed", func(t *testing.T) {
 		mychannel := r.ForChannel("mychannel")
-		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoFilter)
+		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoPriorities, NoExclusion)
 		// However, since we didn't provide any chaincodes to these peers - the server shouldn't
 		// be able to construct the descriptor.
 		// Just check that the appropriate error is returned, and nothing crashes.
@@ -452,7 +452,7 @@ func TestClient(t *testing.T) {
 		assert.Len(t, peers, 8)
 
 		// We should get a valid endorsement descriptor from the service
-		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoFilter)
+		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoPriorities, NoExclusion)
 		assert.NoError(t, err)
 		// The combinations of endorsers should be in the expected combinations
 		assert.Contains(t, expectedOrgCombinations, getMSPs(endorsers))
@@ -470,13 +470,13 @@ func TestClient(t *testing.T) {
 		mychannel := r.ForChannel("mychannel")
 
 		// Check the endorsers for the non cc2cc call
-		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoFilter)
+		endorsers, err := mychannel.Endorsers(ccCall("mycc"), NoPriorities, NoExclusion)
 		assert.NoError(t, err)
 		assert.Contains(t, expectedOrgCombinations, getMSPs(endorsers))
 		// Check the endorsers for the cc2cc call with collections
 		call := ccCall("mycc", "mycc2")
 		call[1].CollectionNames = append(call[1].CollectionNames, "col")
-		endorsers, err = mychannel.Endorsers(call, NoFilter)
+		endorsers, err = mychannel.Endorsers(call, NoPriorities, NoExclusion)
 		assert.NoError(t, err)
 		assert.Contains(t, expectedOrgCombinations2, getMSPs(endorsers))
 	})

@@ -285,7 +285,7 @@ type filter struct {
 
 // NewFilter returns an endorser filter that uses the given exclusion filter and priority selector
 // to filter and sort the endorsers
-func NewFilter(ps PrioritySelector, ef ExclusionFilter) Filter {
+func NewFilter(ps f Filter) Filter {
 	return &filter{
 		ef: ef,
 		ps: ps,
